@@ -1,23 +1,5 @@
 from django import forms
 from django.core.mail import send_mail
-from dockerindex.models import Repository
-
-
-ACCESS_CHOICES = (
-    ('read', 'Read'),
-    ('write', 'Read and Write'),
-)
-
-
-class AccessKeyForm(forms.Form):
-    access = forms.ChoiceField(choices=ACCESS_CHOICES, required=True)
-
-    def __init__(self, u, *args, **kwargs):
-        super(AccessKeyForm, self).__init__(*args, **kwargs)
-        self.fields['repository'] = \
-            forms.ModelChoiceField(queryset=Repository.objects.filter(user=u),
-                                   empty_label='All Repositories',
-                                   required=False)
 
 
 class ContactForm(forms.Form):

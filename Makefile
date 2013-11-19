@@ -15,11 +15,11 @@ install: venv
 	. venv/bin/activate; pip install -r requirements/test.txt
 
 debug: venv
-	. venv/bin/activate; python manage.py runserver
+	. venv/bin/activate; python manage.py runserver 0.0.0.0:8060
 
 serve:
 	. venv/bin/activate; gunicorn --access-logfile - --error-logfile - \
-		-k gevent -w 2 -b 0.0.0.0:8000 bearweb.wsgi
+		-k gevent -w 2 -b 0.0.0.0:8060 bearweb.wsgi
 
 syncdb: venv
 	. venv/bin/activate; python manage.py syncdb

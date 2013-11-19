@@ -10,7 +10,7 @@ a {
 }
 
 .custom-top-bar {
-  margin: 0 10px;
+  margin: 0;
 }
 
 .btn-primary {
@@ -382,15 +382,10 @@ ul.top-bar-links li.active {
   margin: 20px 0;
 }
 
-
 @media (min-width: 768px) {
 
 #logo {
-	float: left;
-}
-
-.heroshot {
-  background-position: center bottom;
+  float: left;
 }
  
 ul.top-bar-links {
@@ -403,6 +398,10 @@ ul.top-bar-links li {
 	display: inline-block;
 	vertical-align: middle;
 	line-height: 100px;
+}
+
+.heroshot {
+  background-position: center bottom;
 }
 .prices {
   padding-top: 50px;
@@ -422,7 +421,6 @@ ul.top-bar-links li {
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.05);
   z-index: 99;
 }
-
 
 .pricing-table {
   border-left: 0px solid #ccc;

@@ -10,21 +10,21 @@
 
 <div class="row">
   <div class="col-sm-4 col-md-push-8">
-    <h3>Your Repositories</h3>
+    <h3>Your Games</h3>
     <ul class="repositories shelf">
-      {% for repo in repos %}
+      {% for game in games %}
       <li>
-        <a href="{% url 'viewrepo' repo.id %}">{{ repo.name }}</a>
+        <a href="{% url 'games.view' game.slug %}">{{ game.name }}</a>
       </li>
       {% empty %}
-      <li>You don't have any repositories yet! Follow the steps below to get started.</li>
+      <li>You don't have any games yet! Follow the steps below to get started.
+      <a class="btn btn-primary" href="{% url 'games:create' %}">Create a game</a></li>
       {% endfor %}
     </ul>
   </div>
 
   <div class="col-sm-8 col-md-pull-4">
     <h3>Getting Started with StackMachine</h3>
-    <p class="lead">New to StackMachine or Docker? Follow our <a href="{% url 'guide' %}">guide</a> on getting started using StackMachine.</p>
     <h4>Authenticate via the Docker command line</h4>
     <div id="dockercfg">
       {{ dockercfg|safe }}
