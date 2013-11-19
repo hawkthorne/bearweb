@@ -1,0 +1,15 @@
+---
+layout: default
+title: The StackMachine Blog
+---
+<div id="home">
+  <section class="posts">
+    {% for post in site.posts %}
+    <article class="post">
+      <h3><a href="{{ post.url }}">{{ post.title }}</a></h3>
+      <p>{{ post.date | date: "%B %d, %Y" }} by {{ post.author }}</p>
+      {{ post.content }}
+    </article>
+    {% endfor %}
+  </section>
+</div>

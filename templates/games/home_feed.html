@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="row">
+  <div class="col-sm-12">
+      <h1><a href="{% url 'home' %}">{{ user.username }}</a></h1>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-sm-4 col-md-push-8">
+    <h3>Your Repositories</h3>
+    <ul class="repositories shelf">
+      {% for repo in repos %}
+      <li>
+        <a href="{% url 'viewrepo' repo.id %}">{{ repo.name }}</a>
+      </li>
+      {% empty %}
+      <li>You don't have any repositories yet! Follow the steps below to get started.</li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <div class="col-sm-8 col-md-pull-4">
+    <h3>Getting Started with StackMachine</h3>
+    <p class="lead">New to StackMachine or Docker? Follow our <a href="{% url 'guide' %}">guide</a> on getting started using StackMachine.</p>
+    <h4>Authenticate via the Docker command line</h4>
+    <div id="dockercfg">
+      {{ dockercfg|safe }}
+    </div>
+    <h4>Tag an image into a repository</h4>
+    {{ docker_tag|safe }}
+    <h4>Push your repository to StackMachine</h4>
+    {{ docker_push|safe }}
+  </div>
+</div>
+{% endblock %}

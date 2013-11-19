@@ -1,0 +1,2 @@
+web: gunicorn --access-logfile - --error-logfile - -k gevent -w 2 -b 0.0.0.0:8000 stackmachine.wsgi
+worker: python manage.py celery worker --loglevel=info

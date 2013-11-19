@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}Account Upgrade{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col-md-3">
+    {% include "core/accountpanel.html" %}
+  </div>
+  <div class="col-sm-9">
+    <h2>Billing</h2>
+    {% if plan == "free" %}
+    <p>You are currently taking part in the 14-day free trial.</p>
+    {% else %}
+    <p>You are currently on the {{ plan }} plan.</p>
+    {% endif %}
+    <h3>Change Your Plan</h3>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Plan</th>
+          <th>Price</th>
+          <th colspan="2">Private repositories</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Basic</td>
+          <td>$7 / month</td>
+          <td>3</td>
+          <td class="text-right">
+            <form action="{% url "changeplan" %}" method="POST">
+              {% csrf_token %}
+              <input name="plan" value="basic" type="hidden"/>
+              <input class="btn btn-default" type="submit" value="Change">
+            </form>
+          </td>
+        </tr>
+        <tr>
+          <td>Standard</td>
+          <td>$20 / month</td>
+          <td>10</td>
+          <td class="text-right">
+            <form action="{% url "changeplan" %}" method="POST">
+              {% csrf_token %}
+              <input name="plan" value="standard" type="hidden"/>
+              <input class="btn btn-default" type="submit" value="Change">
+            </form>
+          </td>
+        </tr>
+        <tr>
+          <td>Premium</td>
+          <td>$50 / month</td>
+          <td>30</td>
+          <td class="text-right">
+            <form action="{% url "changeplan" %}" method="POST">
+              {% csrf_token %}
+              <input name="plan" value="premium" type="hidden"/>
+              <input class="btn btn-default" type="submit" value="Change">
+            </form>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}

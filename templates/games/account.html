@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}Account{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col-sm-3">
+    {% include "core/accountpanel.html" %}
+  </div>
+  <div class="col-sm-9">
+    <h2>Account Settings</h2>
+    <h3>Docker Configuration</h3>
+
+    <h4>Authenticate via the Docker command line</h4>
+    <div id="dockercfg">
+      {{ dockercfg|safe }}
+    </div>
+    <h4>Add a new Docker repository</h3>
+    {{ docker|safe }}
+  </div>
+</div>
+{% endblock %}

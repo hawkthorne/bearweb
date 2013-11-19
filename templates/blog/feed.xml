@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title>Stack Machine Blog</title>
+  <link href="http://stackmachine.com/blog/feed.xml" rel="self"/>
+  <link href="http://stackmachine.com/blog"/>
+  <updated>2013-11-19T00:21:06-08:00</updated>
+  <id>http://stackmachine.com/blog</id>
+  <author>
+    <name>Stack Machine</name>
+    <email>contact@stachmachine.com</email>
+  </author>
+  
+</feed>

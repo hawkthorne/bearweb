@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block title %}Upgrade{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col-md-3">
+    {% include "core/accountpanel.html" %}
+  </div>
+  <div class="col-sm-9">
+    <h2>Upgrade Your Account</h2>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Plan</th>
+          <th>Price</th>
+          <th colspan="2">Private repositories</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Basic</td>
+          <td>$7 / month</td>
+          <td>3</td>
+          <td class="text-right">
+            <form action="{% url "pay" %}" method="POST">
+              {% csrf_token %}
+              <input name="plan" value="basic" type="hidden"/>
+              <script
+                src="https://checkout.stripe.com/v2/checkout.js" class="stripe-button"
+                data-key={{ stripe_key }}
+                data-name="Basic Plan"
+                data-description="$7 / Month">
+              </script>
+            </form>
+          </td>
+        </tr>
+        <tr>
+          <td>Standard</td>
+          <td>$20 / month</td>
+          <td>10</td>
+          <td class="text-right">
+            <form action="{% url "pay" %}" method="POST">
+              {% csrf_token %}
+              <input name="plan" value="standard" type="hidden"/>
+              <script
+                src="https://checkout.stripe.com/v2/checkout.js" class="stripe-button"
+                data-key={{ stripe_key }}
+                data-name="Standard Plan"
+                data-description="$20 / Month">
+              </script>
+            </form>
+          </td>
+        </tr>
+        <tr>
+          <td>Premium</td>
+          <td>$50 / month</td>
+          <td>30</td>
+          <td class="text-right">
+            <form action="{% url "pay" %}" method="POST">
+              {% csrf_token %}
+              <input name="plan" value="premium" type="hidden"/>
+              <script
+                src="https://checkout.stripe.com/v2/checkout.js" class="stripe-button"
+                data-key={{ stripe_key }}
+                data-name="Premium Plan"
+                data-description="$50 / Month">
+              </script>
+            </form>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}

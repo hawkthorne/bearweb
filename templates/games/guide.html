@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block title %}Getting Started with StackMachine{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col-sm-12">
+<h1>Getting Started with StackMachine</h1>
+
+<p>StackMachine is the easiest way to host your private and public Docker images. This guide will teach you how to use StackMachine with the Docker commands you already know. If you're brand new to Docker, you'll want to first <a href="http://docs.docker.io/en/latest/installation/#installation-list">install Docker on your system</a> and <a href="http://www.docker.io/gettingstarted/">complete the Docker interactive tutorial</a>.</p>
+
+<p class="text-warning">You'll need Docker version <strong>0.6.2</strong> or greater for this guide to work.</p>
+
+
+<h2 id="auth">Authentication</h2>
+
+<p>The easiest way to authenticate is to use the docker login command.</p>
+
+<pre>docker login -u "{{username}}" -p "{{token}}" -e "{{username}}@users.stackmachine.com" {{host}}</pre>
+
+<p>The above password isn't your account password (if signed in through GitHub you won't have one). Instead, it's a <a href="">personal access token</a> for your account. These tokens can be revoked if they fall into the wrong hands, making them much safer than using your account password.</p>
+
+<h2>Distributing an Existing Image</h2>
+
+<p>If you're a seasoned Docker user, you probably have images you've already created. Maybe you've even exported a few and uploaded them to S3. With StackMachine, the painful import / export process is replaced with the familiar push / pull work flow you already use for public images.
+</p>
+
+<p>If you don't have a local docker image, you can pull <a href="https://index.docker.io/_/docker-ut/">docker-ut</a>.</p>
+
+<pre>docker pull docker-ut</pre>
+
+<p>Next, tag this image under your username</p>
+
+<pre>docker tag docker-ut {{host}}/{{username}}/mini</pre>
+
+<p>Now, push the repository, making sure you've already <a href="#auth">authenticated</a> your Docker client.</p>
+
+<pre>docker push {{host}}/{{username}}/mini</pre>
+
+<h2>Pulling a Repository</h2>
+
+<p>Getting the latest version of a repository requires docker pull with the name of the user and the repository</p>
+
+<pre>docker pull {{host}}/{username}/{repository}</pre>
+
+<p>You can try it out now with the mini repository you created above. It's less than 3MB, so pulling is super fast.</p>
+
+<pre>docker pull {{host}}/{{username}}/mini</pre>
+
+<h2>Building and Distributing from a Dockerfile</h2>
+
+<p>A <a href="http://docs.docker.io/en/latest/use/builder/">Dockerfile</a> allows you to create a Docker image from a set of commands. Many projects include one at the root of their source repository so anyone can build and run their software. See the <a href="http://docs.docker.io/en/latest/use/builder/">Dockerfile documentation</a> for more information on getting started.</p>
+
+<p>If you don't have a Dockerfile to use, open up a new file and paste in the contents below:</p>
+
+<pre>
+FROM docker-ut
+MAINTAINER {{username}}@users.stackmachine.com
+
+RUN echo "Hello Docker"
+RUN date > timestamp.txt
+</pre>
+
+<p>The docker build command is used to turn a Dockerfile into an image. In the same directory as the Dockerfile, execute the following command</p>
+
+<pre>docker build -t {{host}}/{{username}}/hellodocker .</pre>
+
+<p>Now you can push you're new repository to StackMachine</p>
+
+<pre>docker push {{host}}/{{username}}/hellodocker</pre>
+
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}Account Access Tokens{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col-md-3">
+    {% include "core/accountpanel.html" %}
+  </div>
+  <div class="col-sm-9">
+    <h2>Access Tokens</h2>
+    <p>These tokens allow you to give access to specific repositories. They are perfect if you need to pull down an image to a client's server without giving them access to all the repositories in your account.</p>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Token</th>
+          <th>Repository</th>
+          <th>Access</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for token in tokens %}
+      <tr>
+        <td><code>{{ token.token }}</code></td>
+        {% if token.repository %}
+        <td>{{ request.user.username }} / {{ token.repository.name }}</td>
+        {% else %}
+        <td>All repositories</td>
+        {% endif %}
+        {% if token.access == "write" %}
+        <td>Read and Write</td>
+        {% else %}
+        <td>Read</td>
+        {% endif %}
+      </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    <a href="{% url 'tokens_create'%}" class="btn btn-primary btn-large">Create New Token</a>
+  </div>
+</div>
+
+{% endblock %}

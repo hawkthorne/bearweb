@@ -1,0 +1,79 @@
+{% load staticfiles %}
+{% load core_extras %}
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Private Hosted Docker Registry - StackMachine" />
+    <meta name="author" content="Stack Machine, Inc.">
+    <title>{% block title %}Private Hosted Docker Registry{% endblock title %} | StackMachine</title>
+    <link href="{% static 'css/app.css' %}" media="screen, projection" rel="stylesheet" type="text/css" />
+    <link rel="shortcut icon" href="{% static 'favicon.ico' %}">
+    <link rel="alternate" type="application/rss+xml" title="StackMachine Blog" href="https://www.stackmachine.com/blog/feed.xml" />
+  </head>
+  <body>
+    <div class="header">
+      <div class="container">
+        <nav class="row custom-top-bar">
+          <a id="logo" href="/">
+            <img class='logomark' src="{% static 'img/logomark.png' %}"></img>
+          </a>
+          <ul class="top-bar-links">
+            <li class="{% active 'pricing' %}"><a href="{% url 'pricing' %}">Pricing</a></li>
+            <li class="{% active 'blog' %}"><a href="{% url 'blog' %}">Blog</a></li>
+            <li class="{% active 'contact' %}"><a href="{% url 'contact' %}">Contact</a></li>
+            {% if user.is_staff %}
+            <li><a href="{% url 'admin:index' %}">Admin</a></li>
+            {% endif %}
+            {% if user.is_authenticated %}
+            <li class="{% active 'account_portal' %}"><a href="{% url 'portal' %}">Account</a></li>
+            <li><a href="{% url 'auth_logout' %}">Sign Out</a></li>
+            {% else %}
+            <li class="signin {% active 'auth_login' %}"><a href="{% url 'auth_login' %}">Sign In</a></li>
+            {% endif %}
+          </ul>
+        </nav>
+      </div>
+    </div>
+
+    {% block wide %}
+    <div class="container">
+      {% if messages %}
+      <div class="row alerts">
+        <div class="col-md-12">
+          {% for message in messages %}
+          <div data-alert class="alert alert-dismissable {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            {{ message }}
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+
+      {% block content %}
+      <p>Use this document as a way to quick start any new project.</p>
+      {% endblock content %}
+    </div>
+    {% endblock %}
+
+    <div class="container">
+      <div class="row footer">
+        <ul>
+          <li><a href="{% url 'tos' %}">Terms of Service</a></li>
+          <li><a href="{% url 'privacy' %}">Privacy</a></li>
+          <li>© 2013 Stack Machine, Inc</li>
+        </ul>
+      </div>
+    </div>
+
+    <script defer type="text/javascript" src="{% static 'js/jquery-2.0.3.min.js' %}"></script>
+    <script defer type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script defer type="text/javascript" src="{% static 'js/frontpage.js' %}"></script>
+    <script src="https://ssl.google-analytics.com/ga.js" async="true"></script>
+
+    {% block extra_js %}{% endblock extra_js %}
+  </body>
+</html>

@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+  <div class="col-sm-12">
+    <h1>
+      <a href="{% url 'home' %}">{{ object.user.username }}</a> / 
+      <a href="{% url 'viewrepo' object.id %}">{{ object.name }}</a>
+    </h1>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-sm-8">
+    <h5>Image</h5>
+    <p class="mono">{{ info.id }}</p>
+
+    <h5>Parent</h5>
+    <p class="mono">{{ info.parent }}</p>
+
+    {% if info.author %}
+    <h5>Author</h5>
+    <p>{{ info.author }}</p>
+    {% endif %}
+
+    {% if info.docker_version %}
+    <h5>Docker Version</h5>
+    <p>{{ info.docker_version }}</p>
+    {% endif %}
+
+    {% if info.container_config.Cmd %}
+    <h5>Command</h5>
+    <p class="mono smaller">
+    {{ info.container_config.Cmd|join:" " }}
+    </p>
+    {% endif %}
+
+    {% if info.container_config.Env %}
+    <h5>Environment</h5>
+    <ul class="smaller shelf mono">
+    {% for var in info.container_config.Env %}
+      <li>{{ var }}</li>
+    {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% if info.created %}
+    <h5>Date Created</h5>
+    <p>{{ info.created }}</p>
+    {% endif %}
+
+    <h4 class="codetitle">Push images to this repository</h5>
+    {{ pushcode|safe }}
+
+    <h4 class="codetitle">Pull this repository onto a server</h5>
+    {{ pullcode|safe }}
+  </div>
+  <div class="col-sm-4">
+    <h4>Tags</h4>
+    <ul class="shelf">
+      {% for tag in object.tag_set.all %}
+      <li>{{ tag.name }}</li>
+      {% endfor %}
+    </ul>
+
+    <h4>Actions</h4>
+    <a class="btn  btn-sm btn-danger" href="{% url "deleterepo" object.id %}">Delete this repository</a>
+  </div>
+</div>
+{% endblock %}
+

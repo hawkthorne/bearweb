@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% load bootstrap %}
+
+{% block title %}Contact{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col-md-12">
+    <h2>Contact StackMachine</h2>
+    <p>If you're having trouble with the service or just want to say "Hello", we're here to chat.</p>
+    <p>Use the form below or send us an email at <a href="mailto:contact@stackmachine.com">contact@stackmachine.com</a>. You can also open an issue on our <a href="https://github.com/stackmachine/stackmachine.com/issues">public issue tracker</a>.</p>
+  </div>
+  <hr/>
+</div>
+
+<div class="row">
+  <div class="col-sm-8">
+    <form action="" role="form" method="POST">{% csrf_token %}
+      {{ form|bootstrap }}
+      <input class="btn btn-primary btn-lg" type="submit" value="Send Message">
+    </form>
+  </div>
+  <div class="col-sm-4">
+    <h3>Around the Web</h3>
+    <ul>
+      <li>Code with us on <a href="https://github.com/stackmachine">GitHub</a></li>
+      <li>Like us on <a href="https://facebook.com/stackmachine">Facebook</a></li>
+      <li>Follow us on <a href="https://twitter.com/stackmachine">Twitter</a></li>
+    </ul>
+    <h3>Docker Community</h3>
+    <ul>
+      <li>IRC chat in <a href="https://botbot.me/freenode/docker/#">#docker</a> on freenode</li>
+      <li><a href="https://groups.google.com/forum/#!forum/docker-user">Docker-user</a> mailing list</a>
+      <li><a href="https://github.com/dotcloud/docker">Docker</a> GitHub repository</a></li>
+    </ul>
+
+  </div>
+</div>
+{% endblock %}

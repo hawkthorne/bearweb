@@ -1,0 +1,7 @@
+name: Stack Machine Blog
+destination: ../../templates/blog
+pygments: true
+future: false
+permalink: /blog/:title
+baseurl: /blog
+exclude: ['Gemfile', 'Gemfile.lock']

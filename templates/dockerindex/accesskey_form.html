@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% load bootstrap %}
+
+{% block title %}Create New Access Token{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col-md-3">
+    {% include "core/accountpanel.html" %}
+  </div>
+  <div class="col-sm-9">
+    <h2>Create New Access Token</h2>
+    <form action="" role="form" method="POST">{% csrf_token %}
+      {{ form|bootstrap }}
+      <input class="btn btn-primary btn-lg" type="submit" value="Create Token">
+    </form>
+  </div>
+</div>
+{% endblock %}

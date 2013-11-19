@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}Pricing{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col-sm-12">
+    <h2>Plans & Pricing <small>Try StackMachine free for 14 days, no credit card required</small></h2>
+  </div>
+</div>
+
+
+<div class="row prices">
+  <div class="col-xs-6 col-sm-3">
+    <div class="pricing-table">
+      <div class="price">
+        <span class="sign">$</span>
+        <span class="dollars">7</span>
+        <span class="month">/mo</span>
+      </div>
+      <div class="title">Basic</div>
+      <div class="cta-button"><a class="btn btn-primary" href="{% url 'portal' %}">14-day free trial</a></div>
+      <div class="bullet-item"><strong>3</strong> private repositories</div>
+    </div>
+  </div>
+
+  <div class="col-xs-6 col-sm-3">
+    <div class="pricing-table featured">
+      <div class="price">
+        <span class="sign">$</span>
+        <span class="dollars">20</span>
+        <span class="month">/mo</span>
+      </div>
+      <div class="title">Standard</div>
+      <div class="cta-button"><a class="btn btn-primary" href="{% url 'portal' %}">14-day Free Trial</a></div>
+      <div class="bullet-item"><strong>10</strong> private repositories</div>
+    </div>
+  </div>
+
+  <div class="col-xs-6 col-sm-3">
+    <div class="pricing-table">
+      <div class="price">
+        <span class="sign">$</span>
+        <span class="dollars">50</span>
+        <span class="month">/mo</span>
+      </div>
+      <div class="title">Premium</div>
+      <div class="cta-button"><a class="btn btn-primary" href="{% url 'portal' %}">14-day Free Trial</a></div>
+      <div class="bullet-item"><strong>30</strong> private repositories</div>
+    </div>
+  </div>
+
+  <div class="col-xs-6 col-sm-3">
+    <div class="pricing-table">
+      <div class="price">
+        <span class="enterprise">Call for pricing<br/>+1 855-782-2525</span>
+      </div>
+      <div class="title">Enterprise</div>
+      <div class="cta-button">
+        <a href="{% url 'contact' %}" class="btn btn-default">Contact Sales</a>
+      </div>
+      <div class="bullet-item"><strong>Unlimited</strong> private repositories</div>
+    </div>
+  </div>
+</div>
+{% endblock %}

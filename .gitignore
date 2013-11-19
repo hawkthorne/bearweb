@@ -1,0 +1,29 @@
+# Python bytecode:
+*.py[co]
+
+# Packaging files:
+*.egg*
+
+# Editor temp files:
+*.swp
+*~
+
+# Sphinx docs:
+build
+
+# SQLite3 database files:
+*.db
+
+# Logs:
+*.log
+venv
+
+compass/.sass-cache
+*.coverage
+
+.DS_Store
+
+django_cache
+layers/images
+tests/production-vars
+tests/local-vars
