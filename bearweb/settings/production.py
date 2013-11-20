@@ -26,13 +26,6 @@ EMAIL_HOST_USER = 'postmaster@{}'.format(get_env_var('MAILGUN_DOMAIN'))
 EMAIL_HOST_PASSWORD = get_env_var('MAILGUN_PASSWORD')
 EMAIL_PORT = 587
 
-LAYER_STORAGE_ENGINE = 's3'
-LAYER_STORAGE_BUCKET = 'dl.stackmachine.com'
-LAYER_STORAGE_PATH = '/registry'
-
-DOCKER_DOMAIN = 'stackmachine.com'
-DOCKER_HOSTNAME = 'https://stackmachine.com'
-
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#server-email
 SERVER_EMAIL = EMAIL_HOST_USER
 

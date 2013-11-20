@@ -23,6 +23,19 @@ class Game(models.Model):
     def get_absolute_url(self):
         return reverse("games:view", pk=self.pk)
 
+    def next_version(self):
+        """If the game has no releases, return 1.0.0. If the game does have a
+        release, return the next major version.
+        """
+        try:
+            release = self.release_set.order_by('created')[0]
+        except IndexError:
+            return "1.0.0"
+
+        major, minor, bugfix = release.version.split(".")
+
+        return "{}.{}.{}".format(int(major) + 1, minor, bugfix)
+
     class Meta:
         unique_together = ("owner", "slug")
 
@@ -32,6 +45,7 @@ class Release(models.Model):
     updated = models.DateTimeField(auto_now=True)
     game = models.ForeignKey(Game)
     version = models.CharField(max_length=14)
+    original_file = models.FileField(upload_to='games')
 
 
 class Asset(models.Model):

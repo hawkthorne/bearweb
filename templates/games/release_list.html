@@ -7,14 +7,8 @@
 {% block content %}
 <div class="row">
   <div class="col-sm-12">
-    <h1>{{ game.name }}</h1>
-    <ul class="nav nav-tabs">
-      <li class="{% active 'games:view' %}"><a href="{% url 'games:view' game.pk %}">Dashboard</a></li>
-      <li class="{% active 'games:metrics' %}"><a href="{% url 'games:metrics' game.pk %}">Metrics</a></li>
-      <li class="{% active 'games:crashes' %}"><a href="{% url 'games:crashes' game.pk %}">Crash Reports</a></li>
-      <li class="{% active 'games:releases' %}"><a href="{% url 'games:releases' game.pk %}">Releases</a></li>
-    </ul>
-    <a class='btn btn-primary' href="{% url 'games:newrelease' %}">Draft new release</a>
+    {% include "games/gamebar.html" %}
+    <a class='btn btn-primary' href="{% url 'games:newrelease' game.pk %}">Draft new release</a>
   </div>
 </div>
 {% endblock %}

@@ -10,8 +10,6 @@ from core.views import Dashboard
 from core.views import UpgradeView, UpgradePayView, ChangePlanView
 from blog.views import ArticleView
 
-from games import views as gv
-
 
 def template(path):
     return TemplateView.as_view(template_name=path)

@@ -55,7 +55,7 @@ css:
 
 fmt:
 	. venv/bin/activate; flake8 blog bearweb games \
-		manual --exclude "migrations"
+		--exclude "migrations"
 
 test: fmt
 	. venv/bin/activate; \

@@ -39,10 +39,6 @@ def current_url_equals(context, url_name, **kwargs):
     except urlresolvers.Resolver404:
         pass
 
-    print resolved
-    if resolved:
-        print resolved.url_name
-
     matches = resolved and resolved.url_name == url_name and resolved.namespace == namespace
 
     if matches and kwargs:

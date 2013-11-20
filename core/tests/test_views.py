@@ -3,10 +3,6 @@ from django.test import TestCase
 
 class StackMachineViewsTests(TestCase):
 
-    def test_guide_loggedout(self):
-        response = self.client.get('/guide')
-        self.assertEquals(response.status_code, 200)
-
     def test_robots_txt(self):
         response = self.client.get('/robots.txt')
         self.assertEquals(response.status_code, 200)

@@ -8,54 +8,16 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding model 'Framework'
-        db.create_table(u'games_framework', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('created', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
-            ('updated', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, blank=True)),
-            ('name', self.gf('django.db.models.fields.CharField')(max_length=128)),
-        ))
-        db.send_create_signal(u'games', ['Framework'])
-
-        # Renaming Column
-        db.rename_column('games_game', 'user_id', 'owner_id')
-
-        # Adding field 'Game.slug'
-        db.add_column(u'games_game', 'slug',
-                      self.gf('django.db.models.fields.SlugField')(default='', max_length=128),
+        # Adding field 'Release.original_file'
+        db.add_column(u'games_release', 'original_file',
+                      self.gf('django.db.models.fields.files.FileField')(default=None, max_length=100),
                       keep_default=False)
-
-        # Adding field 'Game.framework'
-        db.add_column(u'games_game', 'framework',
-                      self.gf('django.db.models.fields.related.ForeignKey')(default=0, to=orm['games.Framework']),
-                      keep_default=False)
-
-
-        # Changing field 'Game.name'
-        db.alter_column(u'games_game', 'name', self.gf('django.db.models.fields.CharField')(max_length=128))
-
-        # Adding unique constraint on 'Game', fields ['owner', 'slug']
-        db.create_unique(u'games_game', ['owner_id', 'slug'])
 
 
     def backwards(self, orm):
-        # Removing unique constraint on 'Game', fields ['owner', 'slug']
-        db.delete_unique(u'games_game', ['owner_id', 'slug'])
+        # Deleting field 'Release.original_file'
+        db.delete_column(u'games_release', 'original_file')
 
-        # Renaming Column
-        db.rename_column('games_game', 'owner_id', 'user_id')
-
-        # Deleting model 'Framework'
-        db.delete_table(u'games_framework')
-
-        # Deleting field 'Game.slug'
-        db.delete_column(u'games_game', 'slug')
-
-        # Deleting field 'Game.framework'
-        db.delete_column(u'games_game', 'framework_id')
-
-        # Changing field 'Game.name'
-        db.alter_column(u'games_game', 'name', self.gf('django.db.models.fields.TextField')())
 
     models = {
         u'auth.group': {
@@ -132,6 +94,7 @@ class Migration(SchemaMigration):
             'created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             'game': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['games.Game']"}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'original_file': ('django.db.models.fields.files.FileField', [], {'max_length': '100'}),
             'updated': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'}),
             'version': ('django.db.models.fields.CharField', [], {'max_length': '14'})
         }

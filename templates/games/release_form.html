@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% load bootstrap %}
+
+{% block title %}Create a New Release{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col-sm-12">
+    {% include "games/gamebar.html" %}
+    <h1>Create a Release</h1>
+    <form action="" role="form" enctype="multipart/form-data" method="POST">{% csrf_token %}
+      {{ form|bootstrap }}
+      <input class="btn btn-primary btn-lg" type="submit" value="Submit Release">
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+

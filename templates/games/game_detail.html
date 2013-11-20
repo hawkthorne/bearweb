@@ -7,13 +7,7 @@
 {% block content %}
 <div class="row">
   <div class="col-sm-12">
-    <h1>{{ object.name }}</h1>
-    <ul class="nav nav-tabs">
-      <li class="{% active 'games:view' %}"><a href="{% url 'games:view' object.pk %}">Dashboard</a></li>
-      <li class="{% active 'games:metrics' %}"><a href="{% url 'games:metrics' object.pk %}">Metrics</a></li>
-      <li class="{% active 'games:crashes' %}"><a href="{% url 'games:crashes' object.pk %}">Crash Reports</a></li>
-      <li class="{% active 'games:releases' %}"><a href="{% url 'games:releases' object.pk %}">Releases</a></li>
-    </ul>
+    {% include "games/gamebar.html" %}
   </div>
 </div>
 {% endblock %}

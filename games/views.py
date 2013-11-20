@@ -1,12 +1,23 @@
 from django.http import Http404
+from django.core.urlresolvers import reverse
 from django.template.defaultfilters import slugify
 from django.shortcuts import get_object_or_404
 from django.views.generic import DetailView, ListView
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import CreateView, FormView
 
 from braces.views import LoginRequiredMixin
 
 from .models import Game, Release
+from .forms import LoveForm
+
+
+def get_game(request, pk):
+    game = get_object_or_404(Game, pk=pk)
+
+    if game.owner != request.user:
+        raise Http404
+
+    return game
 
 
 class GameDetail(LoginRequiredMixin, DetailView):
@@ -26,17 +37,48 @@ class ReleaseList(LoginRequiredMixin, ListView):
     model = Release
 
     def get_queryset(self):
-        self.game = get_object_or_404(Game, pk=self.kwargs['pk'])
-
-        if self.game.owner != self.request.user:
-            raise Http404
-
+        self.game = get_game(self.request, self.kwargs['pk'])
         return Release.objects.filter(game=self.game)
 
     def get_context_data(self, **kwargs):
         context = super(ReleaseList, self).get_context_data(**kwargs)
         context['game'] = self.game
         return context
+
+
+def create_new_release(game, form):
+    # Find next version
+    version = game.next_version()
+    version = version
+
+    try:
+        release = game.release_set.order_by('created')[0]
+    except IndexError:
+        pass
+
+    release = release
+    return version
+
+
+class ReleaseCreate(LoginRequiredMixin, FormView):
+    template_name = 'games/release_form.html'
+    form_class = LoveForm
+
+    def get_success_url(self):
+        return reverse('games:releases', kwargs={'pk': self.kwargs['pk']})
+
+    def get_context_data(self, **kwargs):
+        context = super(ReleaseCreate, self).get_context_data(**kwargs)
+        context['game'] = get_game(self.request, self.kwargs['pk'])
+        return context
+
+    #def form_valid(self, form):
+    #    game = get_game(self.request, self.kwargs['pk'])
+
+    #    # Get the latest release for the game, and increment the version
+    #    release = create_new_release(game, form)
+
+    #    return super(ReleaseCreate, self).form_valid(form)
 
 
 class GameCreate(LoginRequiredMixin, CreateView):
