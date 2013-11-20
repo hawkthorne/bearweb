@@ -8,6 +8,22 @@
 <div class="row">
   <div class="col-sm-12">
     {% include "games/gamebar.html" %}
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Version</th>
+          <th>URL</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for release in object_list %}
+        <tr>
+          <td>{{ release.version }}</td>
+          <td><a href="{{ release.original_file.url }}">Original File</a></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
     <a class='btn btn-primary' href="{% url 'games:newrelease' game.pk %}">Draft new release</a>
   </div>
 </div>

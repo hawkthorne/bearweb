@@ -10,6 +10,8 @@ from braces.views import LoginRequiredMixin
 from .models import Game, Release
 from .forms import LoveForm
 
+from games import tasks
+
 
 def get_game(request, pk):
     game = get_object_or_404(Game, pk=pk)
@@ -47,17 +49,10 @@ class ReleaseList(LoginRequiredMixin, ListView):
 
 
 def create_new_release(game, form):
-    # Find next version
     version = game.next_version()
-    version = version
-
-    try:
-        release = game.release_set.order_by('created')[0]
-    except IndexError:
-        pass
-
-    release = release
-    return version
+    f = form.cleaned_data['lovefile']
+    f.name = "{}-original-{}.love".format(game.slug, version)
+    return game.release_set.create(version=version, original_file=f)
 
 
 class ReleaseCreate(LoginRequiredMixin, FormView):
@@ -72,13 +67,15 @@ class ReleaseCreate(LoginRequiredMixin, FormView):
         context['game'] = get_game(self.request, self.kwargs['pk'])
         return context
 
-    #def form_valid(self, form):
-    #    game = get_game(self.request, self.kwargs['pk'])
+    def form_valid(self, form):
+        game = get_game(self.request, self.kwargs['pk'])
 
-    #    # Get the latest release for the game, and increment the version
-    #    release = create_new_release(game, form)
+        # Get the latest release for the game, and increment the version
+        release = create_new_release(game, form)
 
-    #    return super(ReleaseCreate, self).form_valid(form)
+        tasks.lovepackage(release.pk)
+
+        return super(ReleaseCreate, self).form_valid(form)
 
 
 class GameCreate(LoginRequiredMixin, CreateView):

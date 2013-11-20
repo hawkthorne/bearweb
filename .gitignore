@@ -8,9 +8,6 @@
 *.swp
 *~
 
-# Sphinx docs:
-build
-
 # SQLite3 database files:
 *.db
 
@@ -24,6 +21,7 @@ compass/.sass-cache
 .DS_Store
 
 django_cache
-layers/images
 tests/production-vars
 tests/local-vars
+test.love
+media
