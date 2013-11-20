@@ -73,7 +73,7 @@ class ReleaseCreate(LoginRequiredMixin, FormView):
 
         release.add_asset(f, tag='uploaded')
 
-        tasks.lovepackage(release.pk)
+        tasks.lovepackage.delay(release.pk)
 
         return super(ReleaseCreate, self).form_valid(form)
 

@@ -30,7 +30,7 @@ class Game(models.Model):
         release, return the next major version.
         """
         try:
-            release = self.release_set.order_by('created')[0]
+            release = self.release_set.order_by('-created')[0]
         except IndexError:
             return "1.0.0"
 

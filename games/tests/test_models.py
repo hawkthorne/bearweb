@@ -20,8 +20,9 @@ class GamesModelTests(TestCase):
         game = Game.objects.create(owner=self.user, framework=self.other,
                                    name="Foo", slug="foo")
         game.release_set.create(version="1.0.0")
+        game.release_set.create(version="2.0.0")
 
-        self.assertEquals("2.0.0", game.next_version())
+        self.assertEquals("3.0.0", game.next_version())
 
     def test_release_add_asset(self):
         game = Game.objects.create(owner=self.user, framework=self.other,
