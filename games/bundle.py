@@ -5,6 +5,7 @@ import tempfile
 
 from django.conf import settings
 from django.template.loader import render_to_string
+from django.core.files import File
 
 from .models import Release
 
@@ -35,14 +36,14 @@ def write_symlink(archive, root, path):
     archive.writestr(zip_info, os.readlink(path))
 
 
-def package_osx(lovefile, name, version):
+def package_osx(lovefile, name, slug, version):
     """Given a path to a .love file, create OS X version for
     download. Returns path to create zipfile
     """
     _, output_name = tempfile.mkstemp("love")
 
     app_name = "{}.app".format(name)
-    zip_name = "{}-osx-{}.zip".format(name.lower().replace(" ", "-"), version)
+    zip_name = "{}-osx-{}.zip".format(slug, version)
 
     archive = zipfile.ZipFile(output_name, "w")
 
@@ -69,17 +70,18 @@ def package_osx(lovefile, name, version):
 
     archive.close()
 
-    return output_name, zip_name
+    blob = File(open(output_name))
+    blob.name = zip_name
+    return blob
 
 
-def package_windows(lovefile, name, version):
+def package_windows(lovefile, name, slug, version):
     """Given a path to a .love file, create a Windows version for
     download. Returns path to created zipfile
     """
     _, output_name = tempfile.mkstemp("love")
 
-    safe_name = name.lower().replace(" ", "-")
-    zip_name = "{}-win-{}.zip".format(safe_name, version)
+    zip_name = "{}-win-{}.zip".format(slug, version)
 
     archive = zipfile.ZipFile(output_name, "w")
 
@@ -92,12 +94,14 @@ def package_windows(lovefile, name, version):
     love_exe = open(p("build/windows/love.exe"), "rb").read()
     love_archive = open(lovefile, "rb").read()
 
-    archive.writestr(os.path.join(name, safe_name + ".exe"),
+    archive.writestr(os.path.join(name, slug + ".exe"),
                      love_exe + love_archive, zipfile.ZIP_DEFLATED)
 
     archive.close()
 
-    return output_name, zip_name
+    blob = File(open(output_name))
+    blob.name = zip_name
+    return blob
 
 
 def inject_code(lovefile, config):
@@ -137,13 +141,13 @@ def package(release_id):
     config = game_config(game.slug, release.version)
 
     # Add new code
-    lovefile = inject_code(release.original_file, config)
+    upload = release.get_asset('uploaded')
+    love = inject_code(upload.blob, config)
 
     # Create binaries
-    osx_zip, _ = package_osx(lovefile, game.name, release.version)
-    win_zip, _ = package_windows(lovefile, game.name, release.version)
+    osx_file = package_osx(love, game.name, game.slug, release.version)
+    win_file = package_windows(love, game.name, game.slug, release.version)
 
     # Upload
-    # shutil.move(osx_zip, "output/demo-osx-0.1.0.zip")
-    # shutil.move(win_zip, "output/demo-win-0.1.0.zip")
-    # shutil.move(lovefile, 'output/demo.love')
+    release.add_asset(osx_file, tag='osx')
+    release.add_asset(win_file, tag='windows')

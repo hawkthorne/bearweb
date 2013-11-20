@@ -62,6 +62,12 @@ test: fmt
 		coverage run manage.py test --settings=bearweb.settings.test
 
 
+# Don't run the tests that take a long time
+check: fmt
+	. venv/bin/activate; DISABLE_SLOW=true coverage run manage.py \
+		test --settings=bearweb.settings.test
+
+
 databases:
 	-@createdb -h localhost bearweb_local
 	-@createdb -h localhost bearweb_test

@@ -1,3 +1,5 @@
+import os
+
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.conf import settings
@@ -45,14 +47,32 @@ class Release(models.Model):
     updated = models.DateTimeField(auto_now=True)
     game = models.ForeignKey(Game)
     version = models.CharField(max_length=14)
-    original_file = models.FileField(upload_to='games')
+
+    class Meta:
+        unique_together = ("game", "version")
+
+    def add_asset(self, django_file, tag=''):
+        return self.asset_set.create(tag=tag, blob=django_file)
+
+    def get_asset(self, tag):
+        # FIXME: This will fail if there are other uploaded files
+        try:
+            return self.asset_set.filter(tag=tag)[0]
+        except IndexError:
+            return None
+
+
+def asset_path(asset, filename):
+    return os.path.join(asset.release.game.slug,
+                        asset.release.version, filename)
 
 
 class Asset(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     release = models.ForeignKey(Release)
-    filename = models.CharField(max_length=64)
+    blob = models.FileField(upload_to=asset_path)
+    tag = models.CharField(max_length=20)
 
 
 class CrashReport(models.Model):

@@ -48,13 +48,6 @@ class ReleaseList(LoginRequiredMixin, ListView):
         return context
 
 
-def create_new_release(game, form):
-    version = game.next_version()
-    f = form.cleaned_data['lovefile']
-    f.name = "{}-original-{}.love".format(game.slug, version)
-    return game.release_set.create(version=version, original_file=f)
-
-
 class ReleaseCreate(LoginRequiredMixin, FormView):
     template_name = 'games/release_form.html'
     form_class = LoveForm
@@ -71,7 +64,14 @@ class ReleaseCreate(LoginRequiredMixin, FormView):
         game = get_game(self.request, self.kwargs['pk'])
 
         # Get the latest release for the game, and increment the version
-        release = create_new_release(game, form)
+        version = game.next_version()
+        release = game.release_set.create(version=version)
+
+        # FIXME: Abstract this away
+        f = form.cleaned_data['lovefile']
+        f.name = "{}-original-{}.love".format(game.slug, version)
+
+        release.add_asset(f, tag='uploaded')
 
         tasks.lovepackage(release.pk)
 

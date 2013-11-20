@@ -1,6 +1,7 @@
 from django.test import TestCase
-
 from django.contrib.auth.models import User
+from django.core.files.base import ContentFile
+
 from games.models import Game, Framework
 
 
@@ -21,3 +22,15 @@ class GamesModelTests(TestCase):
         game.release_set.create(version="1.0.0")
 
         self.assertEquals("2.0.0", game.next_version())
+
+    def test_release_add_asset(self):
+        game = Game.objects.create(owner=self.user, framework=self.other,
+                                   name="Foo", slug="foo")
+        release = game.release_set.create(version='1.0.0')
+
+        blob = ContentFile('foo')
+        blob.name = 'foo.txt'
+
+        asset = release.add_asset(blob)
+
+        self.assertTrue(asset.blob.url.startswith("/media/foo/1.0.0/"))
