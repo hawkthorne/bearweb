@@ -245,6 +245,7 @@ LOGIN_ERROR_URL = '/auth/error'
 
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 
+CELERY_TASK_SERIALIZER = 'json'
 CELERY_ACCEPT_CONTENT = ['json', 'msgpack', 'yaml']
 
 #

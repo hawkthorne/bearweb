@@ -54,12 +54,32 @@ class Release(models.Model):
     def add_asset(self, django_file, tag=''):
         return self.asset_set.create(tag=tag, blob=django_file)
 
+    def windows_url(self):
+        asset = self.get_asset('windows')
+
+        if asset is None:
+            return ""
+    
+        return asset.blob.url
+
+    def osx_url(self):
+        asset = self.get_asset('osx')
+
+        if asset is None:
+            return ""
+    
+        return asset.blob.url
+
     def get_asset(self, tag):
         # FIXME: This will fail if there are other uploaded files
         try:
             return self.asset_set.filter(tag=tag)[0]
         except IndexError:
             return None
+
+
+    def __unicode__(self):
+        return "{} {}".format(self.game.name, self.version)
 
 
 def asset_path(asset, filename):
@@ -73,6 +93,9 @@ class Asset(models.Model):
     release = models.ForeignKey(Release)
     blob = models.FileField(upload_to=asset_path)
     tag = models.CharField(max_length=20)
+
+    def __unicode__(self):
+        return self.blob.name
 
 
 class CrashReport(models.Model):
