@@ -54,20 +54,22 @@ class Release(models.Model):
     def add_asset(self, django_file, tag=''):
         return self.asset_set.create(tag=tag, blob=django_file)
 
+    # FIXME: Reduntant?
     def windows_url(self):
         asset = self.get_asset('windows')
 
         if asset is None:
             return ""
-    
+
         return asset.blob.url
 
+    # FIXME: Reduntant?
     def osx_url(self):
         asset = self.get_asset('osx')
 
         if asset is None:
             return ""
-    
+
         return asset.blob.url
 
     def get_asset(self, tag):
@@ -76,7 +78,6 @@ class Release(models.Model):
             return self.asset_set.filter(tag=tag)[0]
         except IndexError:
             return None
-
 
     def __unicode__(self):
         return "{} {}".format(self.game.name, self.version)

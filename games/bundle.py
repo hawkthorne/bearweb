@@ -40,6 +40,11 @@ def package_osx(lovefile, name, slug, version):
     """Given a path to a .love file, create OS X version for
     download. Returns path to create zipfile
     """
+    def relpath(path, app):
+        """Return the correct relative path for the .app"""
+        path = path.replace(os.path.join(settings.SITE_ROOT, "games"), "")
+        return path.replace("build/osx/love.app", app_name)
+
     _, output_name = tempfile.mkstemp("love")
 
     app_name = "{}.app".format(name)
@@ -51,14 +56,14 @@ def package_osx(lovefile, name, slug, version):
 
         for directory in directories:
             fullpath = os.path.join(root, directory)
-            archive_root = fullpath.replace("build/osx/love.app", app_name)
+            archive_root = relpath(fullpath, app_name)
 
             if os.path.islink(fullpath):
                 write_symlink(archive, archive_root, fullpath)
 
         for filename in files:
             fullpath = os.path.join(root, filename)
-            archive_root = fullpath.replace("build/osx/love.app", app_name)
+            archive_root = relpath(fullpath, app_name)
 
             if os.path.islink(fullpath):
                 write_symlink(archive, archive_root, fullpath)
@@ -70,6 +75,11 @@ def package_osx(lovefile, name, slug, version):
 
     archive.close()
 
+    return output_name, zip_name
+
+
+def blobify(func, lovefile, name, slug, version):
+    output_name, zip_name = func(lovefile, name, slug, version)
     blob = File(open(output_name))
     blob.name = zip_name
     return blob
@@ -99,9 +109,7 @@ def package_windows(lovefile, name, slug, version):
 
     archive.close()
 
-    blob = File(open(output_name))
-    blob.name = zip_name
-    return blob
+    return output_name, zip_name
 
 
 def inject_code(lovefile, config):
@@ -144,9 +152,12 @@ def package(release_id):
     upload = release.get_asset('uploaded')
     love = inject_code(upload.blob, config)
 
+    slug = game.slug
+    name = game.name
+
     # Create binaries
-    osx_file = package_osx(love, game.name, game.slug, release.version)
-    win_file = package_windows(love, game.name, game.slug, release.version)
+    osx_file = blobify(package_osx, love, name, slug, release.version)
+    win_file = blobify(package_windows, love, name, slug, release.version)
 
     # Upload
     release.add_asset(osx_file, tag='osx')
