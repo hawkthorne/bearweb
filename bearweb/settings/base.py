@@ -19,6 +19,8 @@ def get_env_var(var_name):
 
 # Absolute filesystem path to the Django project directory:
 
+OLARK = False
+
 DJANGO_ROOT = dirname(dirname(abspath(__file__)))
 
 # Absolute filesystem path to the top-level project folder:
@@ -125,6 +127,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.tz',
     'django.contrib.messages.context_processors.messages',
     'django.core.context_processors.request',
+    'core.context_processors.olark',
 )
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#template-loaders
@@ -241,6 +244,8 @@ LOGIN_REDIRECT_URL = '/dashboard'
 LOGIN_ERROR_URL = '/auth/error'
 
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+
+CELERY_ACCEPT_CONTENT = ['json', 'msgpack', 'yaml']
 
 #
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#wsgi-application

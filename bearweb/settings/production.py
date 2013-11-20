@@ -57,7 +57,6 @@ CACHES = {
 CONN_MAX_AGE = 600
 
 MIXPANEL_API_TOKEN = get_env_setting('MIXPANEL_API_TOKEN')
-CELERY_ALWAYS_EAGER = False
 BROKER_URL = get_env_setting('REDISCLOUD_URL')
 
 SESSION_COOKIE_SECURE = True
@@ -74,3 +73,5 @@ AWS_STORAGE_BUCKET_NAME = 'uploads.production.bearraid.com'
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#secret-key
 SECRET_KEY = get_env_setting('SECRET_KEY')
+OLARK = True
+

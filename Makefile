@@ -18,8 +18,7 @@ debug: venv
 	. venv/bin/activate; python manage.py runserver 0.0.0.0:8060
 
 serve:
-	. venv/bin/activate; gunicorn --access-logfile - --error-logfile - \
-		-k gevent -w 2 -b 0.0.0.0:8060 bearweb.wsgi
+	. venv/bin/activate; honcho start -f Procfile.dev
 
 syncdb: venv
 	. venv/bin/activate; python manage.py syncdb
