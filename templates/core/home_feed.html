@@ -4,35 +4,31 @@
 
 <div class="row">
   <div class="col-sm-12">
-      <h1><a href="{% url 'home' %}">{{ user.username }}</a></h1>
+    <h1><a href="{% url 'home' %}">{{ user.username }}</a></h1>
   </div>
 </div>
 
 <div class="row">
-  <div class="col-sm-4 col-md-push-8">
-    <h3>Your Games</h3>
-    <ul class="repositories shelf">
+  <div class="col-sm-12">
+    <h3>Games</h3>
+    <div class="row">
       {% for game in games %}
-      <li>
-        <a href="{% url 'games.view' game.slug %}">{{ game.name }}</a>
-      </li>
+      <div class="col-sm-6">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title"><a href="{% url 'games:view' game.pk %}">{{ game.name }}</a></h3>
+          </div>
+          <div class="panel-body">
+            Panel content
+          </div>
+        </div>
+      </div>
       {% empty %}
-      <li>You don't have any games yet! Follow the steps below to get started.
-      <a class="btn btn-primary" href="{% url 'games:create' %}">Create a game</a></li>
+      <p>You don't have any games yet! Follow the steps below to get started.
+        <a class="btn btn-primary" href="{% url 'games:create' %}">Create a game</a>
+      </p>
       {% endfor %}
-    </ul>
-  </div>
-
-  <div class="col-sm-8 col-md-pull-4">
-    <h3>Getting Started with StackMachine</h3>
-    <h4>Authenticate via the Docker command line</h4>
-    <div id="dockercfg">
-      {{ dockercfg|safe }}
     </div>
-    <h4>Tag an image into a repository</h4>
-    {{ docker_tag|safe }}
-    <h4>Push your repository to StackMachine</h4>
-    {{ docker_push|safe }}
   </div>
 </div>
 {% endblock %}

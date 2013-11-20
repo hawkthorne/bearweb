@@ -6,7 +6,7 @@ from django.contrib import admin
 admin.autodiscover()
 
 from core.views import ContactView, PortalView, PricingView
-from core.views import HomeView
+from core.views import Dashboard
 from core.views import UpgradeView, UpgradePayView, ChangePlanView
 from blog.views import ArticleView
 
@@ -23,7 +23,8 @@ urlpatterns = patterns(
         {'next_page': '/'}),
     url(r'^games/', include('games.urls', namespace='games')),
     url(r'^accounts/', include('registration.backends.simple.urls')),
-    url(r'^$', HomeView.as_view(), name='home'),
+    url(r'^$', template("core/index.html"), name='home'),
+    url(r'^dashboard$', Dashboard.as_view(), name='dashboard'),
     url(r'^robots.txt$', TemplateView.as_view(template_name='core/robots.txt',
                                               content_type='text/plain')),
     url(r'^pricing$', PricingView.as_view(), name='pricing'),

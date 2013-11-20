@@ -28,7 +28,7 @@
             <li><a href="{% url 'admin:index' %}">Admin</a></li>
             {% endif %}
             {% if user.is_authenticated %}
-            <li class="{% active 'account_portal' %}"><a href="{% url 'portal' %}">Account</a></li>
+            <li class="{% active 'portal' %}"><a href="{% url 'portal' %}">Account</a></li>
             <li><a href="{% url 'auth_logout' %}">Sign Out</a></li>
             {% else %}
             <li class="signin {% active 'auth_login' %}"><a href="{% url 'auth_login' %}">Sign In</a></li>

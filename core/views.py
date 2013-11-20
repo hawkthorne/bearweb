@@ -16,6 +16,7 @@ from pygments.formatters import HtmlFormatter
 
 from .forms import ContactForm
 from core import tasks
+from games.models import Game
 
 import stripe
 
@@ -62,15 +63,13 @@ class LoginRequiredMixpanel(LoginRequiredMixin):
         return view
 
 
-class HomeView(TemplateView):
+class Dashboard(LoginRequiredMixin, TemplateView):
+    template_name = 'core/home_feed.html'
 
-    def get(self, request, *args, **kwargs):
-        if request.user.is_authenticated():
-            self.template_name = 'core/home_feed.html'
-        else:
-            self.template_name = 'core/index.html'
-        response = super(HomeView, self).get(request, *args, **kwargs)
-        return response.render()
+    def get_context_data(self, **kwargs):
+        context = super(Dashboard, self).get_context_data(**kwargs)
+        context['games'] = Game.objects.filter(owner=self.request.user)
+        return context
 
 
 class ContactView(FormView):

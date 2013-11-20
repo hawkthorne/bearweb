@@ -1,12 +1,30 @@
+from django.core.urlresolvers import reverse
 from django.db import models
 from django.conf import settings
+
+
+class Framework(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+    name = models.CharField(max_length=128)
+
+    def __unicode__(self):
+        return self.name
 
 
 class Game(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL)
-    name = models.TextField()
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL)
+    name = models.CharField(max_length=128)
+    slug = models.SlugField(max_length=128, db_index=True)
+    framework = models.ForeignKey(Framework)
+
+    def get_absolute_url(self):
+        return reverse("games:view", pk=self.pk)
+
+    class Meta:
+        unique_together = ("owner", "slug")
 
 
 class Release(models.Model):

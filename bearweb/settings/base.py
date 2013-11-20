@@ -237,7 +237,7 @@ STRIPE_PUBLISHABLE_KEY = get_env_var('STRIPE_PUBLISHABLE_KEY')
 STRIPE_SECRET_KEY = get_env_var('STRIPE_SECRET_KEY')
 
 LOGIN_URL = '/accounts/login'
-LOGIN_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = '/dashboard'
 LOGIN_ERROR_URL = '/auth/error'
 
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
