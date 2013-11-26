@@ -20,6 +20,7 @@ urlpatterns = patterns(
     url(r'^accounts/logout/$', 'django.contrib.auth.views.logout',
         {'next_page': '/'}),
     url(r'^games/', include('games.urls', namespace='games')),
+    url(r'^api/', include('games.api_urls', namespace='api')),
     url(r'^accounts/', include('registration.backends.simple.urls')),
     url(r'^$', template("core/index.html"), name='home'),
     url(r'^dashboard$', Dashboard.as_view(), name='dashboard'),

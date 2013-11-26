@@ -17,4 +17,6 @@ DATABASES = {
     },
 }
 
+HOSTNAME = 'example.com'
+
 CELERY_ALWAYS_EAGER = True

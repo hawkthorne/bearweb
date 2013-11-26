@@ -10,9 +10,8 @@ from django.core.files import File
 from .models import Release
 
 
-def game_config(name, version):
-    # FIXME: Use Django Settings for correct urls
-    base_url = "http://api.example.com/{}".format(name)
+def game_config(pk, version):
+    base_url = "http://{}/api/games/{}".format(settings.HOSTNAME, pk)
     return json.dumps({
         "version": version,
         "links": {
@@ -36,15 +35,16 @@ def write_symlink(archive, root, path):
     archive.writestr(zip_info, os.readlink(path))
 
 
+def relpath(path, app):
+    """Return the correct relative path for the .app"""
+    path = path.replace(os.path.join(settings.SITE_ROOT, "games/"), "")
+    return path.replace("build/osx/love.app", app)
+
+
 def package_osx(lovefile, name, slug, version):
     """Given a path to a .love file, create OS X version for
     download. Returns path to create zipfile
     """
-    def relpath(path, app):
-        """Return the correct relative path for the .app"""
-        path = path.replace(os.path.join(settings.SITE_ROOT, "games"), "")
-        return path.replace("build/osx/love.app", app_name)
-
     _, output_name = tempfile.mkstemp("love")
 
     app_name = "{}.app".format(name)
@@ -146,7 +146,7 @@ def package(release_id):
     release = Release.objects.get(pk=release_id)
     game = release.game
 
-    config = game_config(game.slug, release.version)
+    config = game_config(game.pk, release.version)
 
     # Add new code
     upload = release.get_asset('uploaded')

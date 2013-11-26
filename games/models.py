@@ -22,6 +22,17 @@ class Game(models.Model):
     slug = models.SlugField(max_length=128, db_index=True)
     framework = models.ForeignKey(Framework)
 
+    def appcast(self):
+        items = []
+
+        for release in self.release_set.order_by('-created'):
+            items.append(release.appcast())
+
+        return {
+            'description': 'Eventually put game description here',
+            'items': items,
+        }
+
     def get_absolute_url(self):
         return reverse("games:view", pk=self.pk)
 
@@ -61,7 +72,7 @@ class Release(models.Model):
         if asset is None:
             return ""
 
-        return asset.blob.url
+        return asset.blob.url.replace("https://", "http://")
 
     # FIXME: Reduntant?
     def osx_url(self):
@@ -70,7 +81,28 @@ class Release(models.Model):
         if asset is None:
             return ""
 
-        return asset.blob.url
+        return asset.blob.url.replace("https://", "http://")
+
+    def appcast(self):
+        asset = self.get_asset('osx')
+
+        if asset is None:
+            return {'platforms': []}
+
+        return {
+            'changelog': '',
+            'platforms': [{
+                'name': 'macosx',
+                'arch': 'universal',
+                'files': [{
+                    'url': asset.blob.url.replace("https://", "http://"),
+                    'length': asset.blob.size,
+                }],
+            }],
+            'published': '',
+            'title': '{} | Version {}'.format(self.game.name, self.version),
+            'version': self.version,
+        }
 
     def get_asset(self, tag):
         # FIXME: This will fail if there are other uploaded files

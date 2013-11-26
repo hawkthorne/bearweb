@@ -25,3 +25,4 @@ tests/production-vars
 tests/local-vars
 test.love
 media
+*.rdb

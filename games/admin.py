@@ -16,7 +16,7 @@ class ReleaseAdmin(admin.ModelAdmin):
 
 
 class AssetAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['__unicode__', 'release']
 
 
 admin.site.register(Game, GameAdmin)

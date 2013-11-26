@@ -40,7 +40,7 @@ class ReleaseList(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         self.game = get_game(self.request, self.kwargs['pk'])
-        return Release.objects.filter(game=self.game)
+        return Release.objects.filter(game=self.game).order_by('-created')
 
     def get_context_data(self, **kwargs):
         context = super(ReleaseList, self).get_context_data(**kwargs)

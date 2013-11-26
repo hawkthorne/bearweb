@@ -29,6 +29,16 @@ end
 
 -- no op
 function osx.cleanup()
+  for _, filename in ipairs(love.filesystem.enumerate("updates")) do
+    if filename == "oldgame.app" then
+      love.timer.sleep(2)
+    end
+  end
+
+  local destination = love.filesystem.getSaveDirectory() .. "/updates"
+
+  execute(string.format("rm -rf \"%s\"", destination),
+          string.format("Error removing \"%s\"", destination))
 end
 
 function osx.getDownload(item)
@@ -48,20 +58,6 @@ function osx.replace(download, oldpath, callback)
   local item = download.files[1]
 
   urllib.retrieve(item.url, zipfile, item.length, callback)
-
-  callback(false, "Installing", 1)
-
-  for _, filename in ipairs(love.filesystem.enumerate("updates")) do
-    if utils.endswith(filename, ".app") then
-
-      if filename == "oldgame.app" then
-        love.timer.sleep(2)
-      end
-
-      execute(string.format("rm -rf \"%s/%s\"", destination, filename),
-              string.format("Error removing \"%s/%s\"", destination, filename))
-    end
-  end
 
   callback(false, "Installing", 25)
 

@@ -20,8 +20,20 @@
         {% for release in object_list %}
         <tr>
           <td>{{ release.version }}</td>
-          <td><a href="{{ release.windows_url }}">Download</a></td>
-          <td><a href="{{ release.osx_url }}">Download</a></td>
+          <td>
+            {% if release.windows_url %}
+            <a href="{{ release.windows_url }}">Download</a></td>
+            {% else %}
+            <span>Processing...</span>
+            {% endif %}
+          </td>
+          <td>
+            {% if release.osx_url %}
+            <a href="{{ release.osx_url }}">Download</a></td>
+            {% else %}
+            <span>Processing...</span>
+            {% endif %}
+          </td>
         </tr>
         {% endfor %}
       </tbody>

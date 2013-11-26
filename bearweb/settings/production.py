@@ -71,6 +71,9 @@ AWS_ACCESS_KEY_ID = get_env_var('AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = get_env_var('AWS_SECRET_ACCESS_KEY')
 AWS_STORAGE_BUCKET_NAME = 'uploads.production.bearraid.com'
 
+# FIXME
+HOSTNAME = 'example.com'
+
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#secret-key
 SECRET_KEY = get_env_setting('SECRET_KEY')
 OLARK = True

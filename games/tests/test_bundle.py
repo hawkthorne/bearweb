@@ -6,6 +6,7 @@ import shutil
 from django.test import TestCase
 from django.core.files import File
 from django.contrib.auth.models import User
+from django.conf import settings
 
 from games.models import Game, Framework
 from games import bundle
@@ -17,6 +18,16 @@ def simple_love():
     love.writestr('main.lua', contents)
     love.close()
     return File(open('test.love'))
+
+
+class BundleTests(TestCase):
+
+    def test_relpath(self):
+        path = os.path.join(settings.SITE_ROOT, "games", "build",
+                            "osx", "love.app", "Contents")
+
+        newpath = bundle.relpath(path, "foo.app")
+        self.assertEquals("foo.app/Contents", newpath)
 
 
 class GamesModelTests(TestCase):

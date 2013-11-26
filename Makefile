@@ -15,7 +15,7 @@ install: venv
 	. venv/bin/activate; pip install -r requirements/test.txt
 
 debug: venv
-	. venv/bin/activate; python manage.py runserver 0.0.0.0:8060
+	. venv/bin/activate; python manage.py runserver
 
 serve:
 	. venv/bin/activate; honcho start -f Procfile.dev
