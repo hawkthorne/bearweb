@@ -1,5 +1,6 @@
 local sparkle = require 'sparkle'
 local reporter = require 'sparkle/reporter'
+local tasks = require 'sparkle/tasks'
 local config = require 'sparkle/config'
 
 function love.errhand(msg)
@@ -15,6 +16,7 @@ local updater = nil
 local logo = nil
 local message = ""
 local time = 0
+local updaterok = false
 local progress = -1
 local loaded = false
 
@@ -33,6 +35,8 @@ function love.load(arg)
     return
   end
 
+  tasks.track('Game Open')
+
   cmdargs = arg
   message = ""
   time = 0
@@ -48,7 +52,9 @@ function love.update(dt)
   time = time + dt
 
   if updater and not updater:done() then
-    local msg, percent = updater:progress()
+    local msg, percent, ok = updater:progress()
+
+    updaterok = ok
 
     if msg ~= "" then
       message = msg
@@ -78,8 +84,12 @@ function love.draw()
 
   if progress >= 0 then
     love.graphics.setColor(255, 255, 255)
-    love.graphics.rectangle("line", 40, height - 75, width - 80, 10)
-    love.graphics.rectangle("fill", 40, height - 75,  (width - 80) * progress / 100, 10)
+
+    if updaterok then
+      love.graphics.rectangle("line", 40, height - 75, width - 80, 10)
+      love.graphics.rectangle("fill", 40, height - 75,  (width - 80) * progress / 100, 10)
+    end
+
     love.graphics.printf(message, 40, height - 55, width - 80, 'center')
   end
 end

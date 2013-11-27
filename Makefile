@@ -60,6 +60,9 @@ test: fmt
 	. venv/bin/activate; \
 		coverage run manage.py test --settings=bearweb.settings.test
 
+love:
+	games/build/osx/love.app/Contents/MacOS/love games/build
+
 
 # Don't run the tests that take a long time
 check: fmt

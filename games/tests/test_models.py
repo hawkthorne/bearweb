@@ -14,24 +14,24 @@ class GamesModelTests(TestCase):
     def test_game_first_release(self):
         game = Game.objects.create(owner=self.user, framework=self.other,
                                    name="Foo", slug="foo")
-        self.assertEquals("1.0.0", game.next_version())
+        self.assertEquals("0.1.0", game.next_version())
 
     def test_game_next_release(self):
         game = Game.objects.create(owner=self.user, framework=self.other,
                                    name="Foo", slug="foo")
-        game.release_set.create(version="1.0.0")
-        game.release_set.create(version="2.0.0")
+        game.release_set.create(version="0.1.0")
+        game.release_set.create(version="0.2.0")
 
-        self.assertEquals("3.0.0", game.next_version())
+        self.assertEquals("0.3.0", game.next_version())
 
     def test_release_add_asset(self):
         game = Game.objects.create(owner=self.user, framework=self.other,
                                    name="Foo", slug="foo")
-        release = game.release_set.create(version='1.0.0')
+        release = game.release_set.create(version='0.1.0')
 
         blob = ContentFile('foo')
         blob.name = 'foo.txt'
 
         asset = release.add_asset(blob)
 
-        self.assertTrue(asset.blob.url.startswith("/media/foo/1.0.0/"))
+        self.assertTrue(asset.blob.url.startswith("/media/foo/0.1.0/"))

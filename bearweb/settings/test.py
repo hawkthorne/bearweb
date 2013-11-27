@@ -17,6 +17,6 @@ DATABASES = {
     },
 }
 
-HOSTNAME = 'example.com'
+HOSTNAME = 'localhost:8000'
 
 CELERY_ALWAYS_EAGER = True

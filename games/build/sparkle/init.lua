@@ -42,9 +42,10 @@ end
 function Updater:progress()
   if not self.thread then
     self.logger:info("Waiting to start")
-    return "Waiting to start", 0
+    return "Waiting to start", -1
   end
 
+  local ok = true
   local percent = self.thread:get('percent') or 0
   local status = self.thread:get('message')
   local finished = self.thread:get('finished') or false
@@ -64,18 +65,18 @@ function Updater:progress()
   end
 
   if err ~= nil then
-    return err, percent
+    return err, percent, false
   end
 
   if status ~= nil then
-    return status, percent
+    return status, percent, ok
   end
 
   if self:done() then
-    return "Finished updating", 100
+    return "Finished updating", 100, ok
   end
 
-  return "", 0
+  return "", 0, ok
 end
 
 local sparkle = {}

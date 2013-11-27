@@ -128,8 +128,9 @@ def inject_code(lovefile, config):
 
     # Add code
     for script in os.listdir(p("build/sparkle")):
-        archive.write(p(os.path.join("build", "sparkle", script)),
-                      os.path.join("sparkle", script))
+        if script.endswith(".lua"):
+            archive.write(p(os.path.join("build", "sparkle", script)),
+                          os.path.join("sparkle", script))
 
     # Add new main.lua
     archive.writestr("main.lua", render_to_string('games/main.lua'))

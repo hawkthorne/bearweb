@@ -37,17 +37,17 @@ class Game(models.Model):
         return reverse("games:view", pk=self.pk)
 
     def next_version(self):
-        """If the game has no releases, return 1.0.0. If the game does have a
-        release, return the next major version.
+        """If the game has no releases, return 0.1.0. If the game does have a
+        release, return the next minor version.
         """
         try:
             release = self.release_set.order_by('-created')[0]
         except IndexError:
-            return "1.0.0"
+            return "0.1.0"
 
         major, minor, bugfix = release.version.split(".")
 
-        return "{}.{}.{}".format(int(major) + 1, minor, bugfix)
+        return "{}.{}.{}".format(major, int(minor) + 1, bugfix)
 
     class Meta:
         unique_together = ("owner", "slug")
@@ -136,7 +136,7 @@ class CrashReport(models.Model):
     updated = models.DateTimeField(auto_now=True)
     game = models.ForeignKey(Game)
     traceback = models.TextField()
-    # Think about using json for this
-    # distinct_id = models.CharField()
-    # version = models.CharField()
-    # os = models.CharField()
+    # Eventually switch to hstore
+    distinct_id = models.CharField(max_length=24, default='')
+    version = models.CharField(max_length=14, default='')
+    os = models.CharField(max_length=14, default='')

@@ -1,5 +1,6 @@
 local json = require 'sparkle/json'
-local api = require 'sparkle/api'
+local tasks = require 'sparkle/tasks'
+local config = require 'sparkle/config'
 local module = {}
 
 -- Given a stack message, return a JSON-encoded string
@@ -9,7 +10,7 @@ function module.create_report(msg)
     ['tags'] = {
       ['release'] = love._release or false,
       ['os'] = love._os,
-      ['version'] = '0.0.0',
+      ['version'] = config.version,
     },
   })
 end
@@ -21,13 +22,14 @@ function module.report_local(payload)
   return crashpath
 end
 
-function module.report_remote(payload)
+function module.report_remote(msg)
+  tasks.report(msg)
 end
 
 function module.send_report(msg)
   local payload = module.create_report(msg)
   local path = module.report_local(payload)
-  local success = module.report_remote(payload)
+  local success = module.report_remote(msg)
   return path
 end
 
