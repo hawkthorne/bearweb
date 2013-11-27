@@ -248,6 +248,9 @@ SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_ACCEPT_CONTENT = ['json', 'msgpack', 'yaml']
 
+KEEN_PROJECT_ID = get_env_var('KEEN_PROJECT_ID')
+KEEN_READ_KEY = get_env_var('KEEN_READ_KEY')
+
 #
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#wsgi-application
 WSGI_APPLICATION = '%s.wsgi.application' % SITE_NAME

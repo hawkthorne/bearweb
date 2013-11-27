@@ -69,6 +69,11 @@ class FieldMarshalTest(TestCase):
         self.assertEquals(fieldmarshal.dumps(c),
                           json.dumps({"id": "foo"}))
 
+    def test_dumpd(self):
+        c = Foo(id=u"foo")
+        self.assertEquals(fieldmarshal.dumpd(c),
+                          {u"id": u"foo"})
+
     def test_zero_value_string(self):
         c = Foo()
         self.assertEquals(c.id, "")

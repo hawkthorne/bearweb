@@ -4,10 +4,11 @@ from django.template.defaultfilters import slugify
 from django.shortcuts import get_object_or_404
 from django.views.generic import DetailView, ListView
 from django.views.generic.edit import CreateView, FormView
+from django.conf import settings
 
 from braces.views import LoginRequiredMixin
 
-from .models import Game, Release
+from .models import Game, Release, CrashReport
 from .forms import LoveForm
 
 from games import tasks
@@ -32,6 +33,22 @@ class GameDetail(LoginRequiredMixin, DetailView):
         if context['game'].owner != self.request.user:
             raise Http404
 
+        context['KEEN_PROJECT_ID'] = settings.KEEN_PROJECT_ID
+        context['KEEN_READ_KEY'] = settings.KEEN_READ_KEY
+
+        return context
+
+
+class ReportList(LoginRequiredMixin, ListView):
+    model = CrashReport
+
+    def get_queryset(self):
+        self.game = get_game(self.request, self.kwargs['pk'])
+        return CrashReport.objects.filter(game=self.game).order_by('-created')
+
+    def get_context_data(self, **kwargs):
+        context = super(ReportList, self).get_context_data(**kwargs)
+        context['game'] = self.game
         return context
 
 

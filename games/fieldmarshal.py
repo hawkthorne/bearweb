@@ -1,6 +1,7 @@
 import inspect
 import StringIO
 import json
+import copy
 
 
 def _get_user_attributes(cls):
@@ -129,6 +130,11 @@ class Struct(object):
 
 def dump(obj, file_object):
     file_object.write(dumps(obj))
+
+
+def dumpd(obj):
+    """Dump a struct as a Python dictionary"""
+    return copy.deepcopy(obj.__dict__)
 
 
 def dumps(obj):

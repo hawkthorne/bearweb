@@ -1,0 +1,36 @@
+
+{% extends "base.html" %}
+
+{% load core_extras %}
+
+{% block title %}Releases | {{ game.name }}{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col-sm-12">
+    {% include "games/gamebar.html" %}
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Traceback</th>
+          <th>Date</th>
+          <th>Version</th>
+          <th>OS</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for report in object_list %}
+        <tr>
+          <td><pre>{{ report.traceback }}</pre></td>
+          <td>{{ report.created }}</td>
+          <td>{{ report.version }}</td>
+          <td>{{ report.os }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
+
+

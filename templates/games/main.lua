@@ -35,7 +35,7 @@ function love.load(arg)
     return
   end
 
-  tasks.track('Game Open')
+  tasks.track('opens')
 
   cmdargs = arg
   message = ""

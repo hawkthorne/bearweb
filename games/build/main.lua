@@ -13,9 +13,7 @@ end
 function love.load(arg)
   local logger = logging.new('foo')
   logger:info("Successly started")
-  tasks.track('Foo Bar')
-  local a = {}
-  local b = a.b.c
+  tasks.track('opens')
 end
 
 function love.update(dt)

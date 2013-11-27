@@ -25,14 +25,16 @@ function tasks.report(message, data)
   local request = {
     ["url"] = config.links.errors,
     ["payload"] = {
-      ["errors"] = {["message"] = msg, ["tags"] = data}
+      ["errors"] = {
+        {["message"] = msg, ["tags"] = data},
+      }
     }
   }
 
   thread:set('request', json.encode(request))
 end
 
-function tasks.track(payload, data)
+function tasks.track(event, data)
   if thread == nil then
     thread = love.thread.newThread("tasks", "sparkle/task_thread.lua")
     thread:start()

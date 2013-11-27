@@ -72,7 +72,7 @@ function module.log(msg)
   love.graphics.clear()
 
   local trace = debug.traceback()
-  local p = stackmessage(msg, trace, '0.0.0')
+  local p = stackmessage(msg, trace, config.version)
 
   local path = module.send_report(p)
   local savedir = love.filesystem.getSaveDirectory()

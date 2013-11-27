@@ -1,6 +1,7 @@
 from django.conf.urls import patterns, url
 
 from .views import GameCreate, GameDetail, ReleaseList, ReleaseCreate
+from .views import ReportList
 
 urlpatterns = patterns(
     '',
@@ -10,5 +11,5 @@ urlpatterns = patterns(
     url(r'^(?P<pk>\d+)/releases$', ReleaseList.as_view(), name='releases'),
     url(r'^(?P<pk>\d+)/releases/new$', ReleaseCreate.as_view(),
         name='newrelease'),
-    url(r'^(?P<pk>\d+)/crashes$', GameDetail.as_view(), name='crashes'),
+    url(r'^(?P<pk>\d+)/crashes$', ReportList.as_view(), name='crashes'),
 )
