@@ -28,7 +28,6 @@ local function reset()
 
   updater = nil
   logo = nil
-  love.graphics.clear()
 end
 
 function love.load(arg)

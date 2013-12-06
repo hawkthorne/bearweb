@@ -21,7 +21,7 @@
           </div>
         </div>
         <input id="id_lovefile" class=" form-control" type="file" name="lovefile">
-        <input type="hidden" id="id_next" value="{% url 'games:releases' game.pk %}">
+        <input type="hidden" id="id_next" value="{% url 'games:releases' game.uuid %}">
       </div>
     </form>
   </div>

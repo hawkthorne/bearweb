@@ -146,7 +146,7 @@ def package(release_id):
     release = Release.objects.get(pk=release_id)
     game = release.game
 
-    config = game_config(game.pk, release.version)
+    config = game_config(game.uuid, release.version)
 
     # Add new code
     upload = release.get_asset('uploaded')

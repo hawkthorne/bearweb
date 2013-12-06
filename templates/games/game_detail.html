@@ -30,7 +30,7 @@
         interval: "daily"
     });
 
-    unique.addFilter("game_id", "eq", {{game.pk}});
+    unique.addFilter("game_uuid", "eq", {{game.uuid}});
 
     unique.draw(document.getElementById("unique-game-opens"), {
         title: "Unique game opens per day for last 7 Days",
@@ -43,7 +43,7 @@
         interval: "daily"
     });
 
-    total.addFilter("game_id", "eq", {{game.pk}});
+    total.addFilter("game_uuid", "eq", {{game.uuid}});
 
     total.draw(document.getElementById("total-game-opens"), {
         title: "Total game opens per day for last 7 Days",

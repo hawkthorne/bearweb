@@ -14,8 +14,8 @@ from .forms import LoveForm
 from games import tasks
 
 
-def get_game(request, pk):
-    game = get_object_or_404(Game, pk=pk)
+def get_game(request, uuid):
+    game = get_object_or_404(Game, uuid=uuid)
 
     if game.owner != request.user:
         raise Http404
@@ -23,7 +23,12 @@ def get_game(request, pk):
     return game
 
 
-class GameDetail(LoginRequiredMixin, DetailView):
+class UUIDMixin(object):
+    slug_field = 'uuid'
+    slug_url_kwarg = 'uuid'
+
+
+class GameDetail(UUIDMixin, LoginRequiredMixin, DetailView):
     model = Game
     context_object_name = 'game'
 
@@ -43,7 +48,7 @@ class ReportList(LoginRequiredMixin, ListView):
     model = CrashReport
 
     def get_queryset(self):
-        self.game = get_game(self.request, self.kwargs['pk'])
+        self.game = get_game(self.request, self.kwargs['uuid'])
         return CrashReport.objects.filter(game=self.game).order_by('-created')
 
     def get_context_data(self, **kwargs):
@@ -56,7 +61,7 @@ class ReleaseList(LoginRequiredMixin, ListView):
     model = Release
 
     def get_queryset(self):
-        self.game = get_game(self.request, self.kwargs['pk'])
+        self.game = get_game(self.request, self.kwargs['uuid'])
         return Release.objects.filter(game=self.game).order_by('-created')
 
     def get_context_data(self, **kwargs):
@@ -70,15 +75,15 @@ class ReleaseCreate(LoginRequiredMixin, FormView):
     form_class = LoveForm
 
     def get_success_url(self):
-        return reverse('games:releases', kwargs={'pk': self.kwargs['pk']})
+        return reverse('games:releases', kwargs={'uuid': self.kwargs['uuid']})
 
     def get_context_data(self, **kwargs):
         context = super(ReleaseCreate, self).get_context_data(**kwargs)
-        context['game'] = get_game(self.request, self.kwargs['pk'])
+        context['game'] = get_game(self.request, self.kwargs['uuid'])
         return context
 
     def form_valid(self, form):
-        game = get_game(self.request, self.kwargs['pk'])
+        game = get_game(self.request, self.kwargs['uuid'])
 
         # Get the latest release for the game, and increment the version
         version = game.next_version()

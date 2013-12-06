@@ -62,9 +62,9 @@ def allowed(*args):
 
 @allowed('GET', 'POST')
 @csrf_exempt
-def metrics(request, game_pk):
+def metrics(request, game_uuid):
     try:
-        game = Game.objects.get(pk=game_pk)
+        game = Game.objects.get(uuid=game_uuid)
     except Game.DoesNotExist:
         return api_error('Requested game does not exist', code=404)
     except Game.MultipleObjectsReturned:
@@ -81,7 +81,7 @@ def metrics(request, game_pk):
         if metric.event not in events:
             events[metric.event] = []
 
-        metric.properties['game_id'] = game.pk
+        metric.properties['game_uuid'] = game.uuid
         events[metric.event].append(metric.properties)
 
     print events
@@ -94,9 +94,9 @@ def metrics(request, game_pk):
 
 @allowed('GET', 'POST')
 @csrf_exempt
-def errors(request, game_pk):
+def errors(request, game_uuid):
     try:
-        game = Game.objects.get(pk=game_pk)
+        game = Game.objects.get(uuid=game_uuid)
     except Game.DoesNotExist:
         return api_error('Requested game does not exist', code=404)
     except Game.MultipleObjectsReturned:
@@ -111,7 +111,7 @@ def errors(request, game_pk):
 
     for report in container.errors:
         data = fieldmarshal.dumpd(report.tags)
-        data['game_id'] = game.pk
+        data['game_uuid'] = game.uuid
         crashes.append(data)
 
     keen.add_events({
@@ -130,9 +130,9 @@ def errors(request, game_pk):
 
 @allowed('GET')
 @csrf_exempt
-def appcast(request, game_pk):
+def appcast(request, game_uuid):
     try:
-        game = Game.objects.get(pk=game_pk)
+        game = Game.objects.get(uuid=game_uuid)
     except Game.DoesNotExist:
         return api_error('Requested game does not exist', code=404)
     except Game.MultipleObjectsReturned:

@@ -4,7 +4,7 @@ from .api import metrics, errors, appcast
 
 urlpatterns = patterns(
     '',
-    url(r'^games/(\d+)/metrics$', metrics),
-    url(r'^games/(\d+)/errors$', errors),
-    url(r'^games/(\d+)/appcast$', appcast),
+    url(r'^games/([0-9a-f]{24})/metrics$', metrics),
+    url(r'^games/([0-9a-f]{24})/errors$', errors),
+    url(r'^games/([0-9a-f]{24})/appcast$', appcast),
 )

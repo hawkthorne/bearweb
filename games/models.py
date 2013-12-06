@@ -1,15 +1,14 @@
+import binascii
 import os
 
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.conf import settings
 
-import base58
 
-
-def youtube_id():
+def tubeid():
     """Return an 11 character identifier. Does not guaruntee uniqueness"""
-    return base58.encode(os.urandom(11))
+    return binascii.hexlify(os.urandom(12))
 
 
 class Framework(models.Model):
@@ -27,12 +26,12 @@ class Game(models.Model):
     owner = models.ForeignKey(settings.AUTH_USER_MODEL)
     name = models.CharField(max_length=128)
     slug = models.SlugField(max_length=128)
-    uuid = models.CharField(max_length=15, db_index=True, unique=True)
+    uuid = models.CharField(max_length=24, db_index=True, unique=True)
     framework = models.ForeignKey(Framework)
 
     def save(self, *args, **kwargs):
         if not self.uuid:
-            self.uuid = youtube_id()
+            self.uuid = tubeid()
         super(Game, self).save(*args, **kwargs)
 
     def appcast(self):
@@ -47,7 +46,7 @@ class Game(models.Model):
         }
 
     def get_absolute_url(self):
-        return reverse("games:view", kwargs={"pk": self.pk})
+        return reverse("games:view", kwargs={"uuid": self.uuid})
 
     def next_version(self):
         """If the game has no releases, return 0.1.0. If the game does have a
@@ -71,11 +70,11 @@ class Release(models.Model):
     updated = models.DateTimeField(auto_now=True)
     game = models.ForeignKey(Game)
     version = models.CharField(max_length=14)
-    uuid = models.CharField(max_length=15, db_index=True, unique=True)
+    uuid = models.CharField(max_length=24, db_index=True, unique=True)
 
     def save(self, *args, **kwargs):
         if not self.uuid:
-            self.uuid = youtube_id()
+            self.uuid = tubeid()
         super(Release, self).save(*args, **kwargs)
 
     class Meta:
@@ -135,7 +134,7 @@ class Release(models.Model):
 
 
 def asset_path(asset, filename):
-    return os.path.join(asset.release.game.slug,
+    return os.path.join(asset.release.game.uuid,
                         asset.release.version, filename)
 
 
@@ -159,9 +158,9 @@ class CrashReport(models.Model):
     distinct_id = models.CharField(max_length=24, default='')
     version = models.CharField(max_length=14, default='')
     os = models.CharField(max_length=14, default='')
-    uuid = models.CharField(max_length=15, db_index=True, unique=True)
+    uuid = models.CharField(max_length=24, db_index=True, unique=True)
 
     def save(self, *args, **kwargs):
         if not self.uuid:
-            self.uuid = youtube_id()
+            self.uuid = tubeid()
         super(CrashReport, self).save(*args, **kwargs)
