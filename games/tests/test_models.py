@@ -11,6 +11,11 @@ class GamesModelTests(TestCase):
         self.user = User.objects.create_user("foo", "bar@example.com", "pass")
         self.other = Framework.objects.create(name="Other")
 
+    def test_get_url(self):
+        game = Game.objects.create(owner=self.user, framework=self.other,
+                                   name="Foo", slug="foo")
+        self.assertTrue(game.get_absolute_url() != "")
+
     def test_game_first_release(self):
         game = Game.objects.create(owner=self.user, framework=self.other,
                                    name="Foo", slug="foo")

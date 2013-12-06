@@ -13,6 +13,7 @@ end
 
 local cmdargs = {}
 local updater = nil
+local downloading = false
 local logo = nil
 local message = ""
 local time = 0
@@ -27,7 +28,7 @@ local function reset()
 
   updater = nil
   logo = nil
-  love.graphics.setColor(255, 255, 255, 255)
+  love.graphics.clear()
 end
 
 function love.load(arg)
@@ -54,11 +55,13 @@ function love.update(dt)
   if updater and not updater:done() then
     local msg, percent, ok = updater:progress()
 
-    updaterok = ok
-
     if msg ~= "" then
       message = msg
       progress = (percent or 1) % 100
+    end
+
+    if msg == "Downloading" then
+      downloading = true
     end
 
     return
@@ -82,14 +85,10 @@ function love.draw()
                        height / 2 - logo:getHeight() / 2)
   end
 
-  if progress >= 0 then
+  if downloading then
     love.graphics.setColor(255, 255, 255)
-
-    if updaterok then
-      love.graphics.rectangle("line", 40, height - 75, width - 80, 10)
-      love.graphics.rectangle("fill", 40, height - 75,  (width - 80) * progress / 100, 10)
-    end
-
+    love.graphics.rectangle("line", 40, height - 75, width - 80, 10)
+    love.graphics.rectangle("fill", 40, height - 75,  (width - 80) * progress / 100, 10)
     love.graphics.printf(message, 40, height - 55, width - 80, 'center')
   end
 end

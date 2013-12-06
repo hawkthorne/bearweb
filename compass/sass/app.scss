@@ -456,9 +456,13 @@ ul.top-bar-links li {
 
 #drop .message {
   text-align: center;
-  height: 46px;
-  line-height: 46px;
   margin: 10px;
+  font-size: 18px;
+}
+
+#drop .message a {
+  color: rgb(51, 51, 51);
+  font-weight: bold;
   font-size: 18px;
 }
 

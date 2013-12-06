@@ -42,7 +42,7 @@ end
 function Updater:progress()
   if not self.thread then
     self.logger:info("Waiting to start")
-    return "Waiting to start", -1
+    return "Waiting to start", 0
   end
 
   local ok = true
@@ -170,7 +170,7 @@ function sparkle.update(version, url, callback)
   local item = sparkle.findItem(version, appcast)
 
   if item == nil then
-    pcall(callback, true, "Current version is up to date", 100)
+    --pcall(callback, true, "Current version is up to date", 100)
     return
   end
 

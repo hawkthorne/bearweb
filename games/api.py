@@ -80,7 +80,7 @@ def metrics(request, game_pk):
     for metric in container.metrics:
         if metric.event not in events:
             events[metric.event] = []
-        
+
         metric.properties['game_id'] = game.pk
         events[metric.event].append(metric.properties)
 

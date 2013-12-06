@@ -39,7 +39,10 @@ collect: venv
 
 autoschema: venv
 	. venv/bin/activate; python manage.py schemamigration --auto games
-			
+
+flush: venv
+	. venv/bin/activate; python manage.py flush
+				
 deploy: test
 	git push origin master
 	git push heroku master
@@ -63,6 +66,10 @@ test: fmt
 love:
 	games/build/osx/love.app/Contents/MacOS/love games/build
 
+
+pipeline: test
+	cd media/foo/0.1.0 && unzip -qq foo-osx-0.1.0.zip
+	open media/foo/0.1.0/Foo.app
 
 # Don't run the tests that take a long time
 check: fmt

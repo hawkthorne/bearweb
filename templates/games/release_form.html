@@ -13,7 +13,7 @@
       {% csrf_token %}
       <div id="drop">
         <div class="message">
-          <strong>Drag and drop a .love file here</strong> or <a class="btn btn-lg btn-default">Upload from your computer</a>
+          <strong>Drag and drop a .love file here</strong> or <a id="browse" href="#">Click to choose a file to upload</a>
         </div>
         <div class="file">
           <div class="knobc">
@@ -21,6 +21,7 @@
           </div>
         </div>
         <input id="id_lovefile" class=" form-control" type="file" name="lovefile">
+        <input type="hidden" id="id_next" value="{% url 'games:releases' game.pk %}">
       </div>
     </form>
   </div>

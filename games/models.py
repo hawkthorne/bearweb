@@ -34,7 +34,7 @@ class Game(models.Model):
         }
 
     def get_absolute_url(self):
-        return reverse("games:view", pk=self.pk)
+        return reverse("games:view", kwargs={"pk": self.pk})
 
     def next_version(self):
         """If the game has no releases, return 0.1.0. If the game does have a

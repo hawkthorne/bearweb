@@ -15,6 +15,9 @@ $(function(){
   });
 
 
+  var fuzzyFunc = null;
+  var fuzzy = 0.0;
+
   // Initialize the jQuery File Upload plugin
   $('#upload').fileupload({
 
@@ -41,16 +44,31 @@ $(function(){
     },
 
     progress: function(e, data){
-
       // Calculate the completion percentage of the upload
       var progress = parseInt(data.loaded / data.total * 100, 10);
 
+      console.log(progress);
+
       // Update the hidden input field and trigger a change
       // so that the jQuery knob plugin knows to update the dial
-      $('#knob').val(progress).change();
+      if (progress >= 95 && fuzzyFunc == null) {
+        fuzzyFunc = setInterval(function() {
+          fuzzy = fuzzy + 0.2;
+          $('#knob').val(Math.min(50 + fuzzy, 98)).change();
+        }, 500);
+      }
 
-      if(progress == 100){
+      $('#knob').val(Math.min(progress / 2) + fuzzy, 98).change();
+
+      if (progress == 100){
+        clearInterval(fuzzyFunc);
+        $('#knob').val(progress).change();
         $("#drop .message").empty().append("<strong>All Done! We're doing some extra work to get your release ready");
+        
+        // TODO: Create redirect
+        setInterval(function() {
+          window.location.href = $('#id_next').val();
+        }, 500);
       }
     },
 
