@@ -8,15 +8,30 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
+        # Adding model 'Framework'
+        db.create_table(u'games_framework', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('created', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
+            ('updated', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, blank=True)),
+            ('name', self.gf('django.db.models.fields.CharField')(max_length=128)),
+        ))
+        db.send_create_signal(u'games', ['Framework'])
+
         # Adding model 'Game'
         db.create_table(u'games_game', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('created', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
             ('updated', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, blank=True)),
-            ('user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'])),
-            ('name', self.gf('django.db.models.fields.TextField')()),
+            ('owner', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'])),
+            ('name', self.gf('django.db.models.fields.CharField')(max_length=128)),
+            ('slug', self.gf('django.db.models.fields.SlugField')(max_length=128)),
+            ('uuid', self.gf('django.db.models.fields.CharField')(unique=True, max_length=15, db_index=True)),
+            ('framework', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['games.Framework'])),
         ))
         db.send_create_signal(u'games', ['Game'])
+
+        # Adding unique constraint on 'Game', fields ['owner', 'slug']
+        db.create_unique(u'games_game', ['owner_id', 'slug'])
 
         # Adding model 'Release'
         db.create_table(u'games_release', (
@@ -25,8 +40,12 @@ class Migration(SchemaMigration):
             ('updated', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, blank=True)),
             ('game', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['games.Game'])),
             ('version', self.gf('django.db.models.fields.CharField')(max_length=14)),
+            ('uuid', self.gf('django.db.models.fields.CharField')(unique=True, max_length=15, db_index=True)),
         ))
         db.send_create_signal(u'games', ['Release'])
+
+        # Adding unique constraint on 'Release', fields ['game', 'version']
+        db.create_unique(u'games_release', ['game_id', 'version'])
 
         # Adding model 'Asset'
         db.create_table(u'games_asset', (
@@ -34,7 +53,8 @@ class Migration(SchemaMigration):
             ('created', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
             ('updated', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, blank=True)),
             ('release', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['games.Release'])),
-            ('filename', self.gf('django.db.models.fields.CharField')(max_length=64)),
+            ('blob', self.gf('django.db.models.fields.files.FileField')(max_length=100)),
+            ('tag', self.gf('django.db.models.fields.CharField')(max_length=20)),
         ))
         db.send_create_signal(u'games', ['Asset'])
 
@@ -45,11 +65,24 @@ class Migration(SchemaMigration):
             ('updated', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, blank=True)),
             ('game', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['games.Game'])),
             ('traceback', self.gf('django.db.models.fields.TextField')()),
+            ('distinct_id', self.gf('django.db.models.fields.CharField')(default='', max_length=24)),
+            ('version', self.gf('django.db.models.fields.CharField')(default='', max_length=14)),
+            ('os', self.gf('django.db.models.fields.CharField')(default='', max_length=14)),
+            ('uuid', self.gf('django.db.models.fields.CharField')(unique=True, max_length=15, db_index=True)),
         ))
         db.send_create_signal(u'games', ['CrashReport'])
 
 
     def backwards(self, orm):
+        # Removing unique constraint on 'Release', fields ['game', 'version']
+        db.delete_unique(u'games_release', ['game_id', 'version'])
+
+        # Removing unique constraint on 'Game', fields ['owner', 'slug']
+        db.delete_unique(u'games_game', ['owner_id', 'slug'])
+
+        # Deleting model 'Framework'
+        db.delete_table(u'games_framework')
+
         # Deleting model 'Game'
         db.delete_table(u'games_game')
 
@@ -102,34 +135,50 @@ class Migration(SchemaMigration):
         },
         u'games.asset': {
             'Meta': {'object_name': 'Asset'},
+            'blob': ('django.db.models.fields.files.FileField', [], {'max_length': '100'}),
             'created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
-            'filename': ('django.db.models.fields.CharField', [], {'max_length': '64'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'release': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['games.Release']"}),
+            'tag': ('django.db.models.fields.CharField', [], {'max_length': '20'}),
             'updated': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'})
         },
         u'games.crashreport': {
             'Meta': {'object_name': 'CrashReport'},
             'created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
+            'distinct_id': ('django.db.models.fields.CharField', [], {'default': "''", 'max_length': '24'}),
             'game': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['games.Game']"}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'os': ('django.db.models.fields.CharField', [], {'default': "''", 'max_length': '14'}),
             'traceback': ('django.db.models.fields.TextField', [], {}),
+            'updated': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'}),
+            'uuid': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '15', 'db_index': 'True'}),
+            'version': ('django.db.models.fields.CharField', [], {'default': "''", 'max_length': '14'})
+        },
+        u'games.framework': {
+            'Meta': {'object_name': 'Framework'},
+            'created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '128'}),
             'updated': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'})
         },
         u'games.game': {
-            'Meta': {'object_name': 'Game'},
+            'Meta': {'unique_together': "(('owner', 'slug'),)", 'object_name': 'Game'},
             'created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
+            'framework': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['games.Framework']"}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.TextField', [], {}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '128'}),
+            'owner': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['auth.User']"}),
+            'slug': ('django.db.models.fields.SlugField', [], {'max_length': '128'}),
             'updated': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'}),
-            'user': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['auth.User']"})
+            'uuid': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '15', 'db_index': 'True'})
         },
         u'games.release': {
-            'Meta': {'object_name': 'Release'},
+            'Meta': {'unique_together': "(('game', 'version'),)", 'object_name': 'Release'},
             'created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             'game': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['games.Game']"}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'updated': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'}),
+            'uuid': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '15', 'db_index': 'True'}),
             'version': ('django.db.models.fields.CharField', [], {'max_length': '14'})
         }
     }

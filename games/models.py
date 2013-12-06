@@ -4,6 +4,13 @@ from django.core.urlresolvers import reverse
 from django.db import models
 from django.conf import settings
 
+import base58
+
+
+def youtube_id():
+    """Return an 11 character identifier. Does not guaruntee uniqueness"""
+    return base58.encode(os.urandom(11))
+
 
 class Framework(models.Model):
     created = models.DateTimeField(auto_now_add=True)
@@ -19,8 +26,14 @@ class Game(models.Model):
     updated = models.DateTimeField(auto_now=True)
     owner = models.ForeignKey(settings.AUTH_USER_MODEL)
     name = models.CharField(max_length=128)
-    slug = models.SlugField(max_length=128, db_index=True)
+    slug = models.SlugField(max_length=128)
+    uuid = models.CharField(max_length=15, db_index=True, unique=True)
     framework = models.ForeignKey(Framework)
+
+    def save(self, *args, **kwargs):
+        if not self.uuid:
+            self.uuid = youtube_id()
+        super(Game, self).save(*args, **kwargs)
 
     def appcast(self):
         items = []
@@ -58,6 +71,12 @@ class Release(models.Model):
     updated = models.DateTimeField(auto_now=True)
     game = models.ForeignKey(Game)
     version = models.CharField(max_length=14)
+    uuid = models.CharField(max_length=15, db_index=True, unique=True)
+
+    def save(self, *args, **kwargs):
+        if not self.uuid:
+            self.uuid = youtube_id()
+        super(Release, self).save(*args, **kwargs)
 
     class Meta:
         unique_together = ("game", "version")
@@ -140,3 +159,9 @@ class CrashReport(models.Model):
     distinct_id = models.CharField(max_length=24, default='')
     version = models.CharField(max_length=14, default='')
     os = models.CharField(max_length=14, default='')
+    uuid = models.CharField(max_length=15, db_index=True, unique=True)
+
+    def save(self, *args, **kwargs):
+        if not self.uuid:
+            self.uuid = youtube_id()
+        super(CrashReport, self).save(*args, **kwargs)

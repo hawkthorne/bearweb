@@ -27,7 +27,7 @@ migrate: venv
 	. venv/bin/activate; python manage.py migrate
 
 init: venv
-	. venv/bin/activate; python manage.py schemamigration core --initial
+	#. venv/bin/activate; python manage.py schemamigration core --initial
 	. venv/bin/activate; python manage.py schemamigration games --initial
 
 

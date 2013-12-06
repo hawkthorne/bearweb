@@ -2,7 +2,7 @@ from django.test import TestCase
 from django.contrib.auth.models import User
 from django.core.files.base import ContentFile
 
-from games.models import Game, Framework
+from games.models import Game, Framework, youtube_id
 
 
 class GamesModelTests(TestCase):
@@ -10,6 +10,9 @@ class GamesModelTests(TestCase):
     def setUp(self):
         self.user = User.objects.create_user("foo", "bar@example.com", "pass")
         self.other = Framework.objects.create(name="Other")
+
+    def test_youtube_id(self):
+        self.assertEqual(15, len(youtube_id()))
 
     def test_get_url(self):
         game = Game.objects.create(owner=self.user, framework=self.other,
