@@ -1,3 +1,5 @@
+import os
+
 from django.test import TestCase
 from django.contrib.auth.models import User
 from django.core.files.base import ContentFile
@@ -42,4 +44,5 @@ class GamesModelTests(TestCase):
 
         asset = release.add_asset(blob)
 
-        self.assertTrue(asset.blob.url.startswith("/media/foo/0.1.0/"))
+        path = os.path.join("media", game.uuid, "0.1.0")
+        self.assertTrue(asset.blob.url.startswith("/" + path))

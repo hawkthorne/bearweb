@@ -48,4 +48,4 @@ class GamesModelTests(TestCase):
 
         asset = release.get_asset('osx')
 
-        self.assertIn('foo/0.1.0/foo-osx-0.1.0.zip', asset.blob.url)
+        self.assertIn('0.1.0/foo-osx-0.1.0.zip', asset.blob.url)

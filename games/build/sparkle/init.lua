@@ -153,11 +153,12 @@ function sparkle.update(version, url, callback)
   local oldpath = platform.getApplicationPath(cwd) 
 
   if oldpath == "" then
+    logger:info("Can't find shit")
     error("Can't find application directory")
   end
 
   pcall(callback, false, "Checking for updates", 0)
-
+  
   -- Download appcast
   local b, c, h = http.request(url)
 
@@ -170,7 +171,7 @@ function sparkle.update(version, url, callback)
   local item = sparkle.findItem(version, appcast)
 
   if item == nil then
-    --pcall(callback, true, "Current version is up to date", 100)
+    pcall(callback, true, "Current version is up to date", 100)
     return
   end
 

@@ -67,9 +67,13 @@ love:
 	games/build/osx/love.app/Contents/MacOS/love games/build
 
 
-pipeline: test
-	cd media/foo/0.1.0 && unzip -qq foo-osx-0.1.0.zip
-	open media/foo/0.1.0/Foo.app
+pipeline: clean test
+	cd media/$(shell ls media | sort -n | head -1)/0.1.0 && unzip -qq foo-osx-0.1.0.zip
+	open media/$(shell ls media | sort -n | head -1)/0.1.0/Foo.app
+
+clean:
+	rm -rf media
+	mkdir -p media	
 
 # Don't run the tests that take a long time
 check: fmt
