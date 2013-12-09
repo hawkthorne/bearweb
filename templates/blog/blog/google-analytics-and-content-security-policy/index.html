@@ -1,0 +1,87 @@
+
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block content %}
+
+<div class="row">
+  <div class="col-sm-12 columns">
+    <h2>Google Analytics and Content Security Policy</h2>
+    <hr/>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-sm-8 columns">
+    <p class="meta">July 09, 2013 by Kyle Conroy</p>
+
+<article class="post">
+<p><a href='http://www.w3.org/TR/CSP/'>Content Security Policy (CSP)</a> is a new header for securing your web application against common scripting attacks. It works by limiting content sources a web page is allowed to access. For example, the header can declare that all content (images, scripts, frames) must originate from a single domain. The browser will block any requests that violate this policy.</p>
+
+<p>CSP defaults to also blocking inline styles, inline Javascript, and the use of <code>eval</code> in Javascript. These defaults have a high risk of breaking existing sites. Specifically, the Javascript code snippet that Google Analytics asks you to include on your website implementations break when using Content Security Policy.</p>
+
+<h2 id='content_security_policy_header'>Content Security Policy Header</h2>
+
+<p>CSP is implemented by returning the <code>Content-Security-Policty</code> header to web requests. The header specifies the allowed domains for content sources. The <code>default-src</code> applies to all unspecified content. The <code>&#39;self&#39;</code> value represents the domain which served this response.</p>
+
+<p>The header below allows all content from the current domain, and allows scripts from one additional domain, <code>https://ssl.google-analytics.com</code>.</p>
+<div class='highlight'><pre><code class='text'>Content-Security-Policy: &quot;default-src &#39;self&#39;; script-src &#39;self&#39; https://ssl.google-analytics.com&quot;
+</code></pre></div>
+<p>With this header in place, let&#8217;s see what happens when we load our page with a Google Analytics tracking snippet.</p>
+<img alt='CSP Violation' src='/static/img/csp-violation.png' />
+<p>Uh-oh.</p>
+
+<h2 id='javascript_changes'>Javascript Changes</h2>
+
+<p>Google Analytics suggests you add the following snippet to all you pages.</p>
+<div class='highlight'><pre><code class='html'><span class='nt'>&lt;script </span><span class='na'>type=</span><span class='s'>&quot;text/javascript&quot;</span><span class='nt'>&gt;</span>
+  <span class='kd'>var</span> <span class='nx'>_gaq</span> <span class='o'>=</span> <span class='nx'>_gaq</span> <span class='o'>||</span> <span class='p'>[];</span>
+  <span class='nx'>_gaq</span><span class='p'>.</span><span class='nx'>push</span><span class='p'>([</span><span class='s1'>&#39;_setAccount&#39;</span><span class='p'>,</span> <span class='s1'>&#39;UA-22222222-1&#39;</span><span class='p'>]);</span>
+  <span class='nx'>_gaq</span><span class='p'>.</span><span class='nx'>push</span><span class='p'>([</span><span class='s1'>&#39;_trackPageview&#39;</span><span class='p'>]);</span>
+
+  <span class='p'>(</span><span class='kd'>function</span><span class='p'>()</span> <span class='p'>{</span>
+    <span class='kd'>var</span> <span class='nx'>ga</span> <span class='o'>=</span> <span class='nb'>document</span><span class='p'>.</span><span class='nx'>createElement</span><span class='p'>(</span><span class='s1'>&#39;script&#39;</span><span class='p'>);</span> <span class='nx'>ga</span><span class='p'>.</span><span class='nx'>type</span> <span class='o'>=</span> <span class='s1'>&#39;text/javascript&#39;</span><span class='p'>;</span> <span class='nx'>ga</span><span class='p'>.</span><span class='nx'>async</span> <span class='o'>=</span> <span class='kc'>true</span><span class='p'>;</span>
+    <span class='nx'>ga</span><span class='p'>.</span><span class='nx'>src</span> <span class='o'>=</span> <span class='p'>(</span><span class='s1'>&#39;https:&#39;</span> <span class='o'>==</span> <span class='nb'>document</span><span class='p'>.</span><span class='nx'>location</span><span class='p'>.</span><span class='nx'>protocol</span> <span class='o'>?</span> <span class='s1'>&#39;https://ssl&#39;</span> <span class='o'>:</span> <span class='s1'>&#39;http://www&#39;</span><span class='p'>)</span> <span class='o'>+</span> <span class='s1'>&#39;.google-analytics.com/ga.js&#39;</span><span class='p'>;</span>
+    <span class='kd'>var</span> <span class='nx'>s</span> <span class='o'>=</span> <span class='nb'>document</span><span class='p'>.</span><span class='nx'>getElementsByTagName</span><span class='p'>(</span><span class='s1'>&#39;script&#39;</span><span class='p'>)[</span><span class='mi'>0</span><span class='p'>];</span> <span class='nx'>s</span><span class='p'>.</span><span class='nx'>parentNode</span><span class='p'>.</span><span class='nx'>insertBefore</span><span class='p'>(</span><span class='nx'>ga</span><span class='p'>,</span> <span class='nx'>s</span><span class='p'>);</span>
+  <span class='p'>})();</span>
+<span class='nt'>&lt;/script&gt;</span>
+</code></pre></div>
+<p>This snippet will violate the above content policy as it includes inline Javascript. We could change our content policy to allow inline Javascript, but that would defeat the entire purpose of adding the header. Instead, we&#8217;ll break apart the above snippet into two script tags. First, create a new Javascript file named <code>tracking.js</code> with the following content:</p>
+<div class='highlight'><pre><code class='javascript'><span class='kd'>var</span> <span class='nx'>_gaq</span> <span class='o'>=</span> <span class='nx'>_gaq</span> <span class='o'>||</span> <span class='p'>[];</span>
+<span class='nx'>_gaq</span><span class='p'>.</span><span class='nx'>push</span><span class='p'>([</span><span class='s1'>&#39;_setAccount&#39;</span><span class='p'>,</span> <span class='s1'>&#39;UA-22222222-1&#39;</span><span class='p'>]);</span>
+<span class='nx'>_gaq</span><span class='p'>.</span><span class='nx'>push</span><span class='p'>([</span><span class='s1'>&#39;_trackPageview&#39;</span><span class='p'>]);</span>
+</code></pre></div>
+<p>Remove the Google Analytics tracking snippet and replace it with these two scripts.</p>
+<div class='highlight'><pre><code class='html'><span class='nt'>&lt;script </span><span class='na'>type=</span><span class='s'>&quot;text/javascript&quot;</span> <span class='na'>src=</span><span class='s'>&quot;/js/tracking.js&quot;</span><span class='nt'>&gt;&lt;/script&gt;</span>
+<span class='nt'>&lt;script </span><span class='na'>src=</span><span class='s'>&quot;https://ssl.google-analytics.com/ga.js&quot;</span> <span class='na'>async=</span><span class='s'>&quot;true&quot;</span><span class='nt'>&gt;&lt;/script&gt;</span>
+</code></pre></div>
+<p>Make sure that these scripts appear at the bottom of the page right before the closing body tag. Older browsers don&#8217;t honor the <code>async</code> attribute, so you want to make sure it&#8217;s the last script to load.</p>
+
+<p>Refresh the page, and you should see that Google Analytics is working as intended.</p>
+<img alt='CSP Ok' src='/static/img/csp-ok.png' />
+<p>Please remember that CSP is just another tool to help secure your web application and does not replace proper HTML escaping. Browsers without CSP support need to be protected as well.</p>
+
+<p>For a deeper look into CSP, the fine folks at GitHub wrote a <a href='https://github.com/blog/1477-content-security-policy'>fantastic post</a> about their experience implementing CSP.</p>
+</article>
+
+  </div>
+  <div class="col-sm-4 columns">
+    <h4>StackMachine is your personal Docker registry.</h4>
+    <p><a href="/users">Sign up for free</a>.</p>
+    <h4>Follow StackMachine</h4>
+    <ul class="shelf">
+      <li><a href="https://github.com/stackmachine">github.com/stackmachine</a></li>
+      <li><a href="https://facebook.com/stackmachine">facebook.com/stackmachine</a></li>
+      <li><a href="https://twitter.com/stackmachine">twitter.com/stackmachine</a></li>
+    </ul>
+  </div>
+</div>
+
+{% endblock %}
+
+
+{% block title %}Google Analytics and Content Security Policy{% endblock %}
+
+
+

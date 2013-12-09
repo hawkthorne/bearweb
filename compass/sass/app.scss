@@ -36,7 +36,7 @@ a {
 
 .logomark {
   width: 100%;
-  margin: 10px 0;
+  margin: 3px 0;
   max-width: 238px; 
 }
 
@@ -479,5 +479,19 @@ ul.top-bar-links li {
 
 #drop input {
   display: none;
+}
+
+#admin {
+  position: absolute;
+  right: 15px;
+  top: 0px;
+}
+
+#admin a {
+  color: #FFF;
+  padding: 5px 15px;
+  display: block;
+  font-weight: bold;
+  background: rgb(169, 32, 83);
 }
 

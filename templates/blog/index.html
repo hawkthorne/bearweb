@@ -17,6 +17,230 @@
     <div id="home">
   <section class="posts">
     
+    <article class="post">
+      <h3><a href="/blog/web-development-on-a-vm-is-it-slower">Web development performance inside and outside a VM</a></h3>
+      <p>July 19, 2013 by Brandon Liu</p>
+      <h5 id='update'>Update!</h5>
+
+<p>Per knotty66&#8217;s suggestion on <a href='https://news.ycombinator.com/item?id=6085695'>Hacker News</a>, I added measurements with NFS on VirtualBox instead of Shared Folders, which speed it up significantly.</p>
+
+<h5 id='update_2'>Update 2!</h5>
+
+<p>joevandyk points out that NFS Shared Folders can help on VMware Fusion too. Added measurements, which shave off a second or two on app boot. Joe also tipped us off to this forum thread detailing other&#8217;s experiences: <a href='http://vagrant.1086180.n5.nabble.com/Shared-folders-slow-using-VMWare-provider-as-well-as-VirtualBox-td935.html'>Shared folders slow using VMWare provider as well as VirtualBox</a></p>
+
+<h2 id='overview'>Overview</h2>
+
+<p>Web development on a VM presents plenty of benefits over developing on your host machine: developer environments are easy to distribute, can closely match production, and can be recreated at will. <a href='http://www.vagrantup.com'>Vagrant</a> already handles many headaches around using VMs seamlessly, such as networking and shared filesystems. However, many potential users worry about the performance hit of developing in a VM.</p>
+
+<p>I decided to quantify the difference for typical tasks using my &#8216;native&#8217; OS X machine, Vagrant with the <a href='http://www.virtualbox.com'>VirtualBox</a> provider, and Vagrant with the (paid) <a href='http://www.vagrantup.com/vmware'>Fusion provider</a> atop the (paid) <a href='http://www.vmware.com/products/fusion/overview.html'>VMware Fusion</a>.</p>
+<hr />
+<h3 id='test_setup'>Test Setup</h3>
+
+<p>I&#8217;m using my relatively dinky 2012 MacBook Air - it has a Core i5 chip, an SSD, and 8GB of memory. I was aiming to measure the difference between machines in typical web development tasks, so don&#8217;t take these numbers as absolutes.</p>
+
+<p>I chose to do my measurements on the <a href='https://github.com/discourse/discourse'>Discourse</a> forum application. It&#8217;s written in Ruby on Rails and has a fairly large test suite that&#8217;s comparable in size and complexity to most company&#8217;s applications. Also, it&#8217;s free and open source, so please do try to reproduce these results yourself!</p>
+
+<p>For both VirtualBox and Fusion, I allocated 2GB of RAM to the guest machine. I tried these tests again using only 1GB, but it didn&#8217;t make a significant difference. The guests are running a typical set of services: redis, postgres, nginx.</p>
+
+<p>VirtualBox was also tested with NFS instead of Shared Folders, which has speed benefits outlined here: http://docs-v1.vagrantup.com/v1/docs/nfs.html However, you might not be able to use it if your host machine doesn&#8217;t support NFS.</p>
+<hr />
+<h4 id='application_boot_time'>Application boot time</h4>
+
+<p>I measured the boot time of the application via the following script:</p>
+<div class='highlight'><pre><code class='bash'><span class='nb'>time</span> <span class='sb'>`</span>bundle <span class='nb'>exec </span>script/rails runner <span class='s2'>&quot;0&quot;</span><span class='sb'>`</span>
+</code></pre></div>
+<p>Application boot time is one serious source of friction for developers, especially if you&#8217;re doing test-driven development (which you should be!). Note i&#8217;m using Ruby 2.0.0, which improves the performance of the <code>require</code> method significantly over 1.9.3. 10 seconds is a heck of a long time to wait for the app to start - if you&#8217;re interested in improving this check out <a href='https://github.com/martylamb/nailgun'>nailgun</a> (JRuby), <a href='https://github.com/sporkrb/spork'>spork</a> and <a href='https://github.com/burke/zeus'>zeus</a>.</p>
+
+<p>I ran the script three times on each machine and recorded the wall clock time:</p>
+
+<h5 id='host_machine'>Host Machine:</h5>
+<div class='highlight'><pre><code class='bash'>real	0m9.173s
+real	0m8.739s
+real	0m8.823s
+</code></pre></div>
+<h5 id='virtualbox_w_shared_folders'>VirtualBox w/ Shared folders:</h5>
+<div class='highlight'><pre><code class='bash'>real	0m21.764s
+real	0m19.342s
+real	0m20.674s
+</code></pre></div>
+<h5 id='virtualbox_w_nfs'>VirtualBox w/ NFS:</h5>
+<div class='highlight'><pre><code class='bash'>real	0m9.500s
+real	0m8.669s
+real	0m8.625s
+</code></pre></div>
+<h5 id='vmware_fusion_w_shared_folders'>VMware Fusion w/ Shared Folders:</h5>
+<div class='highlight'><pre><code class='bash'>real	0m10.587s
+real	0m10.095s
+real	0m10.445s
+</code></pre></div>
+<h5 id='vmware_fusion_w_nfs'>VMware Fusion w/ NFS:</h5>
+<div class='highlight'><pre><code class='bash'>real	0m8.315s
+real	0m8.781s
+real	0m8.445s
+</code></pre></div><hr />
+<h4 id='time_for_total_test_suite'>Time for total test suite</h4>
+
+<p>I measured the time it took to run the entire Discourse test suite by simply calling:</p>
+<div class='highlight'><pre><code class='bash'>bundle <span class='nb'>exec </span>rake spec
+</code></pre></div>
+<p>The Discourse suite has 2672 individual test cases.</p>
+
+<h5 id='host_machine'>Host Machine:</h5>
+<div class='highlight'><pre><code class='bash'>Finished in 4 minutes 19.64 seconds
+Finished in 3 minutes 52.26 seconds
+Finished in 4 minutes 1.03 seconds
+</code></pre></div>
+<h5 id='virtualbox_w_shared_folders'>VirtualBox w/ Shared Folders:</h5>
+<div class='highlight'><pre><code class='bash'>Finished in 5 minutes 31.31 seconds
+Finished in 5 minutes 12.14 seconds
+Finished in 5 minutes 32.54 seconds
+</code></pre></div>
+<h5 id='virtualbox_w_nfs'>VirtualBox w/ NFS:</h5>
+<div class='highlight'><pre><code class='bash'>Finished in 4 minutes 42.27 seconds
+Finished in 4 minutes 16.27 seconds
+Finished in 4 minutes 43.79 seconds
+</code></pre></div>
+<h5 id='vmware_fusion_w_shared_folders'>VMware Fusion w/ Shared Folders:</h5>
+<div class='highlight'><pre><code class='bash'>Finished in 4 minutes 16.68 seconds
+Finished in 4 minutes 23.95 seconds
+Finished in 4 minutes 22.87 seconds
+</code></pre></div>
+<h5 id='vmware_fusion_w_nfs'>VMware Fusion w/ NFS:</h5>
+<div class='highlight'><pre><code class='bash'>Finished in 4 minutes 20.28 seconds
+Finished in 4 minutes 15.43 seconds
+Finished in 4 minutes 10.78 seconds
+</code></pre></div><hr />
+<h3 id='therefore'>Therefore…</h3>
+
+<p>VMware Fusion and VirtualBox+NFS are considerably faster than VirtualBox+Shared Folders, and only slightly behind using the host machine.</p>
+
+<p>Using either VM solution in this case also has the nice advantage over the host machine in that you can halt the VM when you&#8217;re not developing to free up all its resources!</p>
+
+<p>Please let us know at <a href='mailto:hello@stackmachine.com'>hello@stackmachine.com</a> about your own experiences with this!</p>
+
+<h3 id='addendum'>Addendum</h3>
+
+<p>I looked a little more into I/O performance for routines like accessing the database that would affect the speed of integration tests. <a href='http://www.postgresql.org/docs/devel/static/pgbench.html'>pgbench</a> ships with postgres and is a simple albeit synthetic way to measure postgresql performance. In each case the postgres configuration is the default with <code>shared_buffers</code> set to 24MB and autovacuum off. The script I used:</p>
+<div class='highlight'><pre><code class='bash'>createdb pgbench
+pgbench -i -s 10 pgbench <span class='c'># use scalefactor = 10</span>
+pgbench -T 600 pgbench <span class='c'># collect results over 10 minutes</span>
+</code></pre></div>
+<h5 id='host_machine'>Host Machine:</h5>
+<div class='highlight'><pre><code class='bash'>transaction <span class='nb'>type</span>: TPC-B <span class='o'>(</span>sort of<span class='o'>)</span>
+scaling factor: 10
+query mode: simple
+number of clients: 1
+number of threads: 1
+duration: 600 s
+number of transactions actually processed: 673985
+<span class='nv'>tps</span> <span class='o'>=</span> 1123.322847 <span class='o'>(</span>including connections establishing<span class='o'>)</span>
+<span class='nv'>tps</span> <span class='o'>=</span> 1123.328761 <span class='o'>(</span>excluding connections establishing<span class='o'>)</span>
+</code></pre></div>
+<h5 id='virtualbox'>VirtualBox:</h5>
+<div class='highlight'><pre><code class='bash'>number of transactions actually processed: 421642
+<span class='nv'>tps</span> <span class='o'>=</span> 702.709747 <span class='o'>(</span>including connections establishing<span class='o'>)</span>
+<span class='nv'>tps</span> <span class='o'>=</span> 702.713031 <span class='o'>(</span>excluding connections establishing<span class='o'>)</span>
+</code></pre></div>
+<h5 id='vmware_fusion'>VMware Fusion:</h5>
+<div class='highlight'><pre><code class='bash'>number of transactions actually processed: 558332
+<span class='nv'>tps</span> <span class='o'>=</span> 930.552663 <span class='o'>(</span>including connections establishing<span class='o'>)</span>
+<span class='nv'>tps</span> <span class='o'>=</span> 930.557223 <span class='o'>(</span>excluding connections establishing<span class='o'>)</span>
+</code></pre></div>
+<p>So in raw database performance, VMWare is about 20% slower than the host machine, and VirtualBox is 20% slower still - these differences didn&#8217;t correlate to the real-world cases above, though.</p>
+    </article>
+    
+    <article class="post">
+      <h3><a href="/blog/building-a-vagrant-base-box-with-packer">Building a Vagrant base box with Packer</a></h3>
+      <p>July 15, 2013 by Brandon Liu</p>
+      <p><a href='http://packer.io'>Packer</a> is a utility to create disk images for platforms like VirtualBox, VMWare Fusion, Amazon EC2 and DigitalOcean. It can be used to build <a href='http://www.vagrantup.com'>Vagrant</a> base boxes, which can be shared within your team to make portable development environments.</p>
+
+<p>One way to build a Vagrant base box with packer is to convert a veewee template using <a href='https://github.com/mitchellh/veewee-to-packer'>veewee-to-packer</a>, however I wanted to build a more minimal box that doesn&#8217;t have Ruby, Chef or Puppet. These are usually suggested for provisioning on top of your base box (see the <a href='http://docs-v1.vagrantup.com/v1/docs/base_boxes.html'>Vagrant base box documentation</a>), instead I&#8217;m going to use the <a href='http://stackmachine.github.io/prefab/'>prefab</a> configuration manager, which is a standalone binary.</p>
+
+<p>Here&#8217;s a minimal template to build an Ubuntu base box: <a href='https://github.com/stackmachine/packer-templates/blob/master/ubuntu64.json'>ubuntu64.json</a>. There&#8217;s a couple of quirky bits to point out:</p>
+
+<h3 id='preseedcfg'>preseed.cfg</h3>
+<div class='highlight'><pre><code class='javascript'>  <span class='s2'>&quot;http_directory&quot;</span><span class='o'>:</span> <span class='s2'>&quot;preseed&quot;</span> 
+</code></pre></div>
+<p>A directory of files to serve. When installing from the operating system ISO, you can give it a <code>preseed.cfg</code> answers file which will automate configuring the box for the first time. It sets settings such as the login user and password, keyboard settings, and the disk layout. Here&#8217;s the preseed.cfg for a vagrant base box: <a href='https://github.com/stackmachine/packer-templates/blob/master/preseed/preseed.cfg'>preseed.cfg</a></p>
+
+<h3 id='passwordless_login_and_sudo_for_the_vagrant_user'>Password-less login and sudo for the &#8216;vagrant&#8217; user</h3>
+<div class='highlight'><pre><code class='javascript'>      <span class='s2'>&quot;mkdir ~/.ssh&quot;</span><span class='p'>,</span>
+      <span class='s2'>&quot;wget -qO- https://raw.github.com/mitchellh/vagrant/master/keys/vagrant.pub &gt;&gt; ~/.ssh/authorized_keys&quot;</span><span class='p'>,</span>
+</code></pre></div>
+<p>Lets the <code>vagrant</code> user ssh without a password, as long as you&#8217;re using the vagrant client which includes its own private key.</p>
+<div class='highlight'><pre><code class='javascript'><span class='s2'>&quot;(cat &lt;&lt;&#39;vagrant ALL=NOPASSWD:ALL&#39;) &gt; /tmp/vagrant&quot;</span><span class='p'>,</span>
+<span class='s2'>&quot;chmod 0440 /tmp/vagrant&quot;</span><span class='p'>,</span>
+<span class='s2'>&quot;mv /tmp/vagrant /etc/sudoers.d/&quot;</span>
+</code></pre></div>
+<p>Let the <code>vagrant</code> user use <code>sudo</code> without prompting for a password.</p>
+
+<h3 id='virtualbox_guest_additions'>VirtualBox guest additions</h3>
+
+<p>When installing the VirtualBox guest additions you may run into an error message that looks like this:</p>
+<div class='highlight'><pre><code class='bash'>    virtualbox: Installing the Window System drivers ...fail!
+    virtualbox: <span class='o'>(</span>Could not find the X.Org or XFree86 Window System.<span class='o'>)</span>
+</code></pre></div>
+<p>You can ignore the error, unless you want to install the X Window System on your VM. You probably don&#8217;t need it, and it&#8217;s quite large.</p>
+
+<h3 id='shutdown_command'>Shutdown Command</h3>
+<div class='highlight'><pre><code class='javascript'><span class='s2'>&quot;shutdown_command&quot;</span><span class='o'>:</span> <span class='s2'>&quot;echo &#39;shutdown -P now&#39; &gt; shutdown.sh; echo &#39;vagrant&#39;|sudo -S sh &#39;shutdown.sh&#39;&quot;</span>
+</code></pre></div>
+<p>The <code>shutdown_command</code> is necessary, otherwise Packer will simply poweroff the machine, and any changes you&#8217;ve made in your provisioner that have not yet been persisted to disk might be lost.</p>
+
+<p>If you&#8217;d like to use the resulting box here&#8217;s a link to it: <a href='https://s3.amazonaws.com/dl.stackmachine.com/baseboxes/ubuntu64.box'>ubuntu64.box</a></p>
+    </article>
+    
+    <article class="post">
+      <h3><a href="/blog/google-analytics-and-content-security-policy">Google Analytics and Content Security Policy</a></h3>
+      <p>July 09, 2013 by Kyle Conroy</p>
+      <p><a href='http://www.w3.org/TR/CSP/'>Content Security Policy (CSP)</a> is a new header for securing your web application against common scripting attacks. It works by limiting content sources a web page is allowed to access. For example, the header can declare that all content (images, scripts, frames) must originate from a single domain. The browser will block any requests that violate this policy.</p>
+
+<p>CSP defaults to also blocking inline styles, inline Javascript, and the use of <code>eval</code> in Javascript. These defaults have a high risk of breaking existing sites. Specifically, the Javascript code snippet that Google Analytics asks you to include on your website implementations break when using Content Security Policy.</p>
+
+<h2 id='content_security_policy_header'>Content Security Policy Header</h2>
+
+<p>CSP is implemented by returning the <code>Content-Security-Policty</code> header to web requests. The header specifies the allowed domains for content sources. The <code>default-src</code> applies to all unspecified content. The <code>&#39;self&#39;</code> value represents the domain which served this response.</p>
+
+<p>The header below allows all content from the current domain, and allows scripts from one additional domain, <code>https://ssl.google-analytics.com</code>.</p>
+<div class='highlight'><pre><code class='text'>Content-Security-Policy: &quot;default-src &#39;self&#39;; script-src &#39;self&#39; https://ssl.google-analytics.com&quot;
+</code></pre></div>
+<p>With this header in place, let&#8217;s see what happens when we load our page with a Google Analytics tracking snippet.</p>
+<img alt='CSP Violation' src='/static/img/csp-violation.png' />
+<p>Uh-oh.</p>
+
+<h2 id='javascript_changes'>Javascript Changes</h2>
+
+<p>Google Analytics suggests you add the following snippet to all you pages.</p>
+<div class='highlight'><pre><code class='html'><span class='nt'>&lt;script </span><span class='na'>type=</span><span class='s'>&quot;text/javascript&quot;</span><span class='nt'>&gt;</span>
+  <span class='kd'>var</span> <span class='nx'>_gaq</span> <span class='o'>=</span> <span class='nx'>_gaq</span> <span class='o'>||</span> <span class='p'>[];</span>
+  <span class='nx'>_gaq</span><span class='p'>.</span><span class='nx'>push</span><span class='p'>([</span><span class='s1'>&#39;_setAccount&#39;</span><span class='p'>,</span> <span class='s1'>&#39;UA-22222222-1&#39;</span><span class='p'>]);</span>
+  <span class='nx'>_gaq</span><span class='p'>.</span><span class='nx'>push</span><span class='p'>([</span><span class='s1'>&#39;_trackPageview&#39;</span><span class='p'>]);</span>
+
+  <span class='p'>(</span><span class='kd'>function</span><span class='p'>()</span> <span class='p'>{</span>
+    <span class='kd'>var</span> <span class='nx'>ga</span> <span class='o'>=</span> <span class='nb'>document</span><span class='p'>.</span><span class='nx'>createElement</span><span class='p'>(</span><span class='s1'>&#39;script&#39;</span><span class='p'>);</span> <span class='nx'>ga</span><span class='p'>.</span><span class='nx'>type</span> <span class='o'>=</span> <span class='s1'>&#39;text/javascript&#39;</span><span class='p'>;</span> <span class='nx'>ga</span><span class='p'>.</span><span class='nx'>async</span> <span class='o'>=</span> <span class='kc'>true</span><span class='p'>;</span>
+    <span class='nx'>ga</span><span class='p'>.</span><span class='nx'>src</span> <span class='o'>=</span> <span class='p'>(</span><span class='s1'>&#39;https:&#39;</span> <span class='o'>==</span> <span class='nb'>document</span><span class='p'>.</span><span class='nx'>location</span><span class='p'>.</span><span class='nx'>protocol</span> <span class='o'>?</span> <span class='s1'>&#39;https://ssl&#39;</span> <span class='o'>:</span> <span class='s1'>&#39;http://www&#39;</span><span class='p'>)</span> <span class='o'>+</span> <span class='s1'>&#39;.google-analytics.com/ga.js&#39;</span><span class='p'>;</span>
+    <span class='kd'>var</span> <span class='nx'>s</span> <span class='o'>=</span> <span class='nb'>document</span><span class='p'>.</span><span class='nx'>getElementsByTagName</span><span class='p'>(</span><span class='s1'>&#39;script&#39;</span><span class='p'>)[</span><span class='mi'>0</span><span class='p'>];</span> <span class='nx'>s</span><span class='p'>.</span><span class='nx'>parentNode</span><span class='p'>.</span><span class='nx'>insertBefore</span><span class='p'>(</span><span class='nx'>ga</span><span class='p'>,</span> <span class='nx'>s</span><span class='p'>);</span>
+  <span class='p'>})();</span>
+<span class='nt'>&lt;/script&gt;</span>
+</code></pre></div>
+<p>This snippet will violate the above content policy as it includes inline Javascript. We could change our content policy to allow inline Javascript, but that would defeat the entire purpose of adding the header. Instead, we&#8217;ll break apart the above snippet into two script tags. First, create a new Javascript file named <code>tracking.js</code> with the following content:</p>
+<div class='highlight'><pre><code class='javascript'><span class='kd'>var</span> <span class='nx'>_gaq</span> <span class='o'>=</span> <span class='nx'>_gaq</span> <span class='o'>||</span> <span class='p'>[];</span>
+<span class='nx'>_gaq</span><span class='p'>.</span><span class='nx'>push</span><span class='p'>([</span><span class='s1'>&#39;_setAccount&#39;</span><span class='p'>,</span> <span class='s1'>&#39;UA-22222222-1&#39;</span><span class='p'>]);</span>
+<span class='nx'>_gaq</span><span class='p'>.</span><span class='nx'>push</span><span class='p'>([</span><span class='s1'>&#39;_trackPageview&#39;</span><span class='p'>]);</span>
+</code></pre></div>
+<p>Remove the Google Analytics tracking snippet and replace it with these two scripts.</p>
+<div class='highlight'><pre><code class='html'><span class='nt'>&lt;script </span><span class='na'>type=</span><span class='s'>&quot;text/javascript&quot;</span> <span class='na'>src=</span><span class='s'>&quot;/js/tracking.js&quot;</span><span class='nt'>&gt;&lt;/script&gt;</span>
+<span class='nt'>&lt;script </span><span class='na'>src=</span><span class='s'>&quot;https://ssl.google-analytics.com/ga.js&quot;</span> <span class='na'>async=</span><span class='s'>&quot;true&quot;</span><span class='nt'>&gt;&lt;/script&gt;</span>
+</code></pre></div>
+<p>Make sure that these scripts appear at the bottom of the page right before the closing body tag. Older browsers don&#8217;t honor the <code>async</code> attribute, so you want to make sure it&#8217;s the last script to load.</p>
+
+<p>Refresh the page, and you should see that Google Analytics is working as intended.</p>
+<img alt='CSP Ok' src='/static/img/csp-ok.png' />
+<p>Please remember that CSP is just another tool to help secure your web application and does not replace proper HTML escaping. Browsers without CSP support need to be protected as well.</p>
+
+<p>For a deeper look into CSP, the fine folks at GitHub wrote a <a href='https://github.com/blog/1477-content-security-policy'>fantastic post</a> about their experience implementing CSP.</p>
+    </article>
+    
   </section>
 </div>
 

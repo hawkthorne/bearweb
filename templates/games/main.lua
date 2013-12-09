@@ -76,7 +76,7 @@ function love.update(dt)
 end
 
 function love.draw()
-  love.graphics.setColor(255, 255, 255, math.min(255, time * 100))
+  love.graphics.setColor(255, 255, 255, math.min(255, time * 200))
 
   local width = love.graphics.getWidth()
   local height = love.graphics.getHeight()

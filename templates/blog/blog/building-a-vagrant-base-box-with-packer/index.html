@@ -1,0 +1,77 @@
+
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block content %}
+
+<div class="row">
+  <div class="col-sm-12 columns">
+    <h2>Building a Vagrant base box with Packer</h2>
+    <hr/>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-sm-8 columns">
+    <p class="meta">July 15, 2013 by Brandon Liu</p>
+
+<article class="post">
+<p><a href='http://packer.io'>Packer</a> is a utility to create disk images for platforms like VirtualBox, VMWare Fusion, Amazon EC2 and DigitalOcean. It can be used to build <a href='http://www.vagrantup.com'>Vagrant</a> base boxes, which can be shared within your team to make portable development environments.</p>
+
+<p>One way to build a Vagrant base box with packer is to convert a veewee template using <a href='https://github.com/mitchellh/veewee-to-packer'>veewee-to-packer</a>, however I wanted to build a more minimal box that doesn&#8217;t have Ruby, Chef or Puppet. These are usually suggested for provisioning on top of your base box (see the <a href='http://docs-v1.vagrantup.com/v1/docs/base_boxes.html'>Vagrant base box documentation</a>), instead I&#8217;m going to use the <a href='http://stackmachine.github.io/prefab/'>prefab</a> configuration manager, which is a standalone binary.</p>
+
+<p>Here&#8217;s a minimal template to build an Ubuntu base box: <a href='https://github.com/stackmachine/packer-templates/blob/master/ubuntu64.json'>ubuntu64.json</a>. There&#8217;s a couple of quirky bits to point out:</p>
+
+<h3 id='preseedcfg'>preseed.cfg</h3>
+<div class='highlight'><pre><code class='javascript'>  <span class='s2'>&quot;http_directory&quot;</span><span class='o'>:</span> <span class='s2'>&quot;preseed&quot;</span> 
+</code></pre></div>
+<p>A directory of files to serve. When installing from the operating system ISO, you can give it a <code>preseed.cfg</code> answers file which will automate configuring the box for the first time. It sets settings such as the login user and password, keyboard settings, and the disk layout. Here&#8217;s the preseed.cfg for a vagrant base box: <a href='https://github.com/stackmachine/packer-templates/blob/master/preseed/preseed.cfg'>preseed.cfg</a></p>
+
+<h3 id='passwordless_login_and_sudo_for_the_vagrant_user'>Password-less login and sudo for the &#8216;vagrant&#8217; user</h3>
+<div class='highlight'><pre><code class='javascript'>      <span class='s2'>&quot;mkdir ~/.ssh&quot;</span><span class='p'>,</span>
+      <span class='s2'>&quot;wget -qO- https://raw.github.com/mitchellh/vagrant/master/keys/vagrant.pub &gt;&gt; ~/.ssh/authorized_keys&quot;</span><span class='p'>,</span>
+</code></pre></div>
+<p>Lets the <code>vagrant</code> user ssh without a password, as long as you&#8217;re using the vagrant client which includes its own private key.</p>
+<div class='highlight'><pre><code class='javascript'><span class='s2'>&quot;(cat &lt;&lt;&#39;vagrant ALL=NOPASSWD:ALL&#39;) &gt; /tmp/vagrant&quot;</span><span class='p'>,</span>
+<span class='s2'>&quot;chmod 0440 /tmp/vagrant&quot;</span><span class='p'>,</span>
+<span class='s2'>&quot;mv /tmp/vagrant /etc/sudoers.d/&quot;</span>
+</code></pre></div>
+<p>Let the <code>vagrant</code> user use <code>sudo</code> without prompting for a password.</p>
+
+<h3 id='virtualbox_guest_additions'>VirtualBox guest additions</h3>
+
+<p>When installing the VirtualBox guest additions you may run into an error message that looks like this:</p>
+<div class='highlight'><pre><code class='bash'>    virtualbox: Installing the Window System drivers ...fail!
+    virtualbox: <span class='o'>(</span>Could not find the X.Org or XFree86 Window System.<span class='o'>)</span>
+</code></pre></div>
+<p>You can ignore the error, unless you want to install the X Window System on your VM. You probably don&#8217;t need it, and it&#8217;s quite large.</p>
+
+<h3 id='shutdown_command'>Shutdown Command</h3>
+<div class='highlight'><pre><code class='javascript'><span class='s2'>&quot;shutdown_command&quot;</span><span class='o'>:</span> <span class='s2'>&quot;echo &#39;shutdown -P now&#39; &gt; shutdown.sh; echo &#39;vagrant&#39;|sudo -S sh &#39;shutdown.sh&#39;&quot;</span>
+</code></pre></div>
+<p>The <code>shutdown_command</code> is necessary, otherwise Packer will simply poweroff the machine, and any changes you&#8217;ve made in your provisioner that have not yet been persisted to disk might be lost.</p>
+
+<p>If you&#8217;d like to use the resulting box here&#8217;s a link to it: <a href='https://s3.amazonaws.com/dl.stackmachine.com/baseboxes/ubuntu64.box'>ubuntu64.box</a></p>
+</article>
+
+  </div>
+  <div class="col-sm-4 columns">
+    <h4>StackMachine is your personal Docker registry.</h4>
+    <p><a href="/users">Sign up for free</a>.</p>
+    <h4>Follow StackMachine</h4>
+    <ul class="shelf">
+      <li><a href="https://github.com/stackmachine">github.com/stackmachine</a></li>
+      <li><a href="https://facebook.com/stackmachine">facebook.com/stackmachine</a></li>
+      <li><a href="https://twitter.com/stackmachine">twitter.com/stackmachine</a></li>
+    </ul>
+  </div>
+</div>
+
+{% endblock %}
+
+
+{% block title %}Building a Vagrant base box with Packer{% endblock %}
+
+
+
