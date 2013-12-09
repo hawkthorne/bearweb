@@ -128,7 +128,6 @@ function windows.replace(download, cwd, callback)
     end
   end
 
-  --FIXME hardcoded hawkthorne.exe name
   if program then
     local cmd = "cmd /C \"start .\\" .. program .. "\""
     logger:info(cmd)

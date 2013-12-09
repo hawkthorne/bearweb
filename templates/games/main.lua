@@ -31,6 +31,8 @@ local function reset()
 end
 
 function love.load(arg)
+  love.graphics.setBackgroundColor(0, 0, 0)
+
   if loaded then
     return
   end

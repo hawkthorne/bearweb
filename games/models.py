@@ -102,21 +102,28 @@ class Release(models.Model):
         return asset.blob.url.replace("https://", "http://")
 
     def appcast(self):
-        asset = self.get_asset('osx')
+        osx_asset = self.get_asset('osx')
+        exe_asset = self.get_asset('exe')
 
-        if asset is None:
-            return {'platforms': []}
+        platforms = []
+
+        if osx_asset:
+            platforms.append({
+                'name': 'macosx',
+                'arch': 'universal',
+                'files': [osx_asset.appcast()],
+            })
+
+        if exe_asset:
+            platforms.append({
+                'name': 'windows',
+                'arch': 'i386',
+                'files': [exe_asset.appcast()],
+            })
 
         return {
             'changelog': '',
-            'platforms': [{
-                'name': 'macosx',
-                'arch': 'universal',
-                'files': [{
-                    'url': asset.blob.url.replace("https://", "http://"),
-                    'length': asset.blob.size,
-                }],
-            }],
+            'platforms': platforms,
             'published': '',
             'title': '{} | Version {}'.format(self.game.name, self.version),
             'version': self.version,
@@ -144,6 +151,12 @@ class Asset(models.Model):
     release = models.ForeignKey(Release)
     blob = models.FileField(upload_to=asset_path)
     tag = models.CharField(max_length=20)
+
+    def appcast(self):
+        return {
+            'url': self.blob.url.replace("https://", "http://"),
+            'length': self.blob.size,
+        }
 
     def __unicode__(self):
         return self.blob.name

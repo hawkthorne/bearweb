@@ -57,3 +57,14 @@ need to change the username to your username. To test locally:
     vagrant ssh
     cd /vagrant/tests
     sudo ./test-production
+
+
+## Testing on Windows
+
+It's helpful to be able to test all of this in a VM as well. To do this, we use
+a small reverse proxy that lives on the VM that proxy localhost:8000 to the
+host machine. 
+
+Download [reversal](https://github.com/kyleconroy/reversal) and run with this command
+
+    reversal.exe :8000 http://<host-ip>:8000

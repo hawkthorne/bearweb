@@ -6,6 +6,7 @@ import tempfile
 from django.conf import settings
 from django.template.loader import render_to_string
 from django.core.files import File
+from django.core.files.base import ContentFile
 
 from .models import Release
 
@@ -112,6 +113,15 @@ def package_windows(lovefile, name, slug, version):
     return output_name, zip_name
 
 
+def package_exe(lovefile, name, slug, version):
+    love_exe = open(p("build/windows/love.exe"), "rb").read()
+    love_archive = open(lovefile, "rb").read()
+
+    blob = ContentFile(love_exe + love_archive)
+    blob.name = slug + ".exe"
+    return blob
+
+
 def inject_code(lovefile, config):
     _, output_name = tempfile.mkstemp("love")
 
@@ -158,7 +168,9 @@ def package(release_id):
     # Create binaries
     osx_file = blobify(package_osx, love, name, slug, release.version)
     win_file = blobify(package_windows, love, name, slug, release.version)
+    exe_file = package_exe(love, name, slug, release.version)
 
     # Upload
     release.add_asset(osx_file, tag='osx')
     release.add_asset(win_file, tag='windows')
+    release.add_asset(exe_file, tag='exe')
