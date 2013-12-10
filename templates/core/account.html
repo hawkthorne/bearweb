@@ -8,15 +8,14 @@
     {% include "core/accountpanel.html" %}
   </div>
   <div class="col-sm-9">
-    <h2>Account Settings</h2>
-    <h3>Docker Configuration</h3>
-
-    <h4>Authenticate via the Docker command line</h4>
-    <div id="dockercfg">
-      {{ dockercfg|safe }}
-    </div>
-    <h4>Add a new Docker repository</h3>
-    {{ docker|safe }}
+    <h2>Notifications</h2>
+    <form role="form">
+      <div class="form-group">
+        <label for="exampleInputEmail1">Email address</label>
+        <input type="email" class="form-control" id="exampleInputEmail1" value="{{ user.email }}">
+        <p class="help-block">Verified email address we'll use for notification emails</p>
+      </div>
+    </form>
   </div>
 </div>
 {% endblock %}

@@ -6,9 +6,9 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Private Hosted Docker Registry - StackMachine" />
+    <meta name="description" content="Publish, track, and sell your games - StackMachine" />
     <meta name="author" content="Stack Machine, Inc.">
-    <title>{% block title %}Private Hosted Docker Registry{% endblock title %} | StackMachine</title>
+    <title>{% block title %}Publish, track, and sell your games{% endblock title %} | StackMachine</title>
     <link href="{% static 'css/app.css' %}" media="screen, projection" rel="stylesheet" type="text/css" />
     <link rel="shortcut icon" href="{% static 'favicon.ico' %}">
     <link rel="alternate" type="application/rss+xml" title="StackMachine Blog" href="https://www.stackmachine.com/blog/feed.xml" />
@@ -21,7 +21,11 @@
     <div class="header">
       <div class="container">
         <nav class="row custom-top-bar">
+          {% if user.is_authenticated %}
+          <a id="logo" href="{% url 'dashboard' %}">
+          {% else %}
           <a id="logo" href="/">
+          {% endif %}
             <img class='logomark' src="{% static 'img/logomark.png' %}"></img>
           </a>
           <ul class="top-bar-links">

@@ -5,39 +5,13 @@
 {% block title %}Releases | {{ game.name }}{% endblock %}
 
 {% block content %}
+
+{% include "games/gamebar.html" %}
+
 <div class="row">
   <div class="col-sm-12">
-    {% include "games/gamebar.html" %}
-    <table class="table">
-      <thead>
-        <tr>
-          <th>Version</th>
-          <th>Windows</th>
-          <th>OSX</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for release in object_list %}
-        <tr>
-          <td>{{ release.version }}</td>
-          <td>
-            {% if release.windows_url %}
-            <a href="{{ release.windows_url }}">Download</a></td>
-            {% else %}
-            <span>Processing...</span>
-            {% endif %}
-          </td>
-          <td>
-            {% if release.osx_url %}
-            <a href="{{ release.osx_url }}">Download</a></td>
-            {% else %}
-            <span>Processing...</span>
-            {% endif %}
-          </td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+    <h2>Releases</h2>
+    {% include "games/_release_table.html" %}
     <a class='btn btn-primary' href="{% url 'games:newrelease' game.uuid %}">Draft new release</a>
   </div>
 </div>

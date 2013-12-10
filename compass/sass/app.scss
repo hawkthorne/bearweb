@@ -495,3 +495,19 @@ ul.top-bar-links li {
   background: rgb(169, 32, 83);
 }
 
+.btn-group-full {
+  width: 100%;
+  margin-bottom: 25px;
+}
+
+.overview-graph {
+  padding: 0px;
+  height: 200px;
+  text-align: center;
+  display: inline-block !important;
+}
+
+.overview-graph div {
+  margin: 0 auto;
+}
+

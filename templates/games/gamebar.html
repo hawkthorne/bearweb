@@ -1,8 +1,6 @@
 {% load core_extras %}
-<h1>{{ game.name }}</h1>
-<ul class="nav nav-tabs">
-  <li class="{% active 'games:view' %}"><a href="{% url 'games:view' game.uuid %}">Dashboard</a></li>
-  <li class="{% active 'games:metrics' %}"><a href="{% url 'games:metrics' game.uuid %}">Metrics</a></li>
-  <li class="{% active 'games:crashes' %}"><a href="{% url 'games:crashes' game.uuid %}">Crash Reports</a></li>
-  <li class="{% active 'games:releases' %}"><a href="{% url 'games:releases' game.uuid %}">Releases</a></li>
-</ul>
+<div class="row gamebar">
+  <div class="col-sm-12">
+    <h1><a href="{% url "games:view" game.uuid %}">{{ game.name }}</a></h1>
+  </div>
+</div>

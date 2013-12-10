@@ -6,9 +6,12 @@
 {% block title %}Create a New Release{% endblock %}
 
 {% block content %}
+
+{% include "games/gamebar.html" %} 
+
 <div class="row">
   <div class="col-sm-12">
-    {% include "games/gamebar.html" %}
+    <h2>Create a new release</h2>
     <form id="upload" action="" role="form" enctype="multipart/form-data" method="POST">
       {% csrf_token %}
       <div id="drop">

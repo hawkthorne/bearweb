@@ -38,18 +38,22 @@ class GameDetail(UUIDMixin, LoginRequiredMixin, DetailView):
         if context['game'].owner != self.request.user:
             raise Http404
 
+        game = context['game']
+
         context['KEEN_PROJECT_ID'] = settings.KEEN_PROJECT_ID
         context['KEEN_READ_KEY'] = settings.KEEN_READ_KEY
-
+        context['releases'] = game.release_set.order_by('-created')[:10]
+        context['crash_reports']= game.crashreport_set.order_by('-created')[:5]
         return context
 
 
 class ReportList(LoginRequiredMixin, ListView):
     model = CrashReport
+    context_object_name = 'crash_reports'
 
     def get_queryset(self):
         self.game = get_game(self.request, self.kwargs['uuid'])
-        return CrashReport.objects.filter(game=self.game).order_by('-created')
+        return self.game.crashreport_set.order_by('-created')
 
     def get_context_data(self, **kwargs):
         context = super(ReportList, self).get_context_data(**kwargs)
@@ -59,6 +63,7 @@ class ReportList(LoginRequiredMixin, ListView):
 
 class ReleaseList(LoginRequiredMixin, ListView):
     model = Release
+    context_object_name = 'releases'
 
     def get_queryset(self):
         self.game = get_game(self.request, self.kwargs['uuid'])
