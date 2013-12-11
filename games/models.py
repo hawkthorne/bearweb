@@ -23,6 +23,7 @@ class Framework(models.Model):
 _PUBLIC_CHOICES = ((True, 'Public'), (False, 'Private'))
 _PUBLIC_HELP = "Public games can be downloaded for free without paying"
 
+
 class Game(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)

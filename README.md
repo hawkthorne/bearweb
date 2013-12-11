@@ -15,14 +15,18 @@ Various secret information is kept in environment variables, outside of source
 control. You'll need the following keys for your local application to work
 correctly.
 
-    GITHUB_ID
-    GITHUB_SECRET
-    MAILGUN_KEY
-    SENTRY_DSN
-    SECRET_KEY
+    AWS_ACCESS_KEY_ID
+    AWS_SECRET_ACCESS_KEY
+    DATABASE_URL
     DJANGO_SETTINGS_MODULE
+    KEEN_PROJECT_ID
+    KEEN_READ_KEY
+    KEEN_WRITE_KEY
+    MAILGUN_DOMAIN
+    MAILGUN_PASSWORD
+    MIXPANEL_API_TOKEN
+    STRIPE_PUBLISHABLE_KEY
     STRIPE_SECRET_KEY
-
 
 ## Running locally
 
