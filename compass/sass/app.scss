@@ -617,6 +617,19 @@ ul.top-bar-links li {
   background: transparent url('/static/img/pw_maze_white.png');
 }
 
+.featureshot img {
+  width: 100%;
+  vertical-align: middle;
+  max-width: 360px;
+}
+
+.featureshot .helper {
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+}
+
+
 .features > div {
   text-align: center;
 }
@@ -627,7 +640,7 @@ ul.top-bar-links li {
   border-bottom: 1px solid #ddd;
   background: white;
   display: inline-block;
-  margin: 20px;
+  margin: 20px 0;
 }
 
 #bloglogo {
@@ -638,6 +651,10 @@ ul.top-bar-links li {
 #bloglogo img {
   width: 100%;
   max-width: 450px;
+}
+
+.post img {
+  width: 100%;
 }
 
 .download-links input {

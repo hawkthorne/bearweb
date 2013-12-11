@@ -35,7 +35,7 @@ Content-Security-Policy: "default-src 'self'; script-src 'self' https://ssl.goog
 With this header in place, let's see what happens when we load our page with a
 Google Analytics tracking snippet.
 
-<img src="/static/img/csp-violation.png" alt="CSP Violation" />
+<img style="max-width:514px" src="/static/img/csp-violation.png" alt="CSP Violation" />
 
 Uh-oh.
 
@@ -82,7 +82,7 @@ to make sure it's the last script to load.
 
 Refresh the page, and you should see that Google Analytics is working as intended.
 
-<img src="/static/img/csp-ok.png" alt="CSP Ok" />
+<img style="max-width:571px"  src="/static/img/csp-ok.png" alt="CSP Ok" />
 
 Please remember that CSP is just another tool to help secure your web
 application and does not replace proper HTML escaping. Browsers without CSP
