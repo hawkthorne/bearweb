@@ -635,6 +635,11 @@ ul.top-bar-links li {
   margin-top: 20px;
 }
 
+#bloglogo img {
+  width: 100%;
+  max-width: 450px;
+}
+
 .download-links input {
   font-family: Monaco,Menlo,Consolas,"Courier New",monospace;
 }
@@ -642,7 +647,6 @@ ul.top-bar-links li {
 .download-links:first-child {
   margin-bottom: 15px;
 }
-
 
 .download-links span div {
   width: 50px;
