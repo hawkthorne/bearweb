@@ -34,7 +34,8 @@ STATICFILES_STORAGE = (
 )
 
 # Enable for CDN
-STATIC_URL = 'https://d2votg94yd3u26.cloudfront.net/static/'
+# STATIC_URL = 'https://d2votg94yd3u26.cloudfront.net/static/'
+STATIC_URL = '/static/'
 
 INSTALLED_APPS += (
     'raven.contrib.django.raven_compat',
