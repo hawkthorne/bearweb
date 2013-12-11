@@ -3,64 +3,41 @@
 {% block title %}Pricing{% endblock %}
 
 {% block content %}
+<div class="row pricing">
+  <div class="col-xs-12 col-md-offset-2 col-md-8">
+    <div class="jumbo">Free</div>
+    <h1>A Price That Everyone Will Love</h1>
+    <h3>During the beta, StackMachine is completely free to use</h3>
+  </div>
+</div>
+
+<div class="row pricing-faq">
+  <div class="col-sm-6">
+    <h5>Will StackMachine always be free?</h5>
+    <p>No. StackMachine is only free during the beta period. Pricing will be announced when the beta is over.</p>
+    <h5>Will games created during the beta be free in the future?</h5>
+    <p>Yes. Any game registered during the beta will be grandfathered in on the free plan. Don't worry, we have your back.</p>
+    <h5>What frameworks does StackMachine support?</h5>
+    <p>StackMachine currently only supports the <a href="http://love2d.org">LÖVE framework</a>. We'll be adding support for other popular frameworks (Unity, LibGDX, etc) in the near future. If you'd like early access, sign up using <a href="#">this form</a>.</p>
+  </div>
+
+  <div class="col-sm-6">
+    <h5>What percenage does StackMachine take of sale revenue?</h5>
+    <p>0%. All sale revenue (after processing fees) goes directly to you. Please note that this percentage may change in the future.</p>
+    <h5>Do I have to pay for download bandwidth?</h5>
+    <p>Nope. All games receive an unlimited number of downloads.</p>
+  </div>
+</div>
+
 <div class="row">
-  <div class="col-sm-12">
-    <h2>Plans & Pricing <small>Try StackMachine free for 14 days, no credit card required</small></h2>
+    <div class="col-sm-12">
+      <div class="pricing-callout">
+        <h2>Upload your game today</h2>
+        <a class="btn btn-lg btn-primary" href="{% url 'registration_register' %}">Get started with StackMachine</a>
+</div>
+      </div>
+    </div>
   </div>
 </div>
 
-
-<div class="row prices">
-  <div class="col-xs-6 col-sm-3">
-    <div class="pricing-table">
-      <div class="price">
-        <span class="sign">$</span>
-        <span class="dollars">7</span>
-        <span class="month">/mo</span>
-      </div>
-      <div class="title">Basic</div>
-      <div class="cta-button"><a class="btn btn-primary" href="{% url 'portal' %}">14-day free trial</a></div>
-      <div class="bullet-item"><strong>3</strong> private repositories</div>
-    </div>
-  </div>
-
-  <div class="col-xs-6 col-sm-3">
-    <div class="pricing-table featured">
-      <div class="price">
-        <span class="sign">$</span>
-        <span class="dollars">20</span>
-        <span class="month">/mo</span>
-      </div>
-      <div class="title">Standard</div>
-      <div class="cta-button"><a class="btn btn-primary" href="{% url 'portal' %}">14-day Free Trial</a></div>
-      <div class="bullet-item"><strong>10</strong> private repositories</div>
-    </div>
-  </div>
-
-  <div class="col-xs-6 col-sm-3">
-    <div class="pricing-table">
-      <div class="price">
-        <span class="sign">$</span>
-        <span class="dollars">50</span>
-        <span class="month">/mo</span>
-      </div>
-      <div class="title">Premium</div>
-      <div class="cta-button"><a class="btn btn-primary" href="{% url 'portal' %}">14-day Free Trial</a></div>
-      <div class="bullet-item"><strong>30</strong> private repositories</div>
-    </div>
-  </div>
-
-  <div class="col-xs-6 col-sm-3">
-    <div class="pricing-table">
-      <div class="price">
-        <span class="enterprise">Call for pricing<br/>+1 855-782-2525</span>
-      </div>
-      <div class="title">Enterprise</div>
-      <div class="cta-button">
-        <a href="{% url 'contact' %}" class="btn btn-default">Contact Sales</a>
-      </div>
-      <div class="bullet-item"><strong>Unlimited</strong> private repositories</div>
-    </div>
-  </div>
-</div>
 {% endblock %}

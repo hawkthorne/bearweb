@@ -2,6 +2,8 @@ from django.http import Http404
 from django.core.urlresolvers import reverse
 from django.template.defaultfilters import slugify
 from django.shortcuts import get_object_or_404
+from django.shortcuts import redirect
+from django.views.decorators.http import require_safe
 from django.views.generic import DetailView, ListView
 from django.views.generic.edit import CreateView, FormView
 from django.conf import settings
@@ -9,7 +11,7 @@ from django.conf import settings
 from braces.views import LoginRequiredMixin
 
 from .models import Game, Release, CrashReport
-from .forms import LoveForm
+from .forms import LoveForm, GameForm
 
 from games import tasks
 
@@ -43,7 +45,8 @@ class GameDetail(UUIDMixin, LoginRequiredMixin, DetailView):
         context['KEEN_PROJECT_ID'] = settings.KEEN_PROJECT_ID
         context['KEEN_READ_KEY'] = settings.KEEN_READ_KEY
         context['releases'] = game.release_set.order_by('-created')[:10]
-        context['crash_reports']= game.crashreport_set.order_by('-created')[:5]
+        context['crash_reports'] = \
+            game.crashreport_set.order_by('-created')[:5]
         return context
 
 
@@ -107,9 +110,35 @@ class ReleaseCreate(LoginRequiredMixin, FormView):
 
 class GameCreate(LoginRequiredMixin, CreateView):
     model = Game
-    fields = ['name', 'framework']
+    form_class = GameForm
 
     def form_valid(self, form):
         form.instance.owner = self.request.user
         form.instance.slug = slugify(form.instance.name)
         return super(GameCreate, self).form_valid(form)
+
+
+@require_safe
+def download(request, uuid, platform):
+    game = get_object_or_404(Game, uuid=uuid)
+
+    if not game.public:
+        raise Http404
+
+    if platform not in ['windows', 'osx']:
+        raise Http404
+
+    try:
+        release = game.latest_release()
+    except IndexError:
+        raise Http404
+
+    if platform == "windows":
+        url = release.windows_url()
+    else:
+        url = release.osx_url()
+
+    if not url:
+        raise Http404
+
+    return redirect(url)

@@ -4,58 +4,65 @@
 {% block wide %}
 <div class="heroshot">
   <div class="container">
-    <div id="topshot" class="col-md-12">
-      <div class="row herorow">
-        <div class="col-md-12">
-          <h2>Host your Docker images with ease</h2>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-3 col-md-offset-3 col-sm-4 col-sm-offset-2">
-          <a class="btn btn-lg btn-default" href="{% url 'auth_login' %}">Sign up</a>
-        </div>
-        <div class="col-sm-4 col-md-3">
-          <a class="btn btn-lg btn-primary" href="">Sign in with GitHub</a>
-        </div>
+    <div class="row">
+      <div class="col-md-12">
+        <h2>Focus on your game.</h2>
+        <h3>We'll take care of the rest.</h3>
+        <p>StackMachine is the easiest way to publish your game online.</p>
+        <a class="btn btn-lg btn-primary" href="{% url 'registration_register' %}">Publish Your Game Now</a>
       </div>
     </div>
   </div>
 </div>
 
 <div class="container">
-  <div class="col-md-12 howitworks">
-    <div class="row text-center">
-      <h3>How it works:</h3>
+  <div class="row features">
+    <div class="col-sm-12">
+      <h3>Why You'll Love StackMachine</h3>
     </div>
-    <div class="row">
-      <div class="col-xs-4 text-center">
-        <img src="{% static 'img/number-1.png' %}" alt="1" />
-        <h4>docker build</h4>
-        <p>Create a Docker image from a running container or a premade Dockerfile.</p>
+  </div>
+  <div class="row">
+    <div class="col-sm-6 col-lg-5 col-lg-offset-1">
+      <div class="featureshot">
+        <img src="{% static 'img/frontpage/updates.png' %}" alt="Autmatic Updates" />
       </div>
-      <div class="col-xs-4 text-center">
-        <img src="{% static 'img/number-2.png' %}" alt="2" />
-        <h4>docker push</h4>
-        <p>Upload your image to your private StackMachine repository. Tag it for later.</p>
+      <h4>Keep Your Game Up to Date, Automatically</h4>
+      <p>No more sending emails to your players, begging them to get the latest version. No more integrating libraries that only work on certain platforms. Automatic updating via StackMachine just works. Upload your binary and forget about the rest.</p>
+    </div>
+    <div class="col-sm-6 col-lg-5">
+      <div class="featureshot">
+        <img src="{% static 'img/frontpage/graphs.png' %}" alt="Graphs" />
       </div>
-      <div class="col-xs-4 text-center">
-        <img src="{% static 'img/number-3.png' %}" alt="3" />
-        <h4>docker pull</h4>
-        <p>Deploy your image to production. Track when and where it’s been deployed.</p>
+      <h4>Get to Know Your Players</h4>
+      <p>Metrics come built into the StackMachine platform. Know how many people are playing your game, for how long, and what system they're using. </p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-6 col-lg-5 col-lg-offset-1">
+      <div class="featureshot">
+        <img src="{% static 'img/frontpage/crashes.png' %}" alt="Crash Reports" />
       </div>
+      <h4>Never Miss a Crash Report</h4>
+      <p>Gone are the days of manual bug reports and trawling through forums to find images of stack traces. If your game crashes, you'll have a complete stack trace along with system metadata to diagnose the issue.</p>
+    </div>
+    <div class="col-sm-6 col-lg-5">
+      <div class="featureshot">
+        <img src="{% static 'img/frontpage/upload.png' %}" alt="Upload" />
+      </div>
+      <h4>No Coding Required</h4>
+      <p>Publishing via StackMachine is simple and quick. Just drag and drop the latest version of your game and we'll handle the rest. Your game will be available to download in under a minute.</p>
     </div>
   </div>
 
-  <div id="bottomsell" class="col-md-12">
-    <div class="row herorow">
-      <div class="col-sm-9">
-        <h2>Try StackMachine free for fourteen days</h2>
-        <h4>No credit required</h4>
-      </div>
-      <div class="col-sm-3">
-        <a class="btn btn-lg btn-primary" href="">Get started now</a>
+  <div class="row">
+    <div class="col-sm-12 col-lg-10 col-lg-offset-1">
+      <div class="pricing-callout">
+        <h2>Upload your game today</h2>
+        <a class="btn btn-lg btn-primary" href="{% url 'registration_register' %}">Get started with StackMachine</a>
       </div>
     </div>
   </div>
 </div>
+
+
 {% endblock %}

@@ -12,7 +12,7 @@ from .models import Release
 
 
 def game_config(pk, version):
-    base_url = "http://{}/api/games/{}".format(settings.HOSTNAME, pk)
+    base_url = "{}/api/games/{}".format(settings.HOSTNAME, pk)
     return json.dumps({
         "version": version,
         "links": {

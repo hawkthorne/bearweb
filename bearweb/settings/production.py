@@ -72,7 +72,7 @@ AWS_SECRET_ACCESS_KEY = get_env_var('AWS_SECRET_ACCESS_KEY')
 AWS_STORAGE_BUCKET_NAME = 'uploads.production.bearraid.com'
 
 # FIXME
-HOSTNAME = 'example.com'
+HOSTNAME = 'https://bearweb.herokuapp.com'
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#secret-key
 SECRET_KEY = get_env_setting('SECRET_KEY')

@@ -31,7 +31,7 @@ INSTALLED_APPS += (
     'debug_toolbar',
 )
 
-HOSTNAME = 'localhost:8000'
+HOSTNAME = 'http://localhost:8000'
 
 # See: https://github.com/django-debug-toolbar/django-debug-toolbar
 INTERNAL_IPS = ('127.0.0.1',)

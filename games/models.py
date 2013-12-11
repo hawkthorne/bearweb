@@ -20,6 +20,9 @@ class Framework(models.Model):
         return self.name
 
 
+_PUBLIC_CHOICES = ((True, 'Public'), (False, 'Private'))
+_PUBLIC_HELP = "Public games can be downloaded for free without paying"
+
 class Game(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
@@ -28,11 +31,26 @@ class Game(models.Model):
     slug = models.SlugField(max_length=128)
     uuid = models.CharField(max_length=24, db_index=True, unique=True)
     framework = models.ForeignKey(Framework)
+    public = models.BooleanField(default=False, help_text=_PUBLIC_HELP,
+                                 choices=_PUBLIC_CHOICES)
+
+    def __unicode__(self):
+        return self.name
 
     def save(self, *args, **kwargs):
         if not self.uuid:
             self.uuid = tubeid()
         super(Game, self).save(*args, **kwargs)
+
+    def download_links(self):
+        def fullurl(uuid, platform):
+            path = reverse('games:download', args=[uuid, platform])
+            return settings.HOSTNAME + path
+
+        return [
+            ('Windows', fullurl(self.uuid, 'windows')),
+            ('OSX', fullurl(self.uuid, 'osx')),
+        ]
 
     def appcast(self):
         items = []
@@ -44,6 +62,9 @@ class Game(models.Model):
             'description': 'Eventually put game description here',
             'items': items,
         }
+
+    def latest_release(self):
+        return self.release_set.order_by('-created')[0]
 
     def get_absolute_url(self):
         return reverse("games:view", kwargs={"uuid": self.uuid})

@@ -34,6 +34,19 @@ class GamesModelTests(TestCase):
 
         self.assertEquals("0.3.0", game.next_version())
 
+    def test_game_download_links(self):
+        game = Game.objects.create(owner=self.user, framework=self.other,
+                                   name="Foo", slug="foo")
+        game.release_set.create(version="0.1.0")
+
+        links = game.download_links()
+        win, osx = links[0], links[1]
+
+        self.assertEquals('Windows', win[0])
+        self.assertEquals('OSX', osx[0])
+
+        self.assertIn('http://localhost:8000/games', osx[1])
+
     def test_release_add_asset(self):
         game = Game.objects.create(owner=self.user, framework=self.other,
                                    name="Foo", slug="foo")
