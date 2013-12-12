@@ -251,6 +251,10 @@ CELERY_ACCEPT_CONTENT = ['json', 'msgpack', 'yaml']
 KEEN_PROJECT_ID = get_env_var('KEEN_PROJECT_ID')
 KEEN_READ_KEY = get_env_var('KEEN_READ_KEY')
 
+SECURE_HOSTNAME = 'http://localhost:8000'
+INSECURE_HOSTNAME = 'http://localhost:8000'
+
+
 #
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#wsgi-application
 WSGI_APPLICATION = '%s.wsgi.application' % SITE_NAME

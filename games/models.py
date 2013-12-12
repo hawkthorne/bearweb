@@ -46,7 +46,7 @@ class Game(models.Model):
     def download_links(self):
         def fullurl(uuid, platform):
             path = reverse('games:download', args=[uuid, platform])
-            return settings.HOSTNAME + path
+            return settings.SECURE_HOSTNAME + path
 
         return [
             ('Windows', fullurl(self.uuid, 'windows')),

@@ -73,7 +73,8 @@ AWS_SECRET_ACCESS_KEY = get_env_var('AWS_SECRET_ACCESS_KEY')
 AWS_STORAGE_BUCKET_NAME = 'cloud.stackmachine.com'
 
 # FIXME
-HOSTNAME = 'https://bearweb.herokuapp.com'
+SECURE_HOSTNAME = 'https://bearweb.herokuapp.com'
+INSECURE_HOSTNAME = 'http://bearweb.herokuapp.com'
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#secret-key
 SECRET_KEY = get_env_setting('SECRET_KEY')
