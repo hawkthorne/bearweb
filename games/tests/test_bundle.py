@@ -7,6 +7,7 @@ from django.test import TestCase
 from django.core.files import File
 from django.contrib.auth.models import User
 from django.conf import settings
+from zipfile import ZipFile
 
 from games.models import Game, Framework
 from games import bundle
@@ -33,7 +34,11 @@ class BundleTests(TestCase):
 class GamesModelTests(TestCase):
 
     def setUp(self):
-        shutil.rmtree('media')
+        try:
+            shutil.rmtree('media')
+        except OSError:
+            pass
+
         self.user = User.objects.create_user("foo", "bar@example.com", "pass")
         self.other = Framework.objects.create(name="Other")
         self.game = Game.objects.create(owner=self.user, framework=self.other,
@@ -49,3 +54,22 @@ class GamesModelTests(TestCase):
         asset = release.get_asset('osx')
 
         self.assertIn('0.1.0/foo-osx-0.1.0.zip', asset.blob.url)
+
+    def test_package_game_with_folders(self):
+        os.mkdir('media')
+
+        lovefile = os.path.abspath('games/tests/game_with_folders.love')
+        path = bundle.inject_code(lovefile, "{}")
+
+        shutil.move(path, 'media/game.love')
+
+        oldzip = ZipFile(lovefile)
+        newzip = ZipFile('media/game.love')
+
+        newperm = newzip.getinfo('foo/').external_attr
+        oldperm = oldzip.getinfo('foo/').external_attr
+        self.assertEquals(oldperm, newperm)
+
+        newperm = newzip.getinfo('foo/bar.lua').external_attr
+        oldperm = oldzip.getinfo('foo/bar.lua').external_attr
+        self.assertEquals(oldperm, newperm)

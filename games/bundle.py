@@ -130,11 +130,12 @@ def inject_code(lovefile, config):
     # Populate with existing code
     with zipfile.ZipFile(lovefile) as old_archive:
         for zipinfo in old_archive.infolist():
+            filename = zipinfo.filename
+
             if zipinfo.filename == 'main.lua':
-                name = 'oldmain.lua'
-            else:
-                name = zipinfo.filename
-            archive.writestr(name, old_archive.read(zipinfo.filename))
+                zipinfo.filename = 'oldmain.lua'
+
+            archive.writestr(zipinfo, old_archive.read(filename))
 
     # Add code
     for script in os.listdir(p("build/sparkle")):
