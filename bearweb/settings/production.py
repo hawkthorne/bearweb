@@ -64,7 +64,7 @@ SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 
 
-MIDDLEWARE_CLASSES = ('sslify.middleware.SSLifyMiddleware',) + \
+MIDDLEWARE_CLASSES = ('core.middleware.SSLifyMiddleware',) + \
     MIDDLEWARE_CLASSES
 
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'

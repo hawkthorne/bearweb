@@ -1,18 +1,11 @@
-import json
-
 from django.contrib import messages
-from django.core.urlresolvers import reverse_lazy
 from django.shortcuts import redirect
 from django.forms import ValidationError
-from django.views.generic import TemplateView, DetailView
-from django.views.generic.edit import FormView, DeleteView
-from django.http import Http404
+from django.views.generic import TemplateView
+from django.views.generic.edit import FormView
 from django.conf import settings
 
 from braces.views import LoginRequiredMixin
-from pygments import highlight
-from pygments.lexers import BashLexer
-from pygments.formatters import HtmlFormatter
 
 from .forms import ContactForm
 from core import tasks
@@ -49,6 +42,11 @@ def track(event, **kwargs):
         tasks.track.delay(event, **kwargs)
     except:  # Gotta catch 'em all
         pass
+
+
+# FIXME:
+class Subscription(object):
+    pass
 
 
 class LoginRequiredMixpanel(LoginRequiredMixin):

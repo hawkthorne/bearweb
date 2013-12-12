@@ -18,7 +18,9 @@ class ActiveNode(template.Node):
 
         return ""
 
+
 register = template.Library()
+
 
 @register.simple_tag(takes_context=True)
 def active(context, url_name, return_value=' active', **kwargs):
@@ -39,7 +41,8 @@ def current_url_equals(context, url_name, **kwargs):
     except urlresolvers.Resolver404:
         pass
 
-    matches = resolved and resolved.url_name == url_name and resolved.namespace == namespace
+    matches = resolved and resolved.url_name == url_name \
+        and resolved.namespace == namespace
 
     if matches and kwargs:
         for key in kwargs:
@@ -48,4 +51,3 @@ def current_url_equals(context, url_name, **kwargs):
             if not resolved_kwarg or kwarg != resolved_kwarg:
                 return False
     return matches
-

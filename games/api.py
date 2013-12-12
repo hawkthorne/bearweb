@@ -7,6 +7,7 @@ from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 
 from .models import Game, CrashReport
+from core.decorators import ssl_exempt
 from games import fieldmarshal
 
 
@@ -60,7 +61,8 @@ def allowed(*args):
     return outer
 
 
-@allowed('GET', 'POST')
+@allowed('POST')
+@ssl_exempt
 @csrf_exempt
 def metrics(request, game_uuid):
     try:
@@ -84,15 +86,14 @@ def metrics(request, game_uuid):
         metric.properties['game_uuid'] = game.uuid
         events[metric.event].append(metric.properties)
 
-    print events
-
     # Keen to the rescue
     keen.add_events(events)
 
     return jsonify('', code=204)
 
 
-@allowed('GET', 'POST')
+@allowed('POST')
+@ssl_exempt
 @csrf_exempt
 def errors(request, game_uuid):
     try:
@@ -128,7 +129,8 @@ def errors(request, game_uuid):
     return api_error('', code=204)
 
 
-@allowed('GET')
+@allowed('GET', 'HEAD')
+@ssl_exempt
 @csrf_exempt
 def appcast(request, game_uuid):
     try:

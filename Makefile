@@ -56,7 +56,7 @@ css:
 	cd compass && exec compass watch .
 
 fmt:
-	. venv/bin/activate; flake8 blog bearweb games \
+	. venv/bin/activate; flake8 blog core bearweb games \
 		--exclude "migrations"
 
 test: fmt

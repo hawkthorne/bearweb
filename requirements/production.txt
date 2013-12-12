@@ -2,6 +2,5 @@
 #	production that isn't in development.
 -r base.txt
 
-django-sslify==0.2
 raven==3.5.2
 django-redis-cache==0.10.0
