@@ -53,6 +53,9 @@ class Game(models.Model):
             ('OSX', fullurl(self.uuid, 'osx')),
         ]
 
+    def icon_url(self):
+        return "img/icons/{}.png".format(self.pk)
+
     def appcast(self):
         items = []
 

@@ -541,11 +541,12 @@ ul.top-bar-links li {
   display: block;
   margin: 0 auto;
   border: 1px solid black;
-  box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.10);
   background-color: green;
   font-size: 85px;
   background: #888;
+  border-radius: 10px;
   color: white;
+  overflow: hidden;
 }
 
 .game .newgame {
@@ -556,10 +557,14 @@ ul.top-bar-links li {
   line-height: 1.42857;
 }
 
+.game .cover img {
+  width: 100%;
+}
+
+
 .game .cover:hover {
   color: white;
   background: #777; 
-  text-shadow: 0px 0px 3px #000000;
 }
 
 .game .newgame:hover{

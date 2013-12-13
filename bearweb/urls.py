@@ -6,8 +6,7 @@ from django.contrib import admin
 admin.autodiscover()
 
 from core.views import ContactView, PortalView, PricingView
-from core.views import Dashboard
-from core.views import UpgradeView, UpgradePayView, ChangePlanView
+from core.views import Dashboard, user_redirect
 from blog.views import ArticleView
 
 
@@ -26,6 +25,8 @@ urlpatterns = patterns(
     url(r'^dashboard$', Dashboard.as_view(), name='dashboard'),
     url(r'^robots.txt$', TemplateView.as_view(template_name='core/robots.txt',
                                               content_type='text/plain')),
+    url(r'^attribution$', template('core/attribution.html'),
+        name='attribution'),
     url(r'^pricing$', PricingView.as_view(), name='pricing'),
     url(r'^privacy$', template('core/privacy.html'), name='privacy'),
     url(r'^tos$', template('core/tos.html'), name='tos'),
@@ -37,10 +38,9 @@ urlpatterns = patterns(
 
     url(r'^account/$', PortalView.as_view(), name='account_portal'),
     url(r'^account/settings$', PortalView.as_view(), name='portal'),
-    url(r'^account/plans$', UpgradeView.as_view(), name='upgrade'),
-    url(r'^account/plans/pay$', UpgradePayView.as_view(), name='pay'),
-    url(r'^account/plans/changeplan$',
-        ChangePlanView.as_view(), name='changeplan'),
+    url(r'^account/plans$', user_redirect, name='upgrade'),
+    url(r'^account/plans/pay$', user_redirect, name='pay'),
+    url(r'^account/plans/changeplan$', user_redirect, name='changeplan'),
     url(r'^users/[a-zA-Z0-9_]+/?', 'core.views.user_redirect'),
 
     url(r'^houston/', include(admin.site.urls)),
