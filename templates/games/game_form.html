@@ -8,6 +8,7 @@
 <div class="row">
   <div class="col-sm-12">
     <h1>Create a new game</h1>
+    {% include 'games/beta.html' %}
     <form action="" role="form" method="POST">{% csrf_token %}
       {{ form|bootstrap }}
       <input class="btn btn-primary btn-lg" type="submit" value="Create Game">

@@ -5,7 +5,7 @@
 {% block content %}
 
 <div class="row">
-  <div class="col-sm-12">
+  <div class="col-sm-8">
     <h1>My Games
 </h2>
     <div class="row">
@@ -23,5 +23,9 @@
       {% endfor %}
     </div>
   </div>
+  <div class="col-sm-4 beta">
+    {% include 'games/beta.html' %}
+  </div>
 </div>
+
 {% endblock %}
