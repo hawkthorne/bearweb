@@ -157,5 +157,9 @@ class UpgradePayView(LoginRequiredMixpanel, FormView):
         return redirect("portal")
 
 
+def feed_redirect(request):
+    return redirect('dashboard')
+
+
 def user_redirect(request):
     return redirect('portal')

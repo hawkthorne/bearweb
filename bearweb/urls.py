@@ -41,7 +41,7 @@ urlpatterns = patterns(
     url(r'^account/plans$', user_redirect, name='upgrade'),
     url(r'^account/plans/pay$', user_redirect, name='pay'),
     url(r'^account/plans/changeplan$', user_redirect, name='changeplan'),
-    url(r'^users/[a-zA-Z0-9_]+/?', 'core.views.user_redirect'),
+    url(r'^users/[a-zA-Z0-9_]+/?', 'core.views.feed_redirect'),
 
     url(r'^houston/', include(admin.site.urls)),
 
