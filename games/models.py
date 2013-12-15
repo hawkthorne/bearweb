@@ -94,7 +94,6 @@ class Game(models.Model):
         unique_together = ("owner", "slug")
 
 
-
 @receiver(post_save, sender=Game)
 def track_create_game(sender, instance, created, **kwargs):
     if created:
