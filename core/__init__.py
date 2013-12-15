@@ -1,2 +1,1 @@
-import signals
-signals.connect()
+import signals  # flake8: noqa

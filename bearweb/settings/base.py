@@ -191,7 +191,7 @@ LOCAL_APPS = (
 )
 
 # Mixpanel and Celery
-MIXPANEL_API_TOKEN = 'b7d91e1507e8ddaf1c2ae11e3a8a3c05'
+MIXPANEL_API_TOKEN = '3579b647be3dac6a6f1fd385e8031430'
 
 #in settings.py
 AUTH_PROFILE_MODULE = 'core.UserProfile'

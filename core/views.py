@@ -49,18 +49,6 @@ class Subscription(object):
     pass
 
 
-class LoginRequiredMixpanel(LoginRequiredMixin):
-    def dispatch(self, request, *args, **kwargs):
-        view = super(LoginRequiredMixpanel, self).\
-            dispatch(request, *args, **kwargs)
-
-        if request.method == 'GET' and request.user.username:
-            track('Visit Page', distinct_id=request.user.username,
-                  path=request.path)
-
-        return view
-
-
 class Dashboard(LoginRequiredMixin, TemplateView):
     template_name = 'core/home_feed.html'
 
@@ -89,11 +77,11 @@ class GuideView(TemplateView):
     template_name = "core/guide.html"
 
 
-class PortalView(LoginRequiredMixpanel, TemplateView):
+class PortalView(LoginRequiredMixin, TemplateView):
     template_name = "core/account.html"
 
 
-class UpgradeView(LoginRequiredMixpanel, TemplateView):
+class UpgradeView(LoginRequiredMixin, TemplateView):
 
     def get(self, request, *args, **kwargs):
         if request.user.subscription_set.count() > 0:
@@ -110,7 +98,7 @@ class UpgradeView(LoginRequiredMixpanel, TemplateView):
         return context
 
 
-class ChangePlanView(LoginRequiredMixpanel, FormView):
+class ChangePlanView(LoginRequiredMixin, FormView):
 
     def post(self, request, *args, **kwargs):
         plan = request.POST.get('plan')
@@ -129,7 +117,7 @@ class ChangePlanView(LoginRequiredMixpanel, FormView):
         return redirect("portal")
 
 
-class UpgradePayView(LoginRequiredMixpanel, FormView):
+class UpgradePayView(LoginRequiredMixin, FormView):
 
     def post(self, request, *args, **kwargs):
         stripe.api_key = settings.STRIPE_SECRET_KEY
