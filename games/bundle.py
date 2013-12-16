@@ -1,6 +1,7 @@
 import os
 import json
 import zipfile
+import re
 import tempfile
 
 from django.conf import settings
@@ -40,6 +41,18 @@ def relpath(path, app):
     """Return the correct relative path for the .app"""
     path = path.replace(os.path.join(settings.SITE_ROOT, "games/"), "")
     return path.replace("build/osx/love.app", app)
+
+
+_version_pattern = r"t\.version\s+=\s+(\"0\.\d\.0\"|'0\.\d\.0')"
+
+
+def detect_version(conf):
+    match = re.search(_version_pattern, conf)
+
+    if match is None:
+        return match
+
+    return match.group(1).replace('"', '').replace("'", '')
 
 
 def package_osx(lovefile, name, slug, version):

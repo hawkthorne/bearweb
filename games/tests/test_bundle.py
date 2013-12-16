@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import zipfile
 import os
 import unittest
@@ -21,6 +22,38 @@ def simple_love():
     return File(open('test.love'))
 
 
+LOVE_9_CONF = u"""
+function love.conf(t)
+    t.identity = "Picaro" -- The name of the save directory (string)
+    t.version = "0.9.0"   -- The LÖVE version this game was made for (string)
+    t.console = false     -- Attach a console (boolean, Windows only)
+end
+"""
+
+LOVE_9_CONF_TICK = u"""
+function love.conf(t)
+    t.identity = "Picaro" -- The name of the save directory (string)
+    t.version = '0.9.0'   -- The LÖVE version this game was made for (string)
+    t.console = false     -- Attach a console (boolean, Windows only)
+end
+"""
+
+LOVE_8_CONF = u"""
+function love.conf(t)
+    t.identity = "Picaro" -- The name of the save directory (string)
+    t.version = "0.8.0"   -- The LÖVE version this game was made for (string)
+    t.console = false     -- Attach a console (boolean, Windows only)
+end
+"""
+
+LOVE_NO_CONF = u"""
+function love.conf(t)
+    t.identity = "Picaro" -- The name of the save directory (string)
+    t.console = false     -- Attach a console (boolean, Windows only)
+end
+"""
+
+
 class BundleTests(TestCase):
 
     def test_relpath(self):
@@ -29,6 +62,18 @@ class BundleTests(TestCase):
 
         newpath = bundle.relpath(path, "foo.app")
         self.assertEquals("foo.app/Contents", newpath)
+
+    def test_detect_love9(self):
+        self.assertEquals("0.9.0", bundle.detect_version(LOVE_9_CONF))
+
+    def test_detect_love9_tick(self):
+        self.assertEquals("0.9.0", bundle.detect_version(LOVE_9_CONF_TICK))
+
+    def test_detect_love8(self):
+        self.assertEquals("0.8.0", bundle.detect_version(LOVE_8_CONF))
+
+    def test_detect_no_version(self):
+        self.assertEquals(None, bundle.detect_version(LOVE_NO_CONF))
 
 
 class GamesModelTests(TestCase):
