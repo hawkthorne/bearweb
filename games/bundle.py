@@ -46,7 +46,7 @@ def relpath(path, app):
 _version_pattern = r"t\.version\s+=\s+(\"0\.\d\.0\"|'0\.\d\.0')"
 
 
-def detect_version(conf):
+def love_version(conf):
     match = re.search(_version_pattern, conf)
 
     if match is None:

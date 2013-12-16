@@ -64,16 +64,16 @@ class BundleTests(TestCase):
         self.assertEquals("foo.app/Contents", newpath)
 
     def test_detect_love9(self):
-        self.assertEquals("0.9.0", bundle.detect_version(LOVE_9_CONF))
+        self.assertEquals("0.9.0", bundle.love_version(LOVE_9_CONF))
 
     def test_detect_love9_tick(self):
-        self.assertEquals("0.9.0", bundle.detect_version(LOVE_9_CONF_TICK))
+        self.assertEquals("0.9.0", bundle.love_version(LOVE_9_CONF_TICK))
 
     def test_detect_love8(self):
-        self.assertEquals("0.8.0", bundle.detect_version(LOVE_8_CONF))
+        self.assertEquals("0.8.0", bundle.love_version(LOVE_8_CONF))
 
     def test_detect_no_version(self):
-        self.assertEquals(None, bundle.detect_version(LOVE_NO_CONF))
+        self.assertEquals(None, bundle.love_version(LOVE_NO_CONF))
 
 
 class GamesModelTests(TestCase):
