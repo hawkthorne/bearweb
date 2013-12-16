@@ -12,7 +12,7 @@ class FrameworkAdmin(admin.ModelAdmin):
 
 
 class ReleaseAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['__unicode__', 'game', 'version']
 
 
 class AssetAdmin(admin.ModelAdmin):
