@@ -4,7 +4,7 @@ from .models import Game, Framework, Release, Asset
 
 
 class GameAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['name', 'uuid', 'owner', 'framework', 'public']
 
 
 class FrameworkAdmin(admin.ModelAdmin):
