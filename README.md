@@ -1,3 +1,5 @@
+![](http://i.imgur.com/xbInbI0.png)
+
 ## Working Environment
 
 You have several options in setting up your working environment.  We recommend
