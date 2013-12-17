@@ -1,9 +1,10 @@
 require "love.filesystem"
 require "love.event"
 
+local glove = require("sparkle/glove")
 local sparkle = require("sparkle")
 
-local thread = love.thread.getThread()
+local thread = glove.thread.getThread()
 
 local version = thread:demand('version')
 local url = thread:demand('url')

@@ -63,8 +63,12 @@ test: fmt
 	. venv/bin/activate; \
 		coverage run manage.py test --settings=bearweb.settings.test
 
-love:
-	games/build/osx/love.app/Contents/MacOS/love games/build
+love8:
+	games/build/love8/osx/love.app/Contents/MacOS/love games/build
+
+love9:
+	games/build/love9/osx/love.app/Contents/MacOS/love games/build
+
 
 
 pipeline: clean test

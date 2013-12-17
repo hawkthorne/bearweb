@@ -1,10 +1,11 @@
 require 'love.filesystem'
 
+local glove = require "sparkle/glove"
 local json = require "sparkle/json"
 local http = require "socket.http"
 local ltn12 = require "ltn12"
 
-local thread = love.thread.getThread()
+local thread = glove.thread.getThread()
 
 while true do
 

@@ -73,7 +73,7 @@ function windows.removeRecursive(path)
     return love.filesystem.remove(path)
   end
 
-  for k, file in ipairs(love.filesystem.enumerate(path)) do
+  for k, file in ipairs(glove.filesystem.enumerate(path)) do
     local subpath = path .. "/" .. file
 
     if love.filesystem.isDirectory(subpath) then
@@ -97,7 +97,7 @@ end
 function windows.replace(download, cwd, callback)
   -- Clean up previous updates
   windows.removeRecursive("winupdates")
-  love.filesystem.mkdir("winupdates")
+  glove.filesystem.mkdir("winupdates")
 
   local destination = love.filesystem.getSaveDirectory() .. "/winupdates"
 

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 import zipfile
 import os
 import unittest
@@ -20,11 +21,16 @@ function love.conf(t)
 end
 """
 
+MAIN = """
+function love.draw()
+  love.graphics.print(love._version, 0, 0)
+end
+"""
+
 
 def create_lovefile(path, name, version):
     love = zipfile.ZipFile(path, 'w')
-    contents = 'function love.draw() love.graphics.print("HELLO", 0, 0) end'
-    love.writestr('main.lua', contents)
+    love.writestr('main.lua', MAIN)
     contents = CONF.format(version, name)
     love.writestr('conf.lua', contents)
     love.close()
@@ -32,8 +38,9 @@ def create_lovefile(path, name, version):
 
 
 def simple_love(name, version):
-    create_lovefile('gen/test.love', name, version)
-    return File(open('gen/test.love'))
+    lovepath = os.path.join('gen', '{}.love'.format(name))
+    create_lovefile(lovepath, name, version)
+    return File(open(lovepath))
 
 
 LOVE_9_CONF = u"""
@@ -145,7 +152,8 @@ class GamesModelTests(TestCase):
 
     @unittest.skipIf('DISABLE_SLOW' in os.environ, "This is a slow test")
     def test_package_simple_game_9(self):
-        release = self.game.release_set.create(version="0.1.9")
+        release = self.game.release_set.create(love_version="0.9.0",
+                                               version="0.1.9")
         release.asset_set.create(blob=simple_love('bar9', "0.9.0"),
                                  tag='uploaded')
 

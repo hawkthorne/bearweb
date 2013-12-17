@@ -1,3 +1,4 @@
+local glove = require 'sparkle/glove'
 local utils = require 'sparkle/utils'
 local config = require 'sparkle/config'
 local json = require "sparkle/json"
@@ -16,7 +17,7 @@ function tasks.report(message, data)
   data["distinct_id"] = utils.distinctId()
 
   if thread == nil then
-    thread = love.thread.newThread("tasks", "sparkle/task_thread.lua")
+    thread = glove.thread.newThread("tasks", "sparkle/task_thread.lua")
     thread:start()
   end
 
@@ -36,7 +37,7 @@ end
 
 function tasks.track(event, data)
   if thread == nil then
-    thread = love.thread.newThread("tasks", "sparkle/task_thread.lua")
+    thread = glove.thread.newThread("tasks", "sparkle/task_thread.lua")
     thread:start()
   end
 

@@ -87,7 +87,20 @@ local function newThread(name, filedata)
   
   local thread = {}
   setmetatable(thread, NamedThread)
-  return thread:init(name, filedata)
+  thread:init(name, filedata)
+  return thread
 end
+
+local function getThread()
+  if love.thread.getThread then
+    return love.thread.getThread()
+  end
+  local thread = {}
+  setmetatable(thread, NamedThread)
+  return thread
+end
+
+glove.thread.newThread = newThread
+glove.thread.getThread = getThread
 
 return glove
