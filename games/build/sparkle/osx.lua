@@ -1,6 +1,7 @@
 require "love.timer"
 
 local os = require "os"
+local glove = require "sparkle/glove"
 local urllib = require "sparkle/urllib"
 local logging = require "sparkle/logging"
 local utils = require "sparkle/utils"
@@ -29,7 +30,7 @@ end
 
 -- no op
 function osx.cleanup()
-  for _, filename in ipairs(love.filesystem.enumerate("updates")) do
+  for _, filename in ipairs(glove.filesystem.enumerate("updates")) do
     if filename == "oldgame.app" then
       love.timer.sleep(2)
     end
@@ -51,7 +52,7 @@ function osx.getDownload(item)
 end
 
 function osx.replace(download, oldpath, callback)
-  love.filesystem.mkdir("updates")
+  glove.filesystem.mkdir("updates")
 
   local destination = love.filesystem.getSaveDirectory() .. "/updates"
   local zipfile = destination .. "/game_update_osx.zip"
@@ -66,7 +67,7 @@ function osx.replace(download, oldpath, callback)
 
   local newpath = nil
 
-  for _, filename in ipairs(love.filesystem.enumerate("updates")) do
+  for _, filename in ipairs(glove.filesystem.enumerate("updates")) do
     if utils.endswith(filename, ".app") then
       newpath = destination .. "/" .. filename
     end

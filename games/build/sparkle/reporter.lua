@@ -1,3 +1,4 @@
+local glove = require 'sparkle/glove'
 local json = require 'sparkle/json'
 local tasks = require 'sparkle/tasks'
 local config = require 'sparkle/config'
@@ -17,7 +18,7 @@ end
 
 function module.report_local(payload)
   local crashpath = string.format("crashlogs/crash-%d.json", os.time())
-  love.filesystem.mkdir("crashlogs")
+  glove.filesystem.mkdir("crashlogs")
   love.filesystem.write(crashpath, payload)
   return crashpath
 end

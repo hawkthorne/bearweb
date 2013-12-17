@@ -1,5 +1,6 @@
 require "love.filesystem"
 
+local glove = require "sparkle/glove"
 local http = require "socket.http"
 local ltn12 = require "ltn12"
 local os = require "os"
@@ -32,7 +33,7 @@ function Updater:start()
   end
 
   if not self.thread then
-    self.thread = love.thread.newThread("sparkle", "sparkle/thread.lua")
+    self.thread = glove.thread.newThread("sparkle", "sparkle/thread.lua")
     self.thread:start()
     self.thread:set('version', self.version)
     self.thread:set('url', self.url)
