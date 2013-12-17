@@ -106,6 +106,7 @@ class Release(models.Model):
     updated = models.DateTimeField(auto_now=True)
     game = models.ForeignKey(Game)
     version = models.CharField(max_length=14)
+    love_version = models.CharField(max_length=14, default="0.8.0")
     uuid = models.CharField(max_length=24, db_index=True, unique=True)
 
     def save(self, *args, **kwargs):

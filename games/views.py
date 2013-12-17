@@ -1,8 +1,10 @@
 from django.http import Http404
+from django.http import HttpResponseBadRequest
 from django.core.urlresolvers import reverse
 from django.template.defaultfilters import slugify
 from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
+from django.template.loader import render_to_string
 from django.views.decorators.http import require_safe
 from django.views.generic import DetailView, ListView
 from django.views.generic.edit import CreateView, FormView
@@ -13,6 +15,7 @@ from braces.views import LoginRequiredMixin
 from .models import Game, Release, CrashReport
 from .forms import LoveForm, GameForm
 
+from games import bundle
 from games import tasks
 
 
@@ -75,6 +78,7 @@ class ReleaseList(LoginRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super(ReleaseList, self).get_context_data(**kwargs)
         context['game'] = self.game
+        context['show_love_version'] = True
         return context
 
 
@@ -93,12 +97,21 @@ class ReleaseCreate(LoginRequiredMixin, FormView):
     def form_valid(self, form):
         game = get_game(self.request, self.kwargs['uuid'])
 
+        f = form.cleaned_data['lovefile']
+
+        if not bundle.check_for_main(f):
+            errors = {'invalid_file': True}
+            partial = render_to_string('games/upload_errors.html', errors)
+            return HttpResponseBadRequest(partial)
+
+        love_version = bundle.detect_version(f) or "0.8.0"
+
         # Get the latest release for the game, and increment the version
         version = game.next_version()
-        release = game.release_set.create(version=version)
+        release = game.release_set.create(version=version,
+                                          love_version=love_version)
 
         # FIXME: Abstract this away
-        f = form.cleaned_data['lovefile']
         f.name = "{}-original-{}.love".format(game.slug, version)
 
         release.add_asset(f, tag='uploaded')

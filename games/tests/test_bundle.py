@@ -13,13 +13,27 @@ from zipfile import ZipFile
 from games.models import Game, Framework
 from games import bundle
 
+CONF = """
+function love.conf(t)
+  t.version = "{}"
+  t.identity = "{}"
+end
+"""
 
-def simple_love():
-    love = zipfile.ZipFile('test.love', 'w')
+
+def create_lovefile(path, name, version):
+    love = zipfile.ZipFile(path, 'w')
     contents = 'function love.draw() love.graphics.print("HELLO", 0, 0) end'
     love.writestr('main.lua', contents)
+    contents = CONF.format(version, name)
+    love.writestr('conf.lua', contents)
     love.close()
-    return File(open('test.love'))
+    return love
+
+
+def simple_love(name, version):
+    create_lovefile('gen/test.love', name, version)
+    return File(open('gen/test.love'))
 
 
 LOVE_9_CONF = u"""
@@ -56,11 +70,17 @@ end
 
 class BundleTests(TestCase):
 
+    def setUp(self):
+        try:
+            os.mkdir('gen')
+        except OSError:
+            pass
+
     def test_relpath(self):
         path = os.path.join(settings.SITE_ROOT, "games", "build",
-                            "osx", "love.app", "Contents")
+                            "love8", "osx", "love.app", "Contents")
 
-        newpath = bundle.relpath(path, "foo.app")
+        newpath = bundle.relpath("build/love8", path, "foo.app")
         self.assertEquals("foo.app/Contents", newpath)
 
     def test_detect_love9(self):
@@ -71,39 +91,73 @@ class BundleTests(TestCase):
 
     def test_detect_love8(self):
         self.assertEquals("0.8.0", bundle.love_version(LOVE_8_CONF))
+        self.assertEquals("Picaro", bundle.love_identity(LOVE_8_CONF))
 
     def test_detect_no_version(self):
         self.assertEquals(None, bundle.love_version(LOVE_NO_CONF))
 
+    def test_detect_no_version_fixture(self):
+        path = 'games/tests/fixtures/no_identity_version.love'
+        self.assertEquals(None, bundle.detect_version(path))
+
+    def test_detect_no_identity(self):
+        path = 'games/tests/fixtures/no_identity_version.love'
+        self.assertEquals(None, bundle.detect_identity(path))
+
+    def test_detect_missing_files(self):
+        path = 'games/tests/fixtures/invalid.love'
+        self.assertFalse(bundle.check_for_main(path))
+
+    @unittest.skipIf('DISABLE_SLOW' in os.environ, "This is a slow test")
+    def test_lovefile_detect(self):
+        create_lovefile('gen/love8.love', 'foo8', '0.8.0')
+        self.assertEquals('0.8.0', bundle.detect_version('gen/love8.love'))
+
 
 class GamesModelTests(TestCase):
 
-    def setUp(self):
+    @classmethod
+    def setUpClass(cls):
         try:
             shutil.rmtree('media')
         except OSError:
             pass
 
+        os.mkdir('media')
+
+    def setUp(self):
         self.user = User.objects.create_user("foo", "bar@example.com", "pass")
         self.other = Framework.objects.create(name="Other")
         self.game = Game.objects.create(owner=self.user, framework=self.other,
                                         name="foo", slug="foo")
 
     @unittest.skipIf('DISABLE_SLOW' in os.environ, "This is a slow test")
-    def test_package_simple_game(self):
-        release = self.game.release_set.create(version="0.1.0")
-        release.asset_set.create(blob=simple_love(), tag='uploaded')
+    def test_package_simple_game_8(self):
+        release = self.game.release_set.create(version="0.1.8")
+        release.asset_set.create(blob=simple_love('bar8', "0.8.0"),
+                                 tag='uploaded')
 
         bundle.package(release.pk)
 
         asset = release.get_asset('osx')
 
-        self.assertIn('0.1.0/foo-osx-0.1.0.zip', asset.blob.url)
+        self.assertIn('0.1.8/foo-osx-0.1.8.zip', asset.blob.url)
+
+    @unittest.skipIf('DISABLE_SLOW' in os.environ, "This is a slow test")
+    def test_package_simple_game_9(self):
+        release = self.game.release_set.create(version="0.1.9")
+        release.asset_set.create(blob=simple_love('bar9', "0.9.0"),
+                                 tag='uploaded')
+
+        bundle.package(release.pk)
+
+        asset = release.get_asset('osx')
+
+        self.assertIn('0.1.9/foo-osx-0.1.9.zip', asset.blob.url)
 
     def test_package_game_with_folders(self):
-        os.mkdir('media')
-
-        lovefile = os.path.abspath('games/tests/game_with_folders.love')
+        lovefile = os.path.abspath(
+            'games/tests/fixtures/game_with_folders.love')
         path = bundle.inject_code(lovefile, "{}")
 
         shutil.move(path, 'media/game.love')

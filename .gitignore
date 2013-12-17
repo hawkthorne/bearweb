@@ -21,8 +21,7 @@ compass/.sass-cache
 .DS_Store
 
 django_cache
-tests/production-vars
-tests/local-vars
-test.love
 media
+gen
 *.rdb
+

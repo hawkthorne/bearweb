@@ -31,6 +31,10 @@ local function reset()
 end
 
 function love.load(arg)
+  if config.identity then
+    love.filesystem.setIdentity(config.identity)
+  end
+
   love.graphics.setBackgroundColor(0, 0, 0)
 
   if loaded then

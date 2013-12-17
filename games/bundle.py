@@ -12,9 +12,10 @@ from django.core.files.base import ContentFile
 from .models import Release
 
 
-def game_config(pk, version):
-    base_url = "{}/api/games/{}".format(settings.INSECURE_HOSTNAME, pk)
+def game_config(game, version):
+    base_url = "{}/api/games/{}".format(settings.INSECURE_HOSTNAME, game.uuid)
     return json.dumps({
+        "identity": game.slug,
         "version": version,
         "links": {
             "updates": base_url + "/appcast",
@@ -37,13 +38,14 @@ def write_symlink(archive, root, path):
     archive.writestr(zip_info, os.readlink(path))
 
 
-def relpath(path, app):
+def relpath(prefix, path, app):
     """Return the correct relative path for the .app"""
     path = path.replace(os.path.join(settings.SITE_ROOT, "games/"), "")
-    return path.replace("build/osx/love.app", app)
+    return path.replace(prefix + "/osx/love.app", app)
 
 
 _version_pattern = r"t\.version\s+=\s+(\"0\.\d\.0\"|'0\.\d\.0')"
+_identity_pattern = r"t\.identity\s+=\s+(\".+\"|'.+')"
 
 
 def love_version(conf):
@@ -55,7 +57,49 @@ def love_version(conf):
     return match.group(1).replace('"', '').replace("'", '')
 
 
-def package_osx(lovefile, name, slug, version):
+def love_identity(conf):
+    match = re.search(_identity_pattern, conf)
+
+    if match is None:
+        return match
+
+    return match.group(1).replace('"', '').replace("'", '')
+
+
+def detect_version(lovepath):
+    lovefile = zipfile.ZipFile(lovepath)
+
+    try:
+        lovefile.getinfo('conf.lua')
+    except KeyError:
+        return None
+
+    conf = lovefile.read('conf.lua')
+    return love_version(conf)
+
+
+def detect_identity(lovepath):
+    lovefile = zipfile.ZipFile(lovepath)
+
+    try:
+        lovefile.getinfo('conf.lua')
+    except KeyError:
+        return None
+
+    conf = lovefile.read('conf.lua')
+    return love_version(conf)
+
+
+def check_for_main(lovepath):
+    try:
+        lovefile = zipfile.ZipFile(lovepath)
+        lovefile.getinfo('main.lua')
+        return True
+    except KeyError:
+        return False
+
+
+def package_osx(lovefile, prefix, name, slug, version):
     """Given a path to a .love file, create OS X version for
     download. Returns path to create zipfile
     """
@@ -66,18 +110,18 @@ def package_osx(lovefile, name, slug, version):
 
     archive = zipfile.ZipFile(output_name, "w")
 
-    for root, directories, files in os.walk(p("build/osx/love.app")):
+    for root, directories, files in os.walk(p(prefix + "/osx/love.app")):
 
         for directory in directories:
             fullpath = os.path.join(root, directory)
-            archive_root = relpath(fullpath, app_name)
+            archive_root = relpath(prefix, fullpath, app_name)
 
             if os.path.islink(fullpath):
                 write_symlink(archive, archive_root, fullpath)
 
         for filename in files:
             fullpath = os.path.join(root, filename)
-            archive_root = relpath(fullpath, app_name)
+            archive_root = relpath(prefix, fullpath, app_name)
 
             if os.path.islink(fullpath):
                 write_symlink(archive, archive_root, fullpath)
@@ -92,14 +136,14 @@ def package_osx(lovefile, name, slug, version):
     return output_name, zip_name
 
 
-def blobify(func, lovefile, name, slug, version):
-    output_name, zip_name = func(lovefile, name, slug, version)
+def blobify(func, lovefile, prefix, name, slug, version):
+    output_name, zip_name = func(lovefile, prefix, name, slug, version)
     blob = File(open(output_name))
     blob.name = zip_name
     return blob
 
 
-def package_windows(lovefile, name, slug, version):
+def package_windows(lovefile, prefix, name, slug, version):
     """Given a path to a .love file, create a Windows version for
     download. Returns path to created zipfile
     """
@@ -109,13 +153,13 @@ def package_windows(lovefile, name, slug, version):
 
     archive = zipfile.ZipFile(output_name, "w")
 
-    for filename in os.listdir(p("build/windows")):
+    for filename in os.listdir(p(prefix + "/windows")):
         if not filename.endswith(".dll"):
             continue
-        archive.write(p(os.path.join("build/windows", filename)),
+        archive.write(p(os.path.join(prefix + "/windows", filename)),
                       os.path.join(name, filename), zipfile.ZIP_DEFLATED)
 
-    love_exe = open(p("build/windows/love.exe"), "rb").read()
+    love_exe = open(p(prefix + "/windows/love.exe"), "rb").read()
     love_archive = open(lovefile, "rb").read()
 
     archive.writestr(os.path.join(name, slug + ".exe"),
@@ -126,8 +170,8 @@ def package_windows(lovefile, name, slug, version):
     return output_name, zip_name
 
 
-def package_exe(lovefile, name, slug, version):
-    love_exe = open(p("build/windows/love.exe"), "rb").read()
+def package_exe(lovefile, prefix, name, slug, version):
+    love_exe = open(p(prefix + "/windows/love.exe"), "rb").read()
     love_archive = open(lovefile, "rb").read()
 
     blob = ContentFile(love_exe + love_archive)
@@ -170,19 +214,26 @@ def package(release_id):
     release = Release.objects.get(pk=release_id)
     game = release.game
 
-    config = game_config(game.uuid, release.version)
+    config = game_config(game, release.version)
 
-    # Add new code
     upload = release.get_asset('uploaded')
+
+    prefix = "build/love8"
+
+    if release.love_version == "0.9.0":
+        prefix = "build/love9"
+
+    # Detect version, fail if not specified
     love = inject_code(upload.blob, config)
 
     slug = game.slug
     name = game.name
 
     # Create binaries
-    osx_file = blobify(package_osx, love, name, slug, release.version)
-    win_file = blobify(package_windows, love, name, slug, release.version)
-    exe_file = package_exe(love, name, slug, release.version)
+    osx_file = blobify(package_osx, love, prefix, name, slug, release.version)
+    win_file = blobify(package_windows, love, prefix,
+                       name, slug, release.version)
+    exe_file = package_exe(love, prefix, name, slug, release.version)
 
     # Upload
     release.add_asset(osx_file, tag='osx')

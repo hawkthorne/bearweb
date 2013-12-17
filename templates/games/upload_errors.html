@@ -1,0 +1,51 @@
+{% if missing_version %}
+<div class="col-md-6">
+  <div class="panel panel-danger">
+    <div class="panel-heading">
+      <h3 class="panel-title">Error: Missing LÖVE version</h3>
+    </div>
+    <div class="panel-body">
+      <p>Please declare a valid version in <code>conf.lua</code>. For LÖVE 0.8.0 use:</p>
+      <pre><code>function love.conf(t)
+  t.version = "0.8.0"
+end</code></pre>
+      <p>Or for LÖVE 0.9.0 use:</p>
+<pre><code>function love.conf(t)
+  t.version = "0.9.0"
+end</code></pre>
+      <p>For more information, check out the <a href="http://love2d.org/wiki/Config_Files">Config Files</a> section on the LÖVE wiki</p>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+{% if invalid_file %}
+<div class="col-md-6">
+  <div class="panel panel-danger">
+    <div class="panel-heading">
+      <h3 class="panel-title">Error: Invalid LÖVE File</h3>
+    </div>
+    <div class="panel-body">
+      <p>The uploaded LÖVE file is missing <code>main.lua</code> and / or <code>conf.lua</code>. You'll need to add these missing files before we can process your game.</p>
+      <p>For more information, check out the <a href="http://www.love2d.org/wiki/Getting_Started">Getting Started</a> and <a href="http://love2d.org/wiki/Config_Files">Config Files</a> sections on the LÖVE wiki</p>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+{% if missing_idenity %}
+<div class="col-md-6">
+  <div class="panel panel-danger">
+    <div class="panel-heading">
+      <h3 class="panel-title">Error: Missing LÖVE identity</h3>
+    </div>
+    <div class="panel-body">
+      <p>StackMachine uses the <code>love.filesystem</code> module which requires a valid indenity. Please declare a valid idenity in <code>conf.lua</code>, such as:</p>
+      <pre><code>function love.conf(t)
+  t.identity = "{{ slug }}"
+end</code></pre>
+      <p>For more information, check out the <a href="http://love2d.org/wiki/Config_Files">Config Files</a> section on the LÖVE wiki</p>
+    </div>
+  </div>
+</div>
+{% endif %}

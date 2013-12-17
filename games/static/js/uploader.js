@@ -15,9 +15,6 @@ $(function(){
   });
 
 
-  var fuzzyFunc = null;
-  var fuzzy = 0.0;
-
   // Initialize the jQuery File Upload plugin
   $('#upload').fileupload({
 
@@ -29,11 +26,6 @@ $(function(){
     add: function (e, data) {
       $("#drop").removeClass('hover')
       $("#drop .message").empty().append('<strong>Awesome! Uploading new release</strong>');
-
-      // Append the file name and file size
-      console.log(data.files[0].name);
-      console.log(data.files[0].size);
-
       // Initialize the knob plugin
       $('#knob').show().knob();
 
@@ -46,35 +38,24 @@ $(function(){
     progress: function(e, data){
       // Calculate the completion percentage of the upload
       var progress = parseInt(data.loaded / data.total * 100, 10);
+      $('#knob').val(Math.min(progress, 98)).change();
+    },
 
-      console.log(progress);
+    done: function(e, data) {
+      $("#drop .message").empty().append("<strong>All Done! We're doing some extra work to get your release ready");
 
-      // Update the hidden input field and trigger a change
-      // so that the jQuery knob plugin knows to update the dial
-      if (progress >= 95 && fuzzyFunc == null) {
-        fuzzyFunc = setInterval(function() {
-          fuzzy = fuzzy + 0.2;
-          $('#knob').val(Math.min(50 + fuzzy, 98)).change();
-        }, 500);
-      }
-
-      $('#knob').val(Math.min(progress / 2) + fuzzy, 98).change();
-
-      if (progress == 100){
-        clearInterval(fuzzyFunc);
-        $('#knob').val(progress).change();
-        $("#drop .message").empty().append("<strong>All Done! We're doing some extra work to get your release ready");
-        
-        // TODO: Create redirect
-        setInterval(function() {
-          window.location.href = $('#id_next').val();
-        }, 500);
-      }
+      // TODO: Create redirect
+      setInterval(function() {
+        window.location.href = $('#id_next').val();
+      }, 500);
     },
 
     fail:function(e, data){
       // Something has gone wrong!
       $("#drop .message").empty().append('<strong class="error">Uh oh, something went wrong. Refresh and try again. :(</strong>');
+      if (data.jqXHR.status == 400) {
+        $("#upload-errors").html(data.jqXHR.responseText);
+      }
     }
 
   });

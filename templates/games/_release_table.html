@@ -2,6 +2,9 @@
   <thead>
     <tr>
       <th>Version</th>
+      {% if show_love_version %}
+      <th>LÖVE Version</th>
+      {% endif %}
       <th>Windows</th>
       <th>OSX</th>
     </tr>
@@ -10,6 +13,9 @@
     {% for release in releases %}
     <tr>
       <td>{{ release.version }}</td>
+      {% if show_love_version %}
+      <td>{{ release.love_version }}</td>
+      {% endif %}
       <td>
         {% if release.windows_url %}
         <a href="{{ release.windows_url }}">Download</a></td>
