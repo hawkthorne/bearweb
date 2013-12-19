@@ -2,6 +2,7 @@ local sparkle = require 'sparkle'
 local reporter = require 'sparkle/reporter'
 local tasks = require 'sparkle/tasks'
 local config = require 'sparkle/config'
+local utils = require 'sparkle/utils'
 
 function love.errhand(msg)
   reporter.log(msg)
@@ -31,15 +32,15 @@ local function reset()
 end
 
 function love.load(arg)
+  if loaded then return end
+
+  print(utils.getLow(arg))
+
   if config.identity then
     love.filesystem.setIdentity(config.identity)
   end
 
   love.graphics.setBackgroundColor(0, 0, 0)
-
-  if loaded then
-    return
-  end
 
   tasks.track('opens')
 

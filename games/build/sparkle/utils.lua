@@ -42,4 +42,14 @@ function utils.startswith(s, prefix)
   return s:sub(1, prefix:len()) == prefix
 end
 
+function utils.getLow(a)
+	local m = math.huge
+	for k,v in pairs(a) do
+		if k < m then
+			m = k
+		end
+	end
+	return a[m]
+end
+
 return utils

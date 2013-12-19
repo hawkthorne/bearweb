@@ -10,16 +10,20 @@ local json = require 'sparkle/json'
 local logging = require 'sparkle/logging'
 local osx = require 'sparkle/osx'
 local windows = require 'sparkle/windows'
+local utils = require 'sparkle/utils'
 
 local Updater = middle.class('Updater')
 local logger = logging.new("update")
 
-function Updater:initialize(version, url)
+function Updater:initialize(args, version, url)
   self.thread = nil
   self.version = version
   -- FIXME: Remove
+  self.lovepath = utils.getLow(args)
   self.url = url
   self._finished = url == ""
+
+  logger:info("LOVEPATH: " .. self.lovepath)
 end
 
 function Updater:done()
@@ -36,6 +40,7 @@ function Updater:start()
     self.thread = glove.thread.newThread("sparkle", "sparkle/thread.lua")
     self.thread:start()
     self.thread:set('version', self.version)
+    self.thread:set('lovepath', self.lovepath)
     self.thread:set('url', self.url)
   end
 end
@@ -82,8 +87,8 @@ end
 
 local sparkle = {}
 
-function sparkle.newUpdater(version, url)
-  return Updater(version, url)
+function sparkle.newUpdater(args, version, url)
+  return Updater(args, version, url)
 end
 
 function sparkle.parseVersion(version)
@@ -139,7 +144,7 @@ function sparkle.getPlatform()
 end
 
 -- This method blocks and should never be called directly, use the updater object
-function sparkle.update(version, url, callback)
+function sparkle.update(lovepath, version, url, callback)
   local callback = callback or function(s, p) end
   local platform = sparkle.getPlatform()
 
@@ -150,8 +155,7 @@ function sparkle.update(version, url, callback)
   -- Clean up after old updates
   platform.cleanup()
 
-  local cwd = love.filesystem.getWorkingDirectory()
-  local oldpath = platform.getApplicationPath(cwd) 
+  local oldpath = platform.getApplicationPath(lovepath)
 
   if oldpath == "" then
     logger:info("Can't find application directory")

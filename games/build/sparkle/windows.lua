@@ -41,11 +41,11 @@ local function execute(command, msg)
   end
 end
 
-function windows.getApplicationPath(workingdir)
+function windows.getApplicationPath(lovepath)
   if love._exe then
     return ""
   end
-  return workingdir
+  return lovepath
 end
 
 function windows.getDownload(item)

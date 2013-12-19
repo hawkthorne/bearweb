@@ -3,6 +3,7 @@ local reporter = require 'sparkle/reporter'
 local tasks = require 'sparkle/tasks'
 local logging = require 'sparkle/logging'
 local config = require 'sparkle/config'
+local utils = require 'sparkle/utils'
 
 function love.errhand(msg)
   reporter.log(msg)
@@ -21,7 +22,7 @@ local time = 0
 local updaterok = false
 local progress = -1
 local loaded = false
-local logger = logging.new("update")
+local logger = logging.new('foo')
 
 local function reset()
   require "oldmain"
@@ -33,15 +34,19 @@ local function reset()
 end
 
 function love.load(arg)
-  if config.identity then
+  if loaded then return end
+
+  local identity = ""
+
+  if love.filesystem.getIdentity then
+    identity = love.filesystem.getIdentity()
+  end
+    
+  if config.identity and (identity == "" or identity == nil) then
     love.filesystem.setIdentity(config.identity)
   end
 
   love.graphics.setBackgroundColor(0, 0, 0)
-
-  if loaded then
-    return
-  end
 
   tasks.track('opens')
 
@@ -51,8 +56,8 @@ function love.load(arg)
   progress = 0
   logo = love.graphics.newImage('sparkle/splash.png')
 
-  logger:info("Starting updater")
-  updater = sparkle.newUpdater(config.version, config.links.updates)
+
+  updater = sparkle.newUpdater(arg, config.version, config.links.updates)
   updater:start()
   loaded = true
 end

@@ -196,6 +196,8 @@ def inject_code(lovefile, config):
 
     # Add code
     for script in os.listdir(p("build/sparkle")):
+        if script.startswith("."):
+            continue
         archive.write(p(os.path.join("build", "sparkle", script)),
                       os.path.join("sparkle", script))
 

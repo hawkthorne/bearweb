@@ -19,12 +19,14 @@ local function execute(command, msg)
   end
 end
 
-function osx.getApplicationPath(workingdir)
+function osx.getApplicationPath(applicationPath)
   -- Remove /Contents/MacOS/love from the working directory
-  local path = workingdir:sub(0, -20)
+  local path = applicationPath:sub(0, -20)
+
   if path:find(".app") then
     return path
   end
+
   return ""
 end
 
