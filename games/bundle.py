@@ -12,10 +12,10 @@ from django.core.files.base import ContentFile
 from .models import Release
 
 
-def game_config(game, version):
-    base_url = "{}/api/games/{}".format(settings.INSECURE_HOSTNAME, game.uuid)
+def game_config(uuid, identity, version):
+    base_url = "{}/api/games/{}".format(settings.INSECURE_HOSTNAME, uuid)
     return json.dumps({
-        "identity": game.slug,
+        "identity": identity,
         "version": version,
         "links": {
             "updates": base_url + "/appcast",
@@ -87,7 +87,7 @@ def detect_identity(lovepath):
         return None
 
     conf = lovefile.read('conf.lua')
-    return love_version(conf)
+    return love_identity(conf)
 
 
 def check_for_main(lovepath):
@@ -214,9 +214,10 @@ def package(release_id):
     release = Release.objects.get(pk=release_id)
     game = release.game
 
-    config = game_config(game, release.version)
-
     upload = release.get_asset('uploaded')
+
+    identity = detect_identity(upload.blob) or game.slug
+    config = game_config(game.uuid, identity, release.version)
 
     prefix = "build/love8"
 

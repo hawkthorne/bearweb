@@ -12,9 +12,9 @@ local osx = require 'sparkle/osx'
 local windows = require 'sparkle/windows'
 
 local Updater = middle.class('Updater')
+local logger = logging.new("update")
 
 function Updater:initialize(version, url)
-  self.logger = logging.new("update")
   self.thread = nil
   self.version = version
   -- FIXME: Remove
@@ -42,7 +42,7 @@ end
 
 function Updater:progress()
   if not self.thread then
-    self.logger:info("Waiting to start")
+    logger:info("Waiting to start")
     return "Waiting to start", 0
   end
 
@@ -53,12 +53,12 @@ function Updater:progress()
   local err = self.thread:get('error')
   
   if status ~= nil and status ~= "Downloading" and status ~= "Installing" then
-    self.logger:info(status)
+    logger:info(status)
   end
 
   if err ~= nil then
-    self.logger:error("Updater failed")
-    self.logger:error(err)
+    logger:error("Updater failed")
+    logger:error(err)
   end
 
   if err ~= nil or finished then
@@ -154,7 +154,7 @@ function sparkle.update(version, url, callback)
   local oldpath = platform.getApplicationPath(cwd) 
 
   if oldpath == "" then
-    logger:info("Can't find shit")
+    logger:info("Can't find application directory")
     error("Can't find application directory")
   end
 

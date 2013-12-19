@@ -111,6 +111,10 @@ class BundleTests(TestCase):
         path = 'games/tests/fixtures/no_identity_version.love'
         self.assertEquals(None, bundle.detect_identity(path))
 
+    def test_detect_identity(self):
+        path = 'games/tests/fixtures/foobaridentity.love'
+        self.assertEquals('foobar', bundle.detect_identity(path))
+
     def test_detect_missing_files(self):
         path = 'games/tests/fixtures/invalid.love'
         self.assertFalse(bundle.check_for_main(path))

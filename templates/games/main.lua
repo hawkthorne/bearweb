@@ -1,6 +1,7 @@
 local sparkle = require 'sparkle'
 local reporter = require 'sparkle/reporter'
 local tasks = require 'sparkle/tasks'
+local logging = require 'sparkle/logging'
 local config = require 'sparkle/config'
 
 function love.errhand(msg)
@@ -20,6 +21,7 @@ local time = 0
 local updaterok = false
 local progress = -1
 local loaded = false
+local logger = logging.new("update")
 
 local function reset()
   require "oldmain"
@@ -49,6 +51,7 @@ function love.load(arg)
   progress = 0
   logo = love.graphics.newImage('sparkle/splash.png')
 
+  logger:info("Starting updater")
   updater = sparkle.newUpdater(config.version, config.links.updates)
   updater:start()
   loaded = true
