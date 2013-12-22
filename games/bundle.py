@@ -97,6 +97,10 @@ def check_for_main(lovepath):
         return True
     except KeyError:
         return False
+    except zipfile.BadZipfile:
+        return False
+    except zipfile.LargeZipfile:
+        return False
 
 
 def package_osx(lovefile, prefix, name, slug, version):

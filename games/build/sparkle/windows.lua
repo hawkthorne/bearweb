@@ -3,6 +3,7 @@ local os = require "os"
 local url = require "socket.url"
 local urllib = require "sparkle/urllib"
 local utils = require "sparkle/utils"
+local glove = require "sparkle/glove"
 
 local windows = {}
 local logger = logging.new('update')
@@ -66,6 +67,13 @@ function windows.basename(link)
   return table.remove(parts)
 end
 
+function windows.split(path)
+  local parts = split(path, "\\")
+  local basename = table.remove(parts)
+  return path:sub(0, (2 + string.len(basename)) * -1), basename
+end
+
+
 -- Remove all files in a directory. The directory must be in the game save
 -- folder
 function windows.removeRecursive(path)
@@ -94,12 +102,14 @@ function windows.cleanup()
   windows.removeRecursive("winupdates")
 end
 
-function windows.replace(download, cwd, callback)
+function windows.replace(download, exepath, callback)
   -- Clean up previous updates
   windows.removeRecursive("winupdates")
   glove.filesystem.mkdir("winupdates")
 
   local destination = love.filesystem.getSaveDirectory() .. "/winupdates"
+
+  local cwd, exebase = windows.split(exepath)
 
   -- Download new files
   for _, file in ipairs(download.files) do
@@ -110,29 +120,31 @@ function windows.replace(download, cwd, callback)
   -- Rename current files
   for _, file in ipairs(download.files) do
     local base = windows.basename(file.url)
-    os.rename(base, destination .. "/old_" .. base)
+
+    if utils.endswith(base, ".dll") then
+      os.rename(cwd .. "/" .. base, destination .. "/old_" .. base)
+    end
   end
+
+  -- Move the old executable
+  os.rename(exepath, destination .. "/old_" .. exebase)
 
   -- Move new files into place
   for _, file in ipairs(download.files) do
     local base = windows.basename(file.url)
-    os.rename(destination .. "/" .. base, base)
-  end
 
-  program = nil
+    if utils.endswith(base, ".dll") then
+      os.rename(destination .. "/" .. base, cwd .. "/" .. base)
+    end
 
-  for _, file in ipairs(download.files) do
-    local base = windows.basename(file.url)
     if utils.endswith(base, ".exe") then
-      program = base
+      os.rename(destination .. "/" .. base, exepath)
     end
   end
 
-  if program then
-    local cmd = "cmd /C \"start .\\" .. program .. "\""
-    logger:info(cmd)
-    os.execute(cmd)
-  end
+  local cmd = "cmd /C \"start " .. exepath .. "\""
+  logger:info(cmd)
+  os.execute(cmd)
 end
 
 return windows
