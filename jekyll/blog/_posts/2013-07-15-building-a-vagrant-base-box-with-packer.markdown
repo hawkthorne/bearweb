@@ -3,6 +3,7 @@ layout: post
 title:  Building a Vagrant base box with Packer
 date:   2013-07-15 23:31:58
 author: Brandon Liu
+hidden: true
 categories: engineering
 ---
 

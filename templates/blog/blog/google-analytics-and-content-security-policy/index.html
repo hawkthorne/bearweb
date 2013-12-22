@@ -31,7 +31,7 @@
 <div class='highlight'><pre><code class='text'>Content-Security-Policy: &quot;default-src &#39;self&#39;; script-src &#39;self&#39; https://ssl.google-analytics.com&quot;
 </code></pre></div>
 <p>With this header in place, let&#8217;s see what happens when we load our page with a Google Analytics tracking snippet.</p>
-<img alt='CSP Violation' src='/static/img/csp-violation.png' />
+<img alt='CSP Violation' src='/static/img/csp-violation.png' style='max-width:514px' />
 <p>Uh-oh.</p>
 
 <h2 id='javascript_changes'>Javascript Changes</h2>
@@ -61,7 +61,7 @@
 <p>Make sure that these scripts appear at the bottom of the page right before the closing body tag. Older browsers don&#8217;t honor the <code>async</code> attribute, so you want to make sure it&#8217;s the last script to load.</p>
 
 <p>Refresh the page, and you should see that Google Analytics is working as intended.</p>
-<img alt='CSP Ok' src='/static/img/csp-ok.png' />
+<img alt='CSP Ok' src='/static/img/csp-ok.png' style='max-width:571px' />
 <p>Please remember that CSP is just another tool to help secure your web application and does not replace proper HTML escaping. Browsers without CSP support need to be protected as well.</p>
 
 <p>For a deeper look into CSP, the fine folks at GitHub wrote a <a href='https://github.com/blog/1477-content-security-policy'>fantastic post</a> about their experience implementing CSP.</p>
