@@ -730,3 +730,30 @@ ul.top-bar-links li {
 #upload-errors {
   margin-top: 20px;
 }
+
+#gameover {
+  background: #000;
+  text-align: center;
+  padding: 50px 0;
+}
+
+#gameover .container p {
+  margin-top: 20px;
+  color: #fff;
+  font-size: 14px;
+  font-family: monospace;
+  text-transform: uppercase;
+}
+
+#gameover .col-sm-4 {
+  margin-top: 20px;
+  color: #fff;
+  font-size: 14px;
+  font-family: monospace;
+  text-transform: uppercase;
+}
+
+#gameover .container img {
+  max-width: 100%;
+
+}

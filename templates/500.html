@@ -1,1 +1,18 @@
-<h1>Whoops!</h1>
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block wide %}
+<div id="gameover">
+  <div class="container">
+    <img src="{% static 'img/gameover.png' %}" alt="GAME OVER" />
+    <p>StackMachine had died. Would you like to continue?</p>
+    <p>Y/N? Y</p>
+    <div class="row">
+      <div class="col-sm-4">Message <a href="https://twitter.com/stackmachine">@stackmachine</a> on Twitter</div>
+      <div class="col-sm-4">Email <a href="mailto:support@stackmachine.com">support@stackmachine.com</a></div>
+      <div class="col-sm-4">Call StackMachine at <a href="tel:855-782-2525">855-782-2525</a></div>
+    </div>
+  </div>
+</div>
+{% endblock %}
