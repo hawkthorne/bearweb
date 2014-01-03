@@ -49,7 +49,8 @@ urlpatterns = patterns(
 )
 
 if settings.DEBUG:
-    urlpatterns += patterns('',
+    urlpatterns += patterns(
+        '',
         (r'^500/$', 'django.views.defaults.server_error'),
         (r'^404/$', 'django.views.defaults.page_not_found'),
     )
