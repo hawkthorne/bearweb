@@ -142,7 +142,8 @@ function windows.replace(download, exepath, callback)
     end
   end
 
-  local cmd = "cmd /C \"start " .. exepath .. "\""
+  -- http://stackoverflow.com/questions/154075/using-the-dos-start-command-with-parameters-passed-to-the-started-program
+  local cmd = 'cmd /C start "" "' .. exepath .. '"'
   logger:info(cmd)
   os.execute(cmd)
 end
