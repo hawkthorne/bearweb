@@ -193,7 +193,7 @@ class Asset(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     release = models.ForeignKey(Release)
-    blob = models.FileField(upload_to=asset_path)
+    blob = models.FileField(upload_to=asset_path, max_length=200)
     tag = models.CharField(max_length=20)
 
     def appcast(self):
