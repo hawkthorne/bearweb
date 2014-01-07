@@ -10,6 +10,7 @@ from customerio import CustomerIO
 
 cio = CustomerIO(settings.CUSTOMERIO_SITE_ID, settings.CUSTOMERIO_API_KEY)
 
+
 @task
 def identify(pk):
     user = User.objects.get(pk=pk)

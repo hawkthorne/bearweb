@@ -1,9 +1,10 @@
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 from django.conf import settings
 from django.contrib.auth.models import User
 
 from games.models import Game
 from customerio import CustomerIO
+
 
 class Command(BaseCommand):
     help = 'Sync current state into Customer IO'
@@ -26,5 +27,3 @@ class Command(BaseCommand):
                 cio.track(customer_id=pk, name='Create Release',
                           game=game.slug, version=release.version)
                 self.stdout.write('TRACK Release {}'.format(release.version))
-
-
