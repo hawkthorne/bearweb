@@ -19,3 +19,4 @@ stripe==1.9.8
 django-storages==1.1.8
 keen==0.2.2
 newrelic==2.6.0.5
+customerio==0.1.3

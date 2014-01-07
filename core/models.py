@@ -15,7 +15,8 @@ class UserProfile(models.Model):
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
         profile, created = UserProfile.objects.get_or_create(user=instance)
-        tasks.track.delay('Sign Up', distinct_id=instance.username)
+        tasks.identify.delay(instance.pk)
+        tasks.track.delay(instance.pk, 'Sign Up', distinct_id=instance.username)
 
 
 post_save.connect(create_user_profile, sender=User)

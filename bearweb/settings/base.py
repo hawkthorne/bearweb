@@ -251,6 +251,10 @@ CELERY_ACCEPT_CONTENT = ['json', 'msgpack', 'yaml']
 KEEN_PROJECT_ID = get_env_var('KEEN_PROJECT_ID')
 KEEN_READ_KEY = get_env_var('KEEN_READ_KEY')
 
+CUSTOMERIO_SITE_ID = get_env_var('CUSTOMERIO_SITE_ID')
+CUSTOMERIO_API_KEY= get_env_var('CUSTOMERIO_API_KEY')
+
+
 SECURE_HOSTNAME = 'http://localhost:8000'
 INSECURE_HOSTNAME = 'http://localhost:8000'
 

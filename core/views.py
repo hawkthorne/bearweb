@@ -111,7 +111,8 @@ class ChangePlanView(LoginRequiredMixin, FormView):
         subscription.plan = plan
         subscription.save()
 
-        track('Change Plan', distinct_id=request.user.username, plan=plan)
+        track(request.user.pk, 'Change Plan',
+              distinct_id=request.user.username, plan=plan)
 
         messages.success(self.request, "Changed to the %s plan." % plan)
         return redirect("portal")
@@ -139,7 +140,8 @@ class UpgradePayView(LoginRequiredMixin, FormView):
             stripe_id=customer["id"], plan=plan
         )
 
-        track('Upgrade', distinct_id=request.user.username, plan=plan)
+        track(request.user.pk, 'Upgrade',
+              distinct_id=request.user.username, plan=plan)
 
         messages.success(self.request, "Subscribed to the %s plan." % plan)
         return redirect("portal")
