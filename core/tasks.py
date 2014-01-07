@@ -11,7 +11,7 @@ from customerio import CustomerIO
 cio = CustomerIO(settings.CUSTOMERIO_SITE_ID, settings.CUSTOMERIO_API_KEY)
 
 @task
-def indentify(pk):
+def identify(pk):
     user = User.objects.get(pk=pk)
     cio.identify(id=user.pk, email=user.email, username=user.username)
 
