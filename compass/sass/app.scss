@@ -41,6 +41,12 @@ a:hover {
 }
 
 
+
+.dropdown-account img {
+  border: 1px solid #000;
+  margin-right: 5px;
+}
+
 @media (min-width: 768px) {
   .navbar-stackmachine .navbar-brand img {
     width: auto;
@@ -59,6 +65,11 @@ a:hover {
     padding-top: 35px;
     padding-bottom: 31px;
   }
+
+  .navbar-stackmachine .navbar-nav > li > a.dropdown-toggle {
+    padding-top: 30px;
+    padding-bottom: 24px;
+  }
 }
 
 .navbar-stackmachine li.active > a {
@@ -68,6 +79,7 @@ a:hover {
 .navbar-admin {
   margin: 0;
   border: 0;
+  border-bottom: 1px solid #ddd;
   background: #FFF;
 }
 
@@ -802,4 +814,31 @@ ul.top-bar-links li {
   font-size: 24px;
   width: 400px;
   color: #FFF;
+}
+
+.game-icon {
+  display: inline-block;
+  border-radius: 5px;
+  width: 30px;
+}
+
+.games {
+  list-style-type: none;
+  padding: 0;
+  margin: 0 0 30px 0;
+}
+
+.games li {
+  border-bottom: 1px solid #ddd;
+  padding: 3px;
+}
+
+.games li a {
+  font-size: 18px;
+  width: 100%;
+  display: block;
+}
+
+.games li:last-child {
+	border-bottom: 0px;
 }

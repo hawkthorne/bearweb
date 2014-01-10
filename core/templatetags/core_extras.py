@@ -3,23 +3,13 @@ from django import template
 from django.core import urlresolvers
 
 
-class ActiveNode(template.Node):
-    def __init__(self, pattern):
-        self.pattern = pattern
-
-    def render(self, context):
-        request = context.get('request')
-
-        if request is None:
-            return ""
-
-        if re.match(self.pattern, request.path):
-            return "active"
-
-        return ""
-
-
 register = template.Library()
+
+
+@register.simple_tag(takes_context=True)
+def gravatar(context, user):
+    email_hash = '205e460b479e2e5b48aec07710c08d50'
+    return 'http://www.gravatar.com/avatar/?s=30&d=retro'.format(email_hash)
 
 
 @register.simple_tag(takes_context=True)

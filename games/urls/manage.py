@@ -17,6 +17,7 @@ urlpatterns = patterns(
         {'next_page': '/'}),
     #url(r'^users/[a-zA-Z0-9_]+/?', 'core.views.feed_redirect'),
 
+    url(r'^$', Dashboard.as_view(), name='dashboard'),
     url(r'^account/$', PortalView.as_view(), name='account_portal'),
     url(r'^account/settings$', PortalView.as_view(), name='portal'),
     url(r'^account/plans$', user_redirect, name='upgrade'),

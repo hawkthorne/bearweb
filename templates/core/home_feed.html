@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "manage.html" %}
 
 {% load staticfiles %}
 
@@ -6,22 +6,18 @@
 
 <div class="row">
   <div class="col-md-8">
-    <h1>My Games
-</h2>
-    <div class="row">
-      <div class="game col-xs-6 col-sm-4 col-md-3 col-lg-3">
-        <a href="{% url 'games:create' %}" class="cover newgame"><span class="glyphicon glyphicon-plus"></span></a>
-        <a href="{% url 'games:create' %}">Create new game</a>
-      </div>
+    <h2>Games</h2>
+    <ul class="games">
       {% for game in games %}
-      <div class="game col-xs-6 col-sm-4 col-md-3 col-lg-3">
+      <li>
         <a href="{% url 'games:view' game.uuid %}" class="cover">
-          <img src="{% static game.icon_url %}" />
+          <img class="game-icon" src="{% static game.icon_url %}" />
+          {{ game.name }}
         </a>
-        <a href="{% url 'games:view' game.uuid %}">{{ game.name }}</a></h3>
-      </div>
+      </li>
       {% endfor %}
-    </div>
+    </ul>
+    <a class="btn btn-primary" href="{% url 'games:create' %}">+ Create new game</a>
   </div>
   <div class="col-md-4 beta">
     {% include 'games/beta.html' %}

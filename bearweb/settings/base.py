@@ -240,8 +240,8 @@ AUTHENTICATION_BACKENDS = (
 STRIPE_PUBLISHABLE_KEY = get_env_var('STRIPE_PUBLISHABLE_KEY')
 STRIPE_SECRET_KEY = get_env_var('STRIPE_SECRET_KEY')
 
-LOGIN_URL = '/accounts/login'
-LOGIN_REDIRECT_URL = '/dashboard'
+LOGIN_URL = '/users/login'
+LOGIN_REDIRECT_URL = '/'
 LOGIN_ERROR_URL = '/auth/error'
 
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
@@ -264,8 +264,8 @@ ROOT_URLCONF = 'bearweb.urls.notfound'
 # A dictionary of urlconf module paths, keyed by their subdomain.
 SUBDOMAIN_URLCONFS = {
     None: 'bearweb.urls.site',
-    'manage': 'games.urls.manage',
     'www': 'bearweb.urls.www',
+    'manage': 'games.urls.manage',
     'embed': 'games.urls.embed',
     'api': 'games.urls.api',
     'client': 'games.urls.client',
