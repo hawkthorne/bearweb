@@ -1,5 +1,7 @@
 {% extends "base.html" %}
+
 {% load staticfiles %}
+{% load subdomainurls %}
 
 {% block wide %}
 <div class="heroshot">
@@ -9,7 +11,7 @@
         <h2>Focus on your game.</h2>
         <h3>We'll take care of the rest.</h3>
         <p>StackMachine is the easiest way to publish your game online.</p>
-        <a class="btn btn-lg btn-primary" href="{% url 'registration_register' %}">Publish Your Game Now</a>
+        <a class="btn btn-lg btn-primary" href="{% url 'registration_register' 'manage'%}">Publish Your Game Now</a>
       </div>
     </div>
     <div class="row">
@@ -81,7 +83,7 @@
     <div class="col-sm-12 col-lg-10 col-lg-offset-1">
       <div class="pricing-callout">
         <h2>Upload your game today</h2>
-        <a class="btn btn-lg btn-primary btn-multiline" href="{% url 'registration_register' %}">Get started with StackMachine</a>
+        <a class="btn btn-lg btn-primary btn-multiline" href="{% url 'registration_register' 'manage' %}">Get started with StackMachine</a>
       </div>
     </div>
   </div>

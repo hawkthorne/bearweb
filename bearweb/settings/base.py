@@ -145,13 +145,13 @@ TEMPLATE_DIRS = (
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#middleware-classes
 MIDDLEWARE_CLASSES = (
     # Default Django middleware.
+    'subdomains.middleware.SubdomainURLRoutingMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'core.middleware.WWWRedirectMiddleware',
 )
 
 
@@ -180,6 +180,7 @@ THIRD_PARTY_APPS = (
     'bootstrapform',
     'south',
     'djcelery',
+    'subdomains',
 )
 
 # Apps specific for this project go here.
@@ -255,10 +256,20 @@ CUSTOMERIO_SITE_ID = get_env_var('CUSTOMERIO_SITE_ID')
 CUSTOMERIO_API_KEY = get_env_var('CUSTOMERIO_API_KEY')
 
 
-SECURE_HOSTNAME = 'http://localhost:8000'
-INSECURE_HOSTNAME = 'http://localhost:8000'
+SECURE_HOSTNAME = 'http://stackmachine.dev:8000'
+INSECURE_HOSTNAME = 'http://stackmachine.dev:8000'
 
+ROOT_URLCONF = 'bearweb.urls.notfound'
 
-#
+# A dictionary of urlconf module paths, keyed by their subdomain.
+SUBDOMAIN_URLCONFS = {
+    None: 'bearweb.urls.site',
+    'manage': 'games.urls.manage',
+    'www': 'bearweb.urls.www',
+    'embed': 'games.urls.embed',
+    'api': 'games.urls.api',
+    'client': 'games.urls.client',
+}
+
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#wsgi-application
 WSGI_APPLICATION = '%s.wsgi.application' % SITE_NAME

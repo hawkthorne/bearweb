@@ -1,7 +1,7 @@
 from django.conf.urls import patterns, url
 
-from .views import GameCreate, GameDetail, ReleaseList, ReleaseCreate
-from .views import ReportList, download
+from ..views import GameCreate, GameDetail, ReleaseList, ReleaseCreate
+from ..views import ReportList, download
 
 
 def pat(fragment):

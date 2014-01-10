@@ -27,18 +27,11 @@ CACHES = {
 
 
 # See: https://github.com/django-debug-toolbar/django-debug-toolbar
-INSTALLED_APPS += (
-    'debug_toolbar',
-)
 
 # See: https://github.com/django-debug-toolbar/django-debug-toolbar
 INTERNAL_IPS = ('127.0.0.1',)
 
 # See: https://github.com/django-debug-toolbar/django-debug-toolbar
-# FIXME HttpStreaming responses don't work with the debug toolbar middleware
-# MIDDLEWARE_CLASSES += (
-#     'debug_toolbar.middleware.DebugToolbarMiddleware',
-# )
 
 # See: https://github.com/django-debug-toolbar/django-debug-toolbar
 DEBUG_TOOLBAR_CONFIG = {

@@ -18,6 +18,67 @@ a:hover {
   margin: 0;
 }
 
+.navbar-stackmachine {
+  margin: 0;
+}
+
+.navbar-stackmachine a {
+  padding: 5px 0px;
+  color: #FFF;
+}
+
+.navbar-stackmachine .navbar-brand {
+}
+
+.navbar-stackmachine .navbar-brand img {
+  width: 160px;
+}
+
+.navbar-stackmachine .nav > li > a:hover,
+.navbar-stackmachine .nav > li > a:focus,
+.navbar-stackmachine .nav > li > a:active {
+  background-color: #4f4f4f;
+}
+
+
+@media (min-width: 768px) {
+  .navbar-stackmachine .navbar-brand img {
+    width: auto;
+  }
+
+  .navbar-stackmachine a {
+    padding: 15px 0px;
+    color: #FFF;
+  }
+
+  .navbar-stackmachine .navbar-form {
+    margin-top: 27px;
+  }
+
+  .navbar-stackmachine .navbar-nav > li > a {
+    padding-top: 35px;
+    padding-bottom: 31px;
+  }
+}
+
+.navbar-stackmachine li.active > a {
+  background-color: rgb(47, 47, 47);
+}
+
+.navbar-admin {
+  margin: 0;
+  border: 0;
+  background: #FFF;
+}
+
+.navbar-stackmachine .navbar-toggle {
+  border: 0;
+}
+
+.navbar-stackmachine .icon-bar {
+  background: #FFF;
+}
+
 .btn-primary {
   background-color: rgb(190, 36, 94);
   border-color: rgb(147, 28, 73);
@@ -26,17 +87,6 @@ a:hover {
 .btn-primary:focus, .btn-primary:hover {
   background-color: rgb(147, 28, 73);
   border-color: rgb(147, 28, 73);
-}
-
-// top bar
-.top-bar-section ul li a {
-  font-size: 18px;
-  font-family: 'Helvetica Neue', Helvetica, sans-serif;
-  font-weight: 600;
-}
-
-.top-bar-section .signin {
-  background-color: grey;
 }
 
 .logomark {
@@ -114,28 +164,6 @@ div.manual pre {
 div.manual code {
 	color: #000;
 	font-weight: normal;
-}
-
-ul.top-bar-links {
-	padding: 0;
-	margin-bottom: 10px;
-	list-style-type: none;
-}
-
-ul.top-bar-links li {
-	display: inline-block;
-	vertical-align: middle;
-}
-
-ul.top-bar-links a:hover {
-	color: rgb(190, 36, 94);
-}
-
-ul.top-bar-links a {
-	color: #FFF;
-	margin: 0 10px;
-	text-align: center;
-	text-transform: uppercase;
 }
 
 
@@ -755,5 +783,23 @@ ul.top-bar-links li {
 
 #gameover .container img {
   max-width: 100%;
+}
 
+#lost {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  background-image: url('/static/img/earthrise.jpg');
+  background-size: cover;
+}
+
+#lost div {
+  position: absolute;
+  top: 25%;
+  left: 25%;
+  font-size: 24px;
+  width: 400px;
+  color: #FFF;
 }

@@ -1,0 +1,21 @@
+{% load staticfiles %}
+{% load core_extras %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Publish, track, and sell your games - StackMachine" />
+    <meta name="author" content="Stack Machine, Inc.">
+    <title>Lost in Space - StackMachine</title>
+    <link href="{% static 'css/app.css' %}" media="screen, projection" rel="stylesheet" type="text/css" />
+    <link rel="shortcut icon" href="{% static 'favicon.ico' %}">
+    <link rel="alternate" type="application/rss+xml" title="StackMachine Blog" href="https://www.stackmachine.com/blog/feed.xml" />
+  </head>
+  <body>
+    <div id="lost">
+      <div>Looks like you're lost in space.<br/>Head back to <a href="http://stackmachine.com">StackMachine</a></div>
+    </div>
+  </body>
+</body>

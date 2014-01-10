@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.shortcuts import redirect
+from django.http import HttpResponsePermanentRedirect
 from django.forms import ValidationError
 from django.views.generic import TemplateView
 from django.views.generic.edit import FormView
@@ -47,6 +48,14 @@ def track(event, **kwargs):
 # FIXME:
 class Subscription(object):
     pass
+
+
+class LostInSpace(TemplateView):
+    template_name = 'core/nodomain.html'
+
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+        return self.render_to_response(context, status=404)
 
 
 class Dashboard(LoginRequiredMixin, TemplateView):
@@ -149,6 +158,16 @@ class UpgradePayView(LoginRequiredMixin, FormView):
 
 def feed_redirect(request):
     return redirect('dashboard')
+
+
+def www_redirect(redirect):
+    """
+    This middleware will redirect any requests to www to the bare domain
+    """
+    def process_request(self, request):
+        if request.META.get('HTTP_HOST', '').startswith('www.'):
+            url = request.build_absolute_uri()
+            return HttpResponsePermanentRedirect(url.replace('www.', '', 1))
 
 
 def user_redirect(request):

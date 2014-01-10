@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% load subdomainurls %}
+
 {% block title %}Pricing{% endblock %}
 
 {% block content %}
@@ -31,7 +33,7 @@
     <div class="col-sm-12">
       <div class="pricing-callout">
         <h2>Upload your game today</h2>
-        <a class="btn btn-lg btn-primary" href="{% url 'registration_register' %}">Get started with StackMachine</a>
+        <a class="btn btn-lg btn-primary" href="{% url 'registration_register' 'manage' %}">Get started with StackMachine</a>
 </div>
       </div>
     </div>
