@@ -3,6 +3,7 @@ Views which allow users to create and activate accounts.
 
 """
 
+from django.contrib import messages
 from django.shortcuts import redirect
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import FormView
@@ -63,6 +64,7 @@ class RegistrationView(_RequestPassingFormView):
     
     """
     disallowed_url = 'registration_disallowed'
+    authenticated_url = 'dashboard'
     form_class = RegistrationForm
     http_method_names = ['get', 'post', 'head', 'options', 'trace']
     success_url = None
@@ -76,6 +78,10 @@ class RegistrationView(_RequestPassingFormView):
         """
         if not self.registration_allowed(request):
             return redirect(self.disallowed_url)
+        if request.user and request.user.is_authenticated():
+            messages.add_message(request, messages.INFO,
+                                 "You've already signed up for an account")
+            return redirect(self.authenticated_url)
         return super(RegistrationView, self).dispatch(request, *args, **kwargs)
 
     def form_valid(self, request, form):

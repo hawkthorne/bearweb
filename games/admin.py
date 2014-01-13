@@ -4,7 +4,7 @@ from .models import Game, Framework, Release, Asset
 
 
 class GameAdmin(admin.ModelAdmin):
-    list_display = ['name', 'uuid', 'owner', 'framework', 'public']
+    list_display = ['name', 'uuid', 'created', 'owner', 'framework', 'public']
 
 
 class FrameworkAdmin(admin.ModelAdmin):
@@ -12,7 +12,7 @@ class FrameworkAdmin(admin.ModelAdmin):
 
 
 class ReleaseAdmin(admin.ModelAdmin):
-    list_display = ['__unicode__', 'game', 'version']
+    list_display = ['__unicode__', 'created', 'game', 'version']
 
 
 class AssetAdmin(admin.ModelAdmin):

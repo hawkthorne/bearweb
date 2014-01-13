@@ -6,6 +6,7 @@ from django.views.generic import TemplateView
 from django.contrib import admin
 admin.autodiscover()
 
+from games.views import download
 from core.views import ContactView, PricingView
 from blog.views import ArticleView
 
@@ -16,7 +17,9 @@ def template(path):
 
 urlpatterns = patterns(
     '',
-    url(r'^api/', include('games.api_urls', namespace='api')),
+    url(r'^games/(?P<uuid>[0-9a-f]{24})/download/(?P<platform>windows|osx)$',
+        download, name='download'),
+    url(r'api/', include('games.urls.legacy', namespace='api')),
     url(r'^$', template("core/index.html"), name='home'),
     url(r'^robots.txt$', TemplateView.as_view(template_name='core/robots.txt',
                                               content_type='text/plain')),

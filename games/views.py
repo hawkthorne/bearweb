@@ -133,6 +133,7 @@ class GameCreate(LoginRequiredMixin, CreateView):
 
 @require_safe
 def download(request, uuid, platform):
+
     game = get_object_or_404(Game, uuid=uuid)
 
     if not game.public:

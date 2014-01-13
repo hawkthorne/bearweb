@@ -1,11 +1,10 @@
 from django.conf.urls import patterns, include, url
 from django.views.generic import TemplateView
 
-from ..views import GameCreate, GameDetail, ReleaseList, ReleaseCreate
-from ..views import ReportList, download
 
-from core.views import ContactView, PortalView, PricingView
+from core.views import PortalView
 from core.views import Dashboard, user_redirect
+
 
 def pat(fragment):
     return '(?P<uuid>[0-9a-f]{24})' + fragment + '$'

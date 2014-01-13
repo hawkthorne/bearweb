@@ -45,7 +45,7 @@ class GamesModelTests(TestCase):
         self.assertEquals('Windows', win[0])
         self.assertEquals('OSX', osx[0])
 
-        self.assertIn('http://localhost:8000/games', osx[1])
+        self.assertIn('http://example.com/games', osx[1])
 
     def test_release_add_asset(self):
         game = Game.objects.create(owner=self.user, framework=self.other,

@@ -1,4 +1,3 @@
-import re
 from django import template
 from django.core import urlresolvers
 

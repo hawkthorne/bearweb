@@ -1,11 +1,12 @@
 import binascii
 import os
 
-from django.core.urlresolvers import reverse
 from django.dispatch import receiver
 from django.db import models
 from django.db.models.signals import post_save
 from django.conf import settings
+
+from subdomains.utils import reverse
 
 from core import tasks
 
@@ -49,8 +50,8 @@ class Game(models.Model):
 
     def download_links(self):
         def fullurl(uuid, platform):
-            path = reverse('games:download', args=[uuid, platform])
-            return settings.SECURE_HOSTNAME + path
+            # FIXME: Make this link SSL
+            return reverse('download', args=[uuid, platform])
 
         return [
             ('Windows', fullurl(self.uuid, 'windows')),
@@ -75,7 +76,8 @@ class Game(models.Model):
         return self.release_set.order_by('-created')[0]
 
     def get_absolute_url(self):
-        return reverse("games:view", kwargs={"uuid": self.uuid})
+        return reverse("games:view", subdomain='manage',
+                       kwargs={"uuid": self.uuid})
 
     def next_version(self):
         """If the game has no releases, return 0.1.0. If the game does have a
@@ -97,7 +99,7 @@ class Game(models.Model):
 @receiver(post_save, sender=Game)
 def track_create_game(sender, instance, created, **kwargs):
     if created:
-        tasks.track.delay('Create Game', game=instance.slug,
+        tasks.track.delay(instance.owner.pk, 'Create Game', game=instance.slug,
                           distinct_id=instance.owner.username)
 
 
@@ -180,7 +182,8 @@ class Release(models.Model):
 @receiver(post_save, sender=Release)
 def track_create_release(sender, instance, created, **kwargs):
     if created:
-        tasks.track.delay('Create Release', game=instance.game.slug,
+        tasks.track.delay(instance.game.owner.pk, 'Create Release',
+                          game=instance.game.slug,
                           distinct_id=instance.game.owner.username)
 
 

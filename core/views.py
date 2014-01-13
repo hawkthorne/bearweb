@@ -38,11 +38,8 @@ $ docker pull stackmachine.com/{0}/{1}
 """
 
 
-def track(event, **kwargs):
-    try:
-        tasks.track.delay(event, **kwargs)
-    except:  # Gotta catch 'em all
-        pass
+def track(pk, event, **kwargs):
+    tasks.track.delay(pk, event, **kwargs)
 
 
 # FIXME:
