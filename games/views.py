@@ -1,6 +1,8 @@
 from django.http import Http404
+from django.http import HttpResponse
 from django.http import HttpResponseBadRequest
 from django.core.urlresolvers import reverse
+from django.utils.cache import patch_response_headers
 from django.template.defaultfilters import slugify
 from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
@@ -31,6 +33,22 @@ def get_game(request, uuid):
 class UUIDMixin(object):
     slug_field = 'uuid'
     slug_url_kwarg = 'uuid'
+
+
+class IdenticonDetail(UUIDMixin, DetailView):
+    model = Game
+    context_object_name = 'game'
+
+    def render_to_response(self, context, **kwargs):
+        response = HttpResponse(content_type="image/png")
+
+        image = context['game'].identicon(56)
+        image.save(response, 'PNG')
+
+        patch_response_headers(response, cache_timeout=0)
+        # patch_response_headers(response, cache_timeout=31536000)
+
+        return response
 
 
 class GameDetail(UUIDMixin, LoginRequiredMixin, DetailView):

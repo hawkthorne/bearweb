@@ -1,4 +1,5 @@
 import binascii
+import hashlib
 import os
 
 from django.dispatch import receiver
@@ -7,6 +8,7 @@ from django.db.models.signals import post_save
 from django.conf import settings
 
 from subdomains.utils import reverse
+from PIL import Image, ImageDraw
 
 from core import tasks
 
@@ -59,7 +61,34 @@ class Game(models.Model):
         ]
 
     def icon_url(self):
-        return "img/icons/{}.png".format(self.pk)
+        return reverse("identicon", kwargs={"uuid": self.uuid})
+
+    def identicon(self, size):
+        im = Image.new('RGBA', (size, size), (0,0,0,0))
+        draw = ImageDraw.Draw(im)
+
+        digest = hashlib.md5(self.uuid).hexdigest()
+
+        icon = digest[:28]
+        hex_color = digest[26:]
+        color = (int(hex_color[:2], 16), 
+                 int(hex_color[2:4], 16), 
+                 int(hex_color[4:6], 16))
+        step = size / 7
+
+        print step
+
+        for i, value in enumerate(icon):
+            if int(value, 16) % 2 == 0:
+                x = (i % 4) * step
+                x2 = (6 - (i % 4)) * step
+                y = (i / 4) * step
+                draw.rectangle([x2, y, x2 + step - 1, y + step - 1], fill=color)
+                draw.rectangle([x, y, x + step - 1, y + step - 1], fill=color)
+
+        del draw # I'm done drawing so I don't need this anymore
+
+        return im
 
     def appcast(self):
         items = []

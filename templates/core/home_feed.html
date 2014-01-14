@@ -11,7 +11,7 @@
       {% for game in games %}
       <li>
         <a href="{% url 'games:view' game.uuid %}" class="cover">
-          <img class="game-icon" src="{% static game.icon_url %}" />
+          <img class="game-icon" src="{{ game.icon_url }}" />
           {{ game.name }}
         </a>
       </li>

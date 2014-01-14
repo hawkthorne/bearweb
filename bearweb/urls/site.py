@@ -6,7 +6,7 @@ from django.views.generic import TemplateView
 from django.contrib import admin
 admin.autodiscover()
 
-from games.views import download
+from games.views import download, IdenticonDetail
 from core.views import ContactView, PricingView
 from blog.views import ArticleView
 
@@ -19,6 +19,8 @@ urlpatterns = patterns(
     '',
     url(r'^games/(?P<uuid>[0-9a-f]{24})/download/(?P<platform>windows|osx)$',
         download, name='download'),
+    url(r'^identicons/(?P<uuid>[0-9a-f]{24}).png', IdenticonDetail.as_view(),
+        name='identicon'),
     url(r'api/', include('games.urls.legacy', namespace='api')),
     url(r'^$', template("core/index.html"), name='home'),
     url(r'^robots.txt$', TemplateView.as_view(template_name='core/robots.txt',
