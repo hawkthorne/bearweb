@@ -19,7 +19,6 @@
     <div class="row">
       <div id="youtube">
         <div class="embed-container">
-          <iframe src="//www.youtube.com/embed/AL3eSTKxcPw?rel=0&autoplay=1" frameborder="0" allowfullscreen></iframe>
         </div>
       </div>
     </div>
@@ -98,7 +97,10 @@
   $(document).ready(function() {
     $("#videolink").click(function(e) {
       e.preventDefault();
+      var frame = $('<iframe src="//www.youtube.com/embed/AL3eSTKxcPw?rel=0&autoplay=1" frameborder="0" allowfullscreen></iframe>');
+      $("#youtube .embed-container").append(frame);
       $("#youtube").show();
+      $("#videolink").hide();
     });
   });
 </script>
