@@ -1,3 +1,5 @@
+import hashlib
+
 from django import template
 from django.core import urlresolvers
 
@@ -7,8 +9,8 @@ register = template.Library()
 
 @register.simple_tag(takes_context=True)
 def gravatar(context, user):
-    email_hash = '205e460b479e2e5b48aec07710c08d50'
-    return 'http://www.gravatar.com/avatar/?s=30&d=retro'.format(email_hash)
+    email_hash = hashlib.md5(user.email.lower()).hexdigest()
+    return 'https://www.gravatar.com/avatar/{}?s=30&d=retro'.format(email_hash)
 
 
 @register.simple_tag(takes_context=True)
