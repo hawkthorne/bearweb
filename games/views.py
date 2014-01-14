@@ -45,8 +45,7 @@ class IdenticonDetail(UUIDMixin, DetailView):
         image = context['game'].identicon(56)
         image.save(response, 'PNG')
 
-        patch_response_headers(response, cache_timeout=0)
-        # patch_response_headers(response, cache_timeout=31536000)
+        patch_response_headers(response, cache_timeout=31536000)
 
         return response
 
