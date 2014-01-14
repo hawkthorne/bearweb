@@ -157,14 +157,12 @@ def feed_redirect(request):
     return redirect('dashboard')
 
 
-def www_redirect(redirect):
+def www_redirect(request):
     """
     This middleware will redirect any requests to www to the bare domain
     """
-    def process_request(self, request):
-        if request.META.get('HTTP_HOST', '').startswith('www.'):
-            url = request.build_absolute_uri()
-            return HttpResponsePermanentRedirect(url.replace('www.', '', 1))
+    url = request.build_absolute_uri()
+    return HttpResponsePermanentRedirect(url.replace('www.', '', 1))
 
 
 def user_redirect(request):
