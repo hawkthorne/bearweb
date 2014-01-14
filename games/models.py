@@ -1,6 +1,7 @@
 import binascii
 import hashlib
 import os
+from urlparse import urlparse
 
 from django.dispatch import receiver
 from django.db import models
@@ -63,7 +64,7 @@ class Game(models.Model):
         url = reverse("identicon", kwargs={"uuid": self.uuid})
 
         if not settings.DEBUG:
-            return url.replace("http:", "https:")
+            return settings.STATIC_HOST + urlparse(url).path
 
         return url
 
