@@ -247,17 +247,28 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .heroshot {
+  position: relative;
   background: #d0f4f7 url("/static/img/frontpage.png") no-repeat scroll;
-  background-position: left bottom;
+  background-position: center bottom;
   min-height: 555px;
   border-bottom: 1px #222 solid;
   text-align: center;
 }
 
+#videolink {
+  position: absolute;
+  left: 50%;
+  background: #d0f4f7 url("/static/img/videoboard.png") no-repeat;
+  bottom: 245px;
+  margin-left: -70px;
+  width: 140px;
+  height: 105px;
+}
+
 .heroshot h2, .heroshot h3 {
   display: inline-block;
   color: rgb(51, 51, 51);
-  font-size: 32px;
+  font-size: 24px;
 }
 
 .heroshot h3 {
@@ -265,16 +276,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .heroshot p {
-  font-size: 18px;
-}
-
-
-@media (min-width: 1330px) {
-
-.heroshot {
-  background-position: center bottom;
-}
-
+  font-size: 14px;
 }
 
 .vmbuilder {
@@ -451,6 +453,15 @@ ul.top-bar-links li.active {
 }
 
 @media (min-width: 768px) {
+
+.heroshot h2, .heroshot h3 {
+  font-size: 32px;
+}
+
+.heroshot p {
+  font-size: 18px;
+}
+
 
 #logo {
   float: left;
@@ -733,8 +744,8 @@ ul.top-bar-links li {
 }
 
 #youtube {
+  display: none;
   margin: 45px auto;
-  background: rgba(0,0,0,0.5);
   max-width: 640px;
 }
 
@@ -752,7 +763,6 @@ ul.top-bar-links li {
 
 
 .embed-container {
-  border: 3px solid black;
   position: relative;
   padding-bottom: 56.25%;
   padding-top: 30px;

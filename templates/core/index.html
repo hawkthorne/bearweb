@@ -5,6 +5,8 @@
 
 {% block wide %}
 <div class="heroshot">
+  <a href="#" id="videolink">
+  </a>
   <div class="container">
     <div class="row">
       <div class="col-md-12">
@@ -17,7 +19,7 @@
     <div class="row">
       <div id="youtube">
         <div class="embed-container">
-          <iframe src="//www.youtube.com/embed/AL3eSTKxcPw?rel=0" frameborder="0" allowfullscreen></iframe>
+          <iframe src="//www.youtube.com/embed/AL3eSTKxcPw?rel=0&autoplay=1" frameborder="0" allowfullscreen></iframe>
         </div>
       </div>
     </div>
@@ -26,11 +28,11 @@
 
 <div id="engine-beta">
   <div class="container">
-  <div class="row">
-    <div class="col-sm-12 col-lg-10 col-lg-offset-1">
-      <img src="{% static 'img/engines.png' %}" />
+    <div class="row">
+      <div class="col-sm-12 col-lg-10 col-lg-offset-1">
+        <img src="{% static 'img/engines.png' %}" />
+      </div>
     </div>
-  </div>
     <div class="col-sm-12 col-lg-8 col-lg-offset-2">
       <h3>Use a game engine other than LÖVE?</h3>
       <p>We know there are a million and one different game engines, and we plan on supporting them all. Sign up to get early access to StackMachine for Unity3D, GameMaker and other engines.</p>
@@ -89,6 +91,15 @@
   </div>
   <a class="hidden" href="https://plus.google.com/100892292030290554167" rel="publisher">Google+</a>
 </div>
+{% endblock %}
 
-
+{% block extra_js %}
+<script defer type="text/javascript">
+  $(document).ready(function() {
+    $("#videolink").click(function(e) {
+      e.preventDefault();
+      $("#youtube").show();
+    });
+  });
+</script>
 {% endblock %}
