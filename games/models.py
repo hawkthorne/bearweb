@@ -60,7 +60,12 @@ class Game(models.Model):
         ]
 
     def icon_url(self):
-        return reverse("identicon", kwargs={"uuid": self.uuid})
+        url = reverse("identicon", kwargs={"uuid": self.uuid})
+
+        if not settings.DEBUG:
+            return url.replace("http:", "https:")
+
+        return url
 
     def identicon(self, size):
         im = Image.new('RGBA', (size, size), (0, 0, 0, 0))
