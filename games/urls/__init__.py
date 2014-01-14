@@ -7,7 +7,6 @@ from ..views import ReportList
 def pat(fragment):
     return '(?P<uuid>[0-9a-f]{24})' + fragment + '$'
 
-
 urlpatterns = patterns(
     '',
     url(r'^new$', GameCreate.as_view(), name='create'),

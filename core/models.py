@@ -19,5 +19,4 @@ def create_user_profile(sender, instance, created, **kwargs):
         tasks.track.delay(instance.pk, 'Sign Up',
                           distinct_id=instance.username)
 
-
 post_save.connect(create_user_profile, sender=User)

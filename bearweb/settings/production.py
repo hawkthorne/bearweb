@@ -62,8 +62,7 @@ BROKER_URL = get_env_setting('REDISCLOUD_URL')
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 
-
-MIDDLEWARE_CLASSES = ('core.middleware.SSLifyMiddleware',) + \
+MIDDLEWARE_CLASSES = ('core.middleware.SSLifyMiddleware', ) + \
     MIDDLEWARE_CLASSES
 
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'

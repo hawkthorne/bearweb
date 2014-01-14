@@ -14,7 +14,6 @@ from blog.views import ArticleView
 def template(path):
     return TemplateView.as_view(template_name=path)
 
-
 urlpatterns = patterns(
     '',
     url(r'^games/(?P<uuid>[0-9a-f]{24})/download/(?P<platform>windows|osx)$',

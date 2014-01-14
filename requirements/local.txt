@@ -4,3 +4,4 @@ django-debug-toolbar
 Sphinx
 honcho
 Jinja2==2.7
+pep8ify

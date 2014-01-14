@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+  # -*- coding: utf-8 -*-
 
 import zipfile
 import os
@@ -41,7 +41,6 @@ def simple_love(name, version):
     lovepath = os.path.join('gen', '{}.love'.format(name))
     create_lovefile(lovepath, name, version)
     return File(open(lovepath))
-
 
 LOVE_9_CONF = u"""
 function love.conf(t)

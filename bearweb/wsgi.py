@@ -41,6 +41,7 @@ class Cling(WSGIHandler):
     directory, as defined by the STATIC_URL setting, and serves
     those files.
     """
+
     def __init__(self, application, base_dir=None):
         self.application = application
         if not base_dir:
@@ -104,7 +105,6 @@ class Cling(WSGIHandler):
         # Serve static requests in debug mode from StaticFilesHandler
         else:
             return self._gzip(self.debug_cling, environ, start_response)
-
 
 # We defer to a DJANGO_SETTINGS_MODULE already in the environment. This breaks
 # if running multiple sites in the same mod_wsgi process. To fix this, use

@@ -18,7 +18,6 @@ class ReleaseAdmin(admin.ModelAdmin):
 class AssetAdmin(admin.ModelAdmin):
     list_display = ['__unicode__', 'release']
 
-
 admin.site.register(Game, GameAdmin)
 admin.site.register(Release, ReleaseAdmin)
 admin.site.register(Framework, FrameworkAdmin)

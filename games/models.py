@@ -26,7 +26,6 @@ class Framework(models.Model):
     def __unicode__(self):
         return self.name
 
-
 _PUBLIC_CHOICES = ((True, 'Public'), (False, 'Private'))
 _PUBLIC_HELP = "Public games can be downloaded for free without paying"
 
@@ -64,15 +63,15 @@ class Game(models.Model):
         return reverse("identicon", kwargs={"uuid": self.uuid})
 
     def identicon(self, size):
-        im = Image.new('RGBA', (size, size), (0,0,0,0))
+        im = Image.new('RGBA', (size, size), (0, 0, 0, 0))
         draw = ImageDraw.Draw(im)
 
         digest = hashlib.md5(self.uuid).hexdigest()
 
         icon = digest[:28]
         hex_color = digest[26:]
-        color = (int(hex_color[:2], 16), 
-                 int(hex_color[2:4], 16), 
+        color = (int(hex_color[:2], 16),
+                 int(hex_color[2:4], 16),
                  int(hex_color[4:6], 16))
         step = size / 7
 
@@ -81,12 +80,12 @@ class Game(models.Model):
         for i, value in enumerate(icon):
             if int(value, 16) % 2 == 0:
                 x = (i % 4) * step
-                x2 = (6 - (i % 4)) * step
+                z = (6 - (i % 4)) * step
                 y = (i / 4) * step
-                draw.rectangle([x2, y, x2 + step - 1, y + step - 1], fill=color)
+                draw.rectangle([z, y, z + step - 1, y + step - 1], fill=color)
                 draw.rectangle([x, y, x + step - 1, y + step - 1], fill=color)
 
-        del draw # I'm done drawing so I don't need this anymore
+        del draw  # I'm done drawing so I don't need this anymore
 
         return im
 

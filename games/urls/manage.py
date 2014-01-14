@@ -1,14 +1,12 @@
 from django.conf.urls import patterns, include, url
 from django.views.generic import TemplateView
 
-
 from core.views import PortalView
 from core.views import Dashboard, user_redirect
 
 
 def pat(fragment):
     return '(?P<uuid>[0-9a-f]{24})' + fragment + '$'
-
 
 urlpatterns = patterns(
     '',

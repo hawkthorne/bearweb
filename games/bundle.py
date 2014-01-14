@@ -43,7 +43,6 @@ def relpath(prefix, path, app):
     path = path.replace(os.path.join(settings.SITE_ROOT, "games/"), "")
     return path.replace(prefix + "/osx/love.app", app)
 
-
 _version_pattern = r"t\.version\s+=\s+(\"0\.\d\.0\"|'0\.\d\.0')"
 _identity_pattern = r"t\.identity\s+=\s+(\".+\"|'.+')"
 

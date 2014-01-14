@@ -16,7 +16,6 @@ def get_env_var(var_name):
     except KeyError:
         error_msg = "Set the {} environment varible".format(var_name)
         raise ImproperlyConfigured(error_msg)
-
 # Absolute filesystem path to the Django project directory:
 
 OLARK = False
@@ -33,13 +32,11 @@ SITE_NAME = basename(DJANGO_ROOT)
 # name in our dotted import paths:
 path.append(DJANGO_ROOT)
 
-
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#debug
 DEBUG = False
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#template-debug
 TEMPLATE_DEBUG = DEBUG
-
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#admins
 ADMINS = (
@@ -49,15 +46,13 @@ ADMINS = (
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#managers
 MANAGERS = ADMINS
 
-
 DATABASES = {
     'default': dj_database_url.config(),
 }
 
 # Honor the 'X-Forwarded-Proto' header for request.is_secure()
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-
-# Allow all host headers
+  # Allow all host headers
 
 TIME_ZONE = 'America/Los_Angeles'
 
@@ -75,7 +70,6 @@ USE_L10N = True
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#use-tz
 USE_TZ = True
-
 
 MEDIA_ROOT = normpath(join(SITE_ROOT, 'media'))
 
@@ -100,22 +94,18 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 )
 
-
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#secret-key
 # Note: This key should only be used for development and testing.
 SECRET_KEY = r"#05gcqo2u5my+#e)p6nqod61&gt@g^l6*&nh_3!_+ke1rn*leh"
-
 
 # Hosts/domain names that are valid for this site
 # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
 ALLOWED_HOSTS = ['*']
 
-
 # See: /en/dev/ref/settings/#std:setting-FIXTURE_DIRS
 FIXTURE_DIRS = (
     normpath(join(SITE_ROOT, 'fixtures')),
 )
-
 
 # See: /en/dev/ref/settings/#template-context-processors
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -141,7 +131,6 @@ TEMPLATE_DIRS = (
     normpath(join(SITE_ROOT, 'templates')),
 )
 
-
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#middleware-classes
 MIDDLEWARE_CLASSES = (
     # Default Django middleware.
@@ -154,10 +143,8 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#root-urlconf
 ROOT_URLCONF = '%s.urls' % SITE_NAME
-
 
 DJANGO_APPS = (
     # Default Django apps:
@@ -254,7 +241,6 @@ KEEN_READ_KEY = get_env_var('KEEN_READ_KEY')
 
 CUSTOMERIO_SITE_ID = get_env_var('CUSTOMERIO_SITE_ID')
 CUSTOMERIO_API_KEY = get_env_var('CUSTOMERIO_API_KEY')
-
 
 SECURE_HOSTNAME = 'http://stackmachine.dev:8000'
 INSECURE_HOSTNAME = 'http://stackmachine.dev:8000'

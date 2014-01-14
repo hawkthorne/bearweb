@@ -25,11 +25,10 @@ CACHES = {
     }
 }
 
-
 # See: https://github.com/django-debug-toolbar/django-debug-toolbar
 
 # See: https://github.com/django-debug-toolbar/django-debug-toolbar
-INTERNAL_IPS = ('127.0.0.1',)
+INTERNAL_IPS = ('127.0.0.1', )
 
 # See: https://github.com/django-debug-toolbar/django-debug-toolbar
 

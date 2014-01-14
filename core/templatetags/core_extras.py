@@ -3,7 +3,6 @@ import hashlib
 from django import template
 from django.core import urlresolvers
 
-
 register = template.Library()
 
 

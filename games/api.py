@@ -11,8 +11,6 @@ from core.decorators import ssl_exempt
 from games import fieldmarshal
 
 
-# Structs
-
 class Metric(fieldmarshal.Struct):
     event = unicode
     properties = {}

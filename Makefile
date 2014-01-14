@@ -58,10 +58,14 @@ css:
 	cd compass && exec compass watch .
 
 fmt:
+	. venv/bin/activate; find blog core bearweb games -name "*.py" | grep -v "migrations" | xargs -I {} pep8ify -n -w {}
+
+
+pep8:
 	. venv/bin/activate; flake8 blog core bearweb games \
 		--exclude "migrations"
 
-test: fmt
+test: pep8
 	. venv/bin/activate; \
 		coverage run manage.py test --settings=bearweb.settings.test -v 2
 
