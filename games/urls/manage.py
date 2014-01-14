@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.conf.urls import patterns, include, url
 from django.views.generic import TemplateView
 
@@ -27,3 +28,10 @@ urlpatterns = patterns(
     url(r'^users/', include('registration.backends.simple.urls')),
     url(r'^games/', include('games.urls', namespace='games')),
 )
+
+if settings.DEBUG:
+    urlpatterns += patterns(
+        '',
+        (r'^500/$', 'django.views.defaults.server_error'),
+        (r'^404/$', 'django.views.defaults.page_not_found'),
+    )
