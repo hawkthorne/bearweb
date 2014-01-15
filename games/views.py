@@ -115,6 +115,15 @@ class ReleaseCreate(LoginRequiredMixin, FormView):
         game = get_game(self.request, self.kwargs['uuid'])
 
         f = form.cleaned_data['lovefile']
+        version = form.cleaned_data['version']
+
+        if not game.valid_version(version):
+            errors = {
+                'invalid_version': version,
+                'game': game,
+            }
+            partial = render_to_string('games/upload_errors.html', errors)
+            return HttpResponseBadRequest(partial)
 
         if not bundle.check_for_main(f):
             errors = {'invalid_file': True}
@@ -124,7 +133,6 @@ class ReleaseCreate(LoginRequiredMixin, FormView):
         love_version = bundle.detect_version(f) or "0.8.0"
 
         # Get the latest release for the game, and increment the version
-        version = game.next_version()
         release = game.release_set.create(version=version,
                                           love_version=love_version)
 

@@ -17,6 +17,9 @@ install: venv
 debug: venv
 	. venv/bin/activate; python manage.py runserver
 
+worker: venv
+	. venv/bin/activate; python manage.py celery worker --loglevel=info
+
 serve:
 	. venv/bin/activate; honcho start -f Procfile.dev
 
@@ -86,9 +89,9 @@ clean:
 	mkdir -p media	
 
 # Don't run the tests that take a long time
-check: fmt
+check: pep8
 	. venv/bin/activate; DISABLE_SLOW=true coverage run manage.py \
-		test --settings=bearweb.settings.test
+		test --settings=bearweb.settings.test -v 2
 
 
 databases:

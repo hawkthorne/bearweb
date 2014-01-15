@@ -17,4 +17,4 @@ DATABASES = {
     },
 }
 
-CELERY_ALWAYS_EAGER = True
+CELERY_ALWAYS_EAGER = False

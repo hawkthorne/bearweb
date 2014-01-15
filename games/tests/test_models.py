@@ -16,6 +16,33 @@ class GamesModelTests(TestCase):
     def test_youtube_id(self):
         self.assertEqual(24, len(tubeid()))
 
+    def test_current_version(self):
+        game = Game.objects.create(owner=self.user, framework=self.other,
+                                   name="Foo", slug="foo")
+        self.assertEqual("0.0.0", game.current_version())
+
+    def test_invalid_version(self):
+        game = Game.objects.create(owner=self.user, framework=self.other,
+                                   name="Foo", slug="foo")
+        self.assertFalse(game.valid_version("foobar"))
+
+    def test_invalid_version_the_same(self):
+        game = Game.objects.create(owner=self.user, framework=self.other,
+                                   name="Foo", slug="foo")
+        game.release_set.create(version="0.1.0")
+        self.assertFalse(game.valid_version("0.1.0"))
+
+    def test_invalid_version_too_low(self):
+        game = Game.objects.create(owner=self.user, framework=self.other,
+                                   name="Foo", slug="foo")
+        game.release_set.create(version="0.1.0")
+        self.assertFalse(game.valid_version("0.0.1"))
+
+    def test_valid_version(self):
+        game = Game.objects.create(owner=self.user, framework=self.other,
+                                   name="Foo", slug="foo")
+        self.assertTrue(game.valid_version("0.1.0"))
+
     def test_get_url(self):
         game = Game.objects.create(owner=self.user, framework=self.other,
                                    name="Foo", slug="foo")

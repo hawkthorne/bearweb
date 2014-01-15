@@ -4,7 +4,8 @@ from .models import Game
 
 
 class LoveForm(forms.Form):
-    lovefile = forms.FileField()
+    lovefile = forms.FileField(required=True)
+    version = forms.CharField(required=True)
 
 
 class GameForm(forms.ModelForm):

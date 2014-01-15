@@ -1,6 +1,7 @@
 import binascii
 import hashlib
 import os
+import re
 from urlparse import urlparse
 
 from django.dispatch import receiver
@@ -81,8 +82,6 @@ class Game(models.Model):
                  int(hex_color[4:6], 16))
         step = size / 7
 
-        print step
-
         for i, value in enumerate(icon):
             if int(value, 16) % 2 == 0:
                 x = (i % 4) * step
@@ -112,6 +111,36 @@ class Game(models.Model):
     def get_absolute_url(self):
         return reverse("games:view", subdomain='manage',
                        kwargs={"uuid": self.uuid})
+
+    def valid_version(self, new_version):
+        """Make sure that the new version is a valid version and
+        greater than the current version of the game
+        """
+        if not re.match(r"\d+\.\d+\.\d+", new_version):
+            return False
+
+        x1, y1, z1 = [int(i) for i in self.current_version().split(".")]
+        x2, y2, z2 = [int(i) for i in new_version.split(".")]
+
+        if x2 < x1:
+            return False
+
+        if x2 == x1 and y2 < y1:
+            return False
+
+        if x2 == x1 and y2 == y1 and z2 <= z1:
+            return False
+
+        return True
+
+    def current_version(self):
+        """If the game has no releases, return 0.1.0. If the game does have a
+        release, return the next minor version.
+        """
+        try:
+            return self.release_set.order_by('-created')[0].version
+        except IndexError:
+            return "0.0.0"
 
     def next_version(self):
         """If the game has no releases, return 0.1.0. If the game does have a

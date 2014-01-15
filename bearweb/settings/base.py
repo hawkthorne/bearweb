@@ -16,7 +16,7 @@ def get_env_var(var_name):
     except KeyError:
         error_msg = "Set the {} environment varible".format(var_name)
         raise ImproperlyConfigured(error_msg)
-# Absolute filesystem path to the Django project directory:
+  # Absolute filesystem path to the Django project directory:
 
 OLARK = False
 

@@ -12,7 +12,11 @@
 <div class="row">
   <div class="col-sm-12">
     <h2>Create a new release</h2>
-    <form id="upload" action="" role="form" enctype="multipart/form-data" method="POST">
+    <form id="upload" action="" role="form" class="form" enctype="multipart/form-data" method="POST">
+      <div class="form-group">
+        <label for="version">Release version</label>
+        <input id="id_version" class="form-control" type="text" value="{{ game.next_version }}" name="version">
+      </div>
       {% csrf_token %}
       <div id="drop">
         <div class="message">
@@ -23,7 +27,7 @@
             <input class="knob" id="knob" type="text" value="0" data-width="60" data-height="60" data-fgColor="#FFF" data-readOnly="1" data-bgColor="#95275f" />
           </div>
         </div>
-        <input id="id_lovefile" class=" form-control" type="file" name="lovefile">
+        <input id="id_lovefile" class="form-control" type="file" name="lovefile">
         <input type="hidden" id="id_next" value="{% url 'games:releases' game.uuid %}">
       </div>
     </form>

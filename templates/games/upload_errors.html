@@ -1,3 +1,17 @@
+{% if invalid_version %}
+<div class="col-md-6">
+  <div class="panel panel-danger">
+    <div class="panel-heading">
+      <h3 class="panel-title">Error: Invalid release version</h3>
+    </div>
+    <div class="panel-body">
+      <p>The version number "{{ invalid_version }}" you choose is either invalid or lower than the current version of {{ game.name }}. Make sure that your version number follows the pattern "X.Y.Z".</p>
+      <p>The current version of {{ game.name }} is {{ game.current_version }}</p> 
+    </div>
+  </div>
+</div>
+{% endif %}
+
 {% if missing_version %}
 <div class="col-md-6">
   <div class="panel panel-danger">
