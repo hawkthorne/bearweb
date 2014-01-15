@@ -71,6 +71,8 @@ AWS_ACCESS_KEY_ID = get_env_var('AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = get_env_var('AWS_SECRET_ACCESS_KEY')
 AWS_STORAGE_BUCKET_NAME = 'cloud.stackmachine.com'
 
+DEFAULT_URL_SCHEME = 'https'
+
 # FIXME
 SECURE_HOSTNAME = 'https://stackmachine.com'
 INSECURE_HOSTNAME = 'http://stackmachine.com'
