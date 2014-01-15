@@ -4,12 +4,38 @@
   <title>Stack Machine Blog</title>
   <link href="http://stackmachine.com/blog/feed.xml" rel="self"/>
   <link href="http://stackmachine.com/blog"/>
-  <updated>2013-12-21T23:54:52-08:00</updated>
+  <updated>2014-01-14T21:57:48-08:00</updated>
   <id>http://stackmachine.com/blog</id>
   <author>
     <name>Stack Machine</name>
     <email>contact@stachmachine.com</email>
   </author>
+  
+  <entry>
+    <title>Introducing Glove, the LÖVE Compatibility Library</title>
+    <link href="http://stackmachine.com//blog/introducing-glove"/>
+    <updated>2014-01-14T16:00:00-08:00</updated>
+    <id>http://stackmachine.com/blog/introducing-glove</id>
+    <content type="html">&lt;p&gt;With the recent release of LÖVE 0.9, there are now two popular versions of the framework. While many games will be migrating to 0.9, many will choose to stay with 0.8 for the foreseeable future. These two versions cause an issue for developers looking to create libraries for LÖVE, as they need to support both versions of the framework.&lt;/p&gt;
+
+&lt;p&gt;Inspired by &lt;a href=&#39;http://pythonhosted.org/six&#39;&gt;six&lt;/a&gt;, a compatibility library for Python 2 and 3, we&amp;#8217;re happy to introduce &lt;a href=&#39;https://github.com/stackmachine/glove&#39;&gt;Glove&lt;/a&gt;, a compatibility library for LÖVE 0.8 and 0.9. Glove is a single Lua file, so it&amp;#8217;s easy to integrate. Once you&amp;#8217;ve download the file, migrating involves only a few changes. Let&amp;#8217;s look at code that only works on 0.8&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;function love.load()
+  love.filesystem.mkdir(&amp;#39;saves&amp;#39;)
+end&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;a href=&#39;http://love2d.org/wiki/love.filesystem.mkdir&#39;&gt;love.filesystem.mkdir&lt;/a&gt; was renamed in LÖVE 0.9 and will no longer work. With Glove, you can easily make this code work across versions.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;local glove = require &amp;#39;glove&amp;#39;
+
+function love.load()
+  glove.filesystem.mkdir(&amp;#39;saves&amp;#39;)
+end&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This code will now work across both versions of the LÖVE framework.&lt;/p&gt;
+
+&lt;p&gt;The StackMachine SDK for LÖVE is powered using Glove and we can&amp;#8217;t wait for the library to grow. You can see a list of all the supported methods in the &lt;a href=&#39;https://github.com/stackmachine/glove/wiki/Supported-Methods-and-Modules&#39;&gt;documentation&lt;/a&gt; and contribute to the &lt;a href=&#39;https://github.com/stackmachine/glove&#39;&gt;code on GitHub&lt;/a&gt;.&lt;/p&gt;</content>
+  </entry>
   
   <entry>
     <title>Announcing Support for LÖVE 0.9.0</title>
