@@ -67,7 +67,7 @@ class RegistrationView(_RequestPassingFormView):
     authenticated_url = 'dashboard'
     form_class = RegistrationForm
     http_method_names = ['get', 'post', 'head', 'options', 'trace']
-    success_url = None
+    success_url = 'dashboard'
     template_name = 'registration/registration_form.html'
 
     def dispatch(self, request, *args, **kwargs):
