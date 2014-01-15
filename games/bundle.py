@@ -109,7 +109,7 @@ def package_osx(lovefile, prefix, name, slug, version):
     _, output_name = tempfile.mkstemp("love")
 
     app_name = "{}.app".format(name)
-    zip_name = "{}-osx-{}.zip".format(slug, version)
+    zip_name = "{}-osx.zip".format(slug)
 
     archive = zipfile.ZipFile(output_name, "w")
 
@@ -152,7 +152,7 @@ def package_windows(lovefile, prefix, name, slug, version):
     """
     _, output_name = tempfile.mkstemp("love")
 
-    zip_name = "{}-win-{}.zip".format(slug, version)
+    zip_name = "{}-win.zip".format(slug)
 
     archive = zipfile.ZipFile(output_name, "w")
 

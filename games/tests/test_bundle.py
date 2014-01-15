@@ -151,7 +151,7 @@ class GamesModelTests(TestCase):
 
         asset = release.get_asset('osx')
 
-        self.assertIn('0.1.8/foo-osx-0.1.8.zip', asset.blob.url)
+        self.assertIn('0.1.8/foo-osx.zip', asset.blob.url)
 
     @unittest.skipIf('DISABLE_SLOW' in os.environ, "This is a slow test")
     def test_package_simple_game_9(self):
@@ -164,7 +164,7 @@ class GamesModelTests(TestCase):
 
         asset = release.get_asset('osx')
 
-        self.assertIn('0.1.9/foo-osx-0.1.9.zip', asset.blob.url)
+        self.assertIn('0.1.9/foo-osx.zip', asset.blob.url)
 
     def test_package_game_with_folders(self):
         lovefile = os.path.abspath(
