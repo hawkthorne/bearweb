@@ -20,6 +20,6 @@ logutils==0.3.3
 newrelic==2.6.0.5
 psycopg2==2.5.1
 redis
-requests==2.0.1
+requests==2.2.0
 static==0.4
 stripe==1.9.8
