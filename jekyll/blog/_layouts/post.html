@@ -1,10 +1,24 @@
 ---
 layout: default
 ---
-<h3><a href="{{ page.url }}">{{ page.title }}</a></h3>
-
-<p class="meta">{{ page.date | date: "%B %d, %Y" }} by {{ page.author }}</p>
+<h1><a href="{{ page.url }}">{{ page.title }}</a></h1>
 
 <article class="post">
-{{ content }}
+  {{ content }}
 </article>
+
+<div class="well" id="mc_embed_signup">
+  <form class="form-inline" role="form" action="http://stackmachine.us7.list-manage.com/subscribe/post?u=6200d341ebdd542a86f42f04d&amp;id=9624067a19" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" target="_blank" novalidate>
+    <div style="position: absolute; left: -5000px;"><input type="text" name="b_6200d341ebdd542a86f42f04d_9624067a19" value=""></div>
+    <p class="lead">Get notified of new posts</p>
+    <div class="row">
+      <div class="col-sm-9">
+        <label class="sr-only" for="EMAIL">Email Address</label>
+        <input type="text" value="" class="form-control"  name="EMAIL" id="mce-EMAIL" placeholder="Email Address" required>
+      </div>
+      <div class="col-sm-3">
+        <input class="btn btn-primary" type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button">
+      </div>
+    </div>
+  </form>
+</div>

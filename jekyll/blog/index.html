@@ -8,8 +8,7 @@ title: The StackMachine Blog
     {% if post.hidden == true %}
     {% else %}
     <article class="post">
-      <h3><a href="{{ post.url }}">{{ post.title }}</a></h3>
-      <p>{{ post.date | date: "%B %d, %Y" }} by {{ post.author }}</p>
+      <h1><a href="{{ post.url }}">{{ post.title }}</a></h1>
       {{ post.content }}
     </article>
     {% endif %}

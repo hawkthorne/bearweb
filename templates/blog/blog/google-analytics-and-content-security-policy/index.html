@@ -14,12 +14,10 @@
 
 <div class="row">
   <div class="col-sm-9 columns">
-    <h3><a href="/blog/google-analytics-and-content-security-policy">Google Analytics and Content Security Policy</a></h3>
-
-<p class="meta">July 09, 2013 by Kyle Conroy</p>
+    <h1><a href="/blog/google-analytics-and-content-security-policy">Google Analytics and Content Security Policy</a></h1>
 
 <article class="post">
-<p><a href='http://www.w3.org/TR/CSP/'>Content Security Policy (CSP)</a> is a new header for securing your web application against common scripting attacks. It works by limiting content sources a web page is allowed to access. For example, the header can declare that all content (images, scripts, frames) must originate from a single domain. The browser will block any requests that violate this policy.</p>
+  <p><a href='http://www.w3.org/TR/CSP/'>Content Security Policy (CSP)</a> is a new header for securing your web application against common scripting attacks. It works by limiting content sources a web page is allowed to access. For example, the header can declare that all content (images, scripts, frames) must originate from a single domain. The browser will block any requests that violate this policy.</p>
 
 <p>CSP defaults to also blocking inline styles, inline Javascript, and the use of <code>eval</code> in Javascript. These defaults have a high risk of breaking existing sites. Specifically, the Javascript code snippet that Google Analytics asks you to include on your website implementations break when using Content Security Policy.</p>
 
@@ -66,6 +64,22 @@
 
 <p>For a deeper look into CSP, the fine folks at GitHub wrote a <a href='https://github.com/blog/1477-content-security-policy'>fantastic post</a> about their experience implementing CSP.</p>
 </article>
+
+<div class="well" id="mc_embed_signup">
+  <form class="form-inline" role="form" action="http://stackmachine.us7.list-manage.com/subscribe/post?u=6200d341ebdd542a86f42f04d&amp;id=9624067a19" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" target="_blank" novalidate>
+    <div style="position: absolute; left: -5000px;"><input type="text" name="b_6200d341ebdd542a86f42f04d_9624067a19" value=""></div>
+    <p class="lead">Get notified of new posts</p>
+    <div class="row">
+      <div class="col-sm-9">
+        <label class="sr-only" for="EMAIL">Email Address</label>
+        <input type="text" value="" class="form-control"  name="EMAIL" id="mce-EMAIL" placeholder="Email Address" required>
+      </div>
+      <div class="col-sm-3">
+        <input class="btn btn-primary" type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button">
+      </div>
+    </div>
+  </form>
+</div>
 
   </div>
   <div class="col-sm-3 columns">
