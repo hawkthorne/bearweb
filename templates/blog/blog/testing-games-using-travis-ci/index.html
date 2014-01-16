@@ -14,13 +14,10 @@
 
 <div class="row">
   <div class="col-sm-9 columns">
-    <div id="home">
-  <section class="posts">
-    
-    
-    <article class="post">
-      <h1><a href="/blog/testing-games-using-travis-ci">Testing LÖVE Games Using Travis CI</a></h1>
-      <p>One of our main goals at StackMachine is to bring game development up to speed with the rest of the software engineering industry. Best practices such as unit testing, continuous integration, and continuous delivery have yet to make it into the mainstream game development pipeline.</p>
+    <h1><a href="/blog/testing-games-using-travis-ci">Testing LÖVE Games Using Travis CI</a></h1>
+
+<article class="post">
+  <p>One of our main goals at StackMachine is to bring game development up to speed with the rest of the software engineering industry. Best practices such as unit testing, continuous integration, and continuous delivery have yet to make it into the mainstream game development pipeline.</p>
 
 <p>One of the easiest things you can do to improve your process is start testing your LÖVE modules and games using Travis CI. Travis is a free continuous integration service for open source projects. It&#8217;s deeply integrated into GitHub, making it easy to enable and use. Several popular projects, such as <a href='https://github.com/hawkthorne/hawkthorne-journey'>Journey to the Center of Hawkthorne</a> and <a href='https://github.com/stackmachine/glove'>Glove</a>, use Travis to power their tests.</p>
 
@@ -99,63 +96,22 @@ AL lib: oss.c:169: Could not open /dev/dsp: Permission denied</code></pre>
 <h2 id='go_now_and_test'>Go Now and Test</h2>
 
 <p>With this setup you should be able to add continuous integration to your LÖVE module or game in a matter of minutes. Having tests run on every commit make it more likely you&#8217;ll spot bugs earlier and ship fewer regressions.</p>
-    </article>
-    
-    
-    
-    <article class="post">
-      <h1><a href="/blog/introducing-glove">Introducing Glove, the LÖVE Compatibility Library</a></h1>
-      <p>With the recent release of LÖVE 0.9, there are now two popular versions of the framework. While many games will be migrating to 0.9, many will choose to stay with 0.8 for the foreseeable future. These two versions cause an issue for developers looking to create libraries for LÖVE, as they need to support both versions of the framework.</p>
+</article>
 
-<p>Inspired by <a href='http://pythonhosted.org/six'>six</a>, a compatibility library for Python 2 and 3, we&#8217;re happy to introduce <a href='https://github.com/stackmachine/glove'>Glove</a>, a compatibility library for LÖVE 0.8 and 0.9. Glove is a single Lua file, so it&#8217;s easy to integrate. Once you&#8217;ve download the file, migrating involves only a few changes. Let&#8217;s look at code that only works on 0.8</p>
-
-<pre><code>function love.load()
-  love.filesystem.mkdir(&#39;saves&#39;)
-end</code></pre>
-
-<p><a href='http://love2d.org/wiki/love.filesystem.mkdir'>love.filesystem.mkdir</a> was renamed in LÖVE 0.9 and will no longer work. With Glove, you can easily make this code work across versions.</p>
-
-<pre><code>local glove = require &#39;glove&#39;
-
-function love.load()
-  glove.filesystem.mkdir(&#39;saves&#39;)
-end</code></pre>
-
-<p>This code will now work across both versions of the LÖVE framework.</p>
-
-<p>The StackMachine SDK for LÖVE is powered using Glove and we can&#8217;t wait for the library to grow. You can see a list of all the supported methods in the <a href='https://github.com/stackmachine/glove/wiki/Supported-Methods-and-Modules'>documentation</a> and contribute to the <a href='https://github.com/stackmachine/glove'>code on GitHub</a>.</p>
-    </article>
-    
-    
-    
-    <article class="post">
-      <h1><a href="/blog/love-zero-nine-support-has-arrived">Announcing Support for LÖVE 0.9.0</a></h1>
-      <p><img alt='Baby Inspector' src='/static/img/baby.jpg' /></p>
-
-<p>Version 0.9.0 (codename Baby Inspector) was released last week after a year in development. It&#8217;s a huge milestone for the engine and we&#8217;re happy to have been a part of the release. StackMachine powers <a href='http://love2d.org/builds'>Nightly LÖVE</a>, <a href='http://ci.projecthawkthorne.com'>the Jenkins infrastructure</a> behind nightly builds of LÖVE game engine. Users have been testing out 0.9.0 for months before the official release, finding bugs and providing valuable feedback.</p>
-
-<p>Today StackMachine launches full support for 0.9.0. To enable 0.9.0 for your game, just make sure to include the following in your <code>conf.lua</code>:</p>
-
-<pre><code>function love.conf(t)
-  t.version = &quot;0.9.0&quot;
-end</code></pre>
-
-<p>If you&#8217;re unfamiliar with <code>conf.lua</code>, read the <a href='http://www.love2d.org/wiki/Config_Files'>Config Files</a> over on the LÖVE wiki. To maintain backwards compatibility, games without 0.9.0 declared in <code>conf.lua</code> will continue to use version 0.8.0 of the engine.</p>
-
-<p>We&#8217;ve got more exciting features planned over the next few weeks, so <a href='http://localhost:8000/blog/feed.xml'>subscribe</a> and stay tuned.</p>
-    </article>
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-  </section>
+<div class="well" id="mc_embed_signup">
+  <form class="form-inline" role="form" action="http://stackmachine.us7.list-manage.com/subscribe/post?u=6200d341ebdd542a86f42f04d&amp;id=9624067a19" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" target="_blank" novalidate>
+    <div style="position: absolute; left: -5000px;"><input type="text" name="b_6200d341ebdd542a86f42f04d_9624067a19" value=""></div>
+    <p class="lead">Get notified of new posts</p>
+    <div class="row">
+      <div class="col-sm-9">
+        <label class="sr-only" for="EMAIL">Email Address</label>
+        <input type="text" value="" class="form-control"  name="EMAIL" id="mce-EMAIL" placeholder="Email Address" required>
+      </div>
+      <div class="col-sm-3">
+        <input class="btn btn-primary" type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button">
+      </div>
+    </div>
+  </form>
 </div>
 
   </div>
@@ -177,7 +133,7 @@ end</code></pre>
 {% endblock %}
 
 
-{% block title %}The StackMachine Blog{% endblock %}
+{% block title %}Testing LÖVE Games Using Travis CI{% endblock %}
 
 
 

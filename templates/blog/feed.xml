@@ -4,12 +4,98 @@
   <title>Stack Machine Blog</title>
   <link href="http://stackmachine.com/blog/feed.xml" rel="self"/>
   <link href="http://stackmachine.com/blog"/>
-  <updated>2014-01-14T21:57:48-08:00</updated>
+  <updated>2014-01-16T13:38:38-08:00</updated>
   <id>http://stackmachine.com/blog</id>
   <author>
     <name>Stack Machine</name>
     <email>contact@stachmachine.com</email>
   </author>
+  
+  <entry>
+    <title>Testing LÖVE Games Using Travis CI</title>
+    <link href="http://stackmachine.com//blog/testing-games-using-travis-ci"/>
+    <updated>2014-01-16T00:00:00-08:00</updated>
+    <id>http://stackmachine.com/blog/testing-games-using-travis-ci</id>
+    <content type="html">&lt;p&gt;One of our main goals at StackMachine is to bring game development up to speed with the rest of the software engineering industry. Best practices such as unit testing, continuous integration, and continuous delivery have yet to make it into the mainstream game development pipeline.&lt;/p&gt;
+
+&lt;p&gt;One of the easiest things you can do to improve your process is start testing your LÖVE modules and games using Travis CI. Travis is a free continuous integration service for open source projects. It&amp;#8217;s deeply integrated into GitHub, making it easy to enable and use. Several popular projects, such as &lt;a href=&#39;https://github.com/hawkthorne/hawkthorne-journey&#39;&gt;Journey to the Center of Hawkthorne&lt;/a&gt; and &lt;a href=&#39;https://github.com/stackmachine/glove&#39;&gt;Glove&lt;/a&gt;, use Travis to power their tests.&lt;/p&gt;
+
+&lt;h2 id=&#39;the_setup&#39;&gt;The Setup&lt;/h2&gt;
+
+&lt;p&gt;Before you can begin, you&amp;#8217;ll need to login into Travis using your GitHub account. From there, you&amp;#8217;ll be able to enable testing on specific repositories.&lt;/p&gt;
+
+&lt;p&gt;Travis knows how to run your tests by looking for a &lt;code&gt;.travis.yml&lt;/code&gt; file in your repository. Below is a sample configuration you can use for your LÖVE game. You can also check out the &lt;a href=&#39;https://github.com/stackmachine/glove/blob/master/.travis.yml&#39;&gt;.travis.yml&lt;/a&gt; for Glove.&lt;/p&gt;
+&lt;div class=&#39;highlight&#39;&gt;&lt;pre&gt;&lt;code class=&#39;yaml&#39;&gt;&lt;span class=&#39;l-Scalar-Plain&#39;&gt;language&lt;/span&gt;&lt;span class=&#39;p-Indicator&#39;&gt;:&lt;/span&gt; &lt;span class=&#39;l-Scalar-Plain&#39;&gt;erlang&lt;/span&gt;
+&lt;span class=&#39;l-Scalar-Plain&#39;&gt;before_install&lt;/span&gt;&lt;span class=&#39;p-Indicator&#39;&gt;:&lt;/span&gt;
+  &lt;span class=&#39;p-Indicator&#39;&gt;-&lt;/span&gt; &lt;span class=&#39;s&#39;&gt;&amp;quot;export&lt;/span&gt;&lt;span class=&#39;nv&#39;&gt; &lt;/span&gt;&lt;span class=&#39;s&#39;&gt;DISPLAY=:99.0&amp;quot;&lt;/span&gt;
+  &lt;span class=&#39;p-Indicator&#39;&gt;-&lt;/span&gt; &lt;span class=&#39;s&#39;&gt;&amp;quot;sh&lt;/span&gt;&lt;span class=&#39;nv&#39;&gt; &lt;/span&gt;&lt;span class=&#39;s&#39;&gt;-e&lt;/span&gt;&lt;span class=&#39;nv&#39;&gt; &lt;/span&gt;&lt;span class=&#39;s&#39;&gt;/etc/init.d/xvfb&lt;/span&gt;&lt;span class=&#39;nv&#39;&gt; &lt;/span&gt;&lt;span class=&#39;s&#39;&gt;start&amp;quot;&lt;/span&gt;
+&lt;span class=&#39;l-Scalar-Plain&#39;&gt;install&lt;/span&gt;&lt;span class=&#39;p-Indicator&#39;&gt;:&lt;/span&gt;
+  &lt;span class=&#39;p-Indicator&#39;&gt;-&lt;/span&gt; &lt;span class=&#39;l-Scalar-Plain&#39;&gt;mkdir -p $TRAVIS_BUILD_DIR/share/love/&lt;/span&gt;
+&lt;span class=&#39;l-Scalar-Plain&#39;&gt;env&lt;/span&gt;&lt;span class=&#39;p-Indicator&#39;&gt;:&lt;/span&gt;
+  &lt;span class=&#39;l-Scalar-Plain&#39;&gt;matrix&lt;/span&gt;&lt;span class=&#39;p-Indicator&#39;&gt;:&lt;/span&gt;
+    &lt;span class=&#39;p-Indicator&#39;&gt;-&lt;/span&gt; &lt;span class=&#39;l-Scalar-Plain&#39;&gt;LOVE_VERSION=0.8.0&lt;/span&gt;
+    &lt;span class=&#39;p-Indicator&#39;&gt;-&lt;/span&gt; &lt;span class=&#39;l-Scalar-Plain&#39;&gt;LOVE_VERSION=0.9.0&lt;/span&gt;
+  &lt;span class=&#39;l-Scalar-Plain&#39;&gt;global&lt;/span&gt;&lt;span class=&#39;p-Indicator&#39;&gt;:&lt;/span&gt;
+    &lt;span class=&#39;p-Indicator&#39;&gt;-&lt;/span&gt; &lt;span class=&#39;l-Scalar-Plain&#39;&gt;XDG_DATA_HOME=&amp;quot;$TRAVIS_BUILD_DIR/share&amp;quot;&lt;/span&gt;
+&lt;span class=&#39;l-Scalar-Plain&#39;&gt;script&lt;/span&gt;&lt;span class=&#39;p-Indicator&#39;&gt;:&lt;/span&gt; &lt;span class=&#39;l-Scalar-Plain&#39;&gt;make test&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;A few notes about this configuration:&lt;/p&gt;
+
+&lt;p&gt;We set the language to erlang because Travis has yet to officially support Lua. We aren&amp;#8217;t installing Lua because the tests are run using LÖVE itself.&lt;/p&gt;
+
+&lt;p&gt;On Linux, LÖVE uses &lt;code&gt;~/.local/share/love/&lt;/code&gt; for storing game data. This folder isn&amp;#8217;t writable in the Travis environment, so we need to set the &lt;code&gt;XDG_DATA_HOME&lt;/code&gt; environment variable to a writable path.&lt;/p&gt;
+
+&lt;p&gt;Lastly, we make sure to start a virtual display so that LÖVE can run without an actual display attached to the session.&lt;/p&gt;
+
+&lt;h2 id=&#39;running_tests&#39;&gt;Running Tests&lt;/h2&gt;
+
+&lt;p&gt;Glove uses &lt;a href=&#39;https://github.com/stackmachine/lovetest&#39;&gt;lovetest&lt;/a&gt; to run its unit and functional tests. The reason lovetest is used over more common test runners such as &lt;a href=&#39;http://www.mroth.net/lunit/&#39;&gt;lunit&lt;/a&gt; and &lt;a href=&#39;http://olivinelabs.com/busted/&#39;&gt;busted&lt;/a&gt; is that we want access to the &lt;code&gt;love&lt;/code&gt; module from our tests.&lt;/p&gt;
+
+&lt;p&gt;Below is a sample Makefile for running LÖVE in the Travis environment. It supports both 0.8.0 and 0.9.0, as your game or module may use both.&lt;/p&gt;
+&lt;div class=&#39;highlight&#39;&gt;&lt;pre&gt;&lt;code class=&#39;make&#39;&gt;&lt;span class=&#39;cp&#39;&gt;ifeq ($(LOVE_VERSION), 0.9.0)&lt;/span&gt;
+  &lt;span class=&#39;nv&#39;&gt;LOVE&lt;/span&gt; &lt;span class=&#39;o&#39;&gt;=&lt;/span&gt; /usr/bin/love9
+&lt;span class=&#39;cp&#39;&gt;else&lt;/span&gt;
+  &lt;span class=&#39;nv&#39;&gt;LOVE&lt;/span&gt; &lt;span class=&#39;o&#39;&gt;=&lt;/span&gt; /usr/bin/love8
+&lt;span class=&#39;cp&#39;&gt;endif&lt;/span&gt;
+
+&lt;span class=&#39;nf&#39;&gt;test&lt;/span&gt;&lt;span class=&#39;o&#39;&gt;:&lt;/span&gt; &lt;span class=&#39;m&#39;&gt;$(LOVE)&lt;/span&gt;
+	&lt;span class=&#39;k&#39;&gt;$(&lt;/span&gt;LOVE&lt;span class=&#39;k&#39;&gt;)&lt;/span&gt; path/to/game --test
+
+&lt;span class=&#39;nf&#39;&gt;/usr/bin/love8&lt;/span&gt;&lt;span class=&#39;o&#39;&gt;:&lt;/span&gt;
+	wget https://bitbucket.org/rude/love/downloads/love_0.8.0-0precise1_amd64.deb
+	-sudo dpkg -i love_0.8.0-0precise1_amd64.deb
+	sudo apt-get update -y
+	sudo apt-get install -f -y
+	sudo ln -s /usr/bin/love /usr/bin/love8
+
+&lt;span class=&#39;nf&#39;&gt;/usr/bin/love9&lt;/span&gt;&lt;span class=&#39;o&#39;&gt;:&lt;/span&gt;
+	sudo add-apt-repository -y ppa:bartbes/love-stable
+	sudo apt-get update -y
+	sudo apt-get install -y love
+	sudo ln -s /usr/bin/love /usr/bin/love9
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This sample is a stripped-down version of &lt;a href=&#39;https://github.com/stackmachine/glove/blob/master/Makefile&#39;&gt;Glove&amp;#8217;s Makefile&lt;/a&gt; for Glove.&lt;/p&gt;
+
+&lt;p&gt;You&amp;#8217;ll need to change &lt;code&gt;path/to/game&lt;/code&gt; to point to the directory that contains your &lt;code&gt;main.lua&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h2 id=&#39;trouble_shooting&#39;&gt;Trouble Shooting&lt;/h2&gt;
+
+&lt;p&gt;Running LÖVE in a headless environment can be tricky. During startup, you&amp;#8217;ll see a list of scary errors such as these.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;shm_open() failed: Permission denied
+AL lib: pulseaudio.c:612: Context did not connect: Access denied
+ALSA lib confmisc.c:768:(parse_card) cannot find card &amp;#39;0&amp;#39;
+ALSA lib conf.c:4241:(_snd_config_evaluate) function snd_func_card_driver returned error:
+ALSA lib pcm.c:2217:(snd_pcm_open_noupdate) Unknown PCM default
+AL lib: alsa.c:512: Could not open playback device &amp;#39;default&amp;#39;:
+AL lib: oss.c:169: Could not open /dev/dsp: Permission denied&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Don&amp;#8217;t worry about these errors. They stem from the lack of a valid audio backend in the CI environment. They have no effect on your tests.&lt;/p&gt;
+
+&lt;h2 id=&#39;go_now_and_test&#39;&gt;Go Now and Test&lt;/h2&gt;
+
+&lt;p&gt;With this setup you should be able to add continuous integration to your LÖVE module or game in a matter of minutes. Having tests run on every commit make it more likely you&amp;#8217;ll spot bugs earlier and ship fewer regressions.&lt;/p&gt;</content>
+  </entry>
   
   <entry>
     <title>Introducing Glove, the LÖVE Compatibility Library</title>
