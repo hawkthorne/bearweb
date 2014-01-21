@@ -42,6 +42,6 @@ DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
 AWS_ACCESS_KEY_ID = get_env_var('AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = get_env_var('AWS_SECRET_ACCESS_KEY')
 AWS_STORAGE_BUCKET_NAME = 'uploads.local.bearraid.com'
-#AWS_STORAGE_BUCKET_NAME = 'stackmachine-uploads-local'
+AWS_STORAGE_BUCKET_NEW = 'stackmachine-local'
 
 BROKER_URL = 'redis://localhost:6379/0'

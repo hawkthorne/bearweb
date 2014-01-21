@@ -13,7 +13,7 @@ class Command(BaseCommand):
         conn = S3Connection(settings.AWS_ACCESS_KEY_ID,
                             settings.AWS_SECRET_ACCESS_KEY)
         source = conn.get_bucket(settings.AWS_STORAGE_BUCKET_NAME)
-        target = conn.get_bucket(os.environ['AWS_NEW_BUCKET_NAME'])
+        target = conn.get_bucket(settings.AWS_STORAGE_BUCKET_NEW)
 
         for idx, entry in enumerate(source.list()):
             if entry.name.endswith("/"):
@@ -21,8 +21,8 @@ class Command(BaseCommand):
             if not target.get_key(entry.name):
                 self.stdout.write('COPY {}'.format(entry.name))
                 try:
-                    entry.copy(dst_bucket=target, dst_key=entry.name,
-                               validate_dst_bucket=False)
+                    target.copy_key(entry.name,
+                                    settings.AWS_STORAGE_BUCKET_NAME, entry.name)
                 except boto.exception.S3ResponseError, e:
                     self.stderr.write('ERROR {}'.format(e))
             else:
