@@ -93,10 +93,6 @@ check: pep8
 	. venv/bin/activate; DISABLE_SLOW=true coverage run manage.py \
 		test --settings=bearweb.settings.test -v 2
 
-buckets:
-	. venv/bin/activate; python manage.py s3sync
-
-
 databases:
 	-@createdb -h localhost bearweb_local
 	-@createdb -h localhost bearweb_test

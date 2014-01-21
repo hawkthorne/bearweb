@@ -69,6 +69,7 @@ MIDDLEWARE_CLASSES = ('core.middleware.SSLifyMiddleware', ) + \
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
 AWS_ACCESS_KEY_ID = get_env_var('AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = get_env_var('AWS_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_OLD = 'cloud.stackmachine.com'
 AWS_STORAGE_BUCKET_NAME = 'stackmachine-cloud'
 
 DEFAULT_URL_SCHEME = 'https'

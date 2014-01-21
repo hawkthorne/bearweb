@@ -10,7 +10,8 @@ class LoveForm(forms.Form):
 
 
 class ClearableImageInput(widgets.ClearableFileInput):
-    template_with_initial = '%(initial)s<br />%(clear_template)s<br />%(input_text)s: %(input)s'
+    template_with_initial = ('%(initial)s<br />%(clear_template)s'
+                             '<br />%(input_text)s: %(input)s')
     url_markup_template = '<img src="{0}"/>'
 
 
