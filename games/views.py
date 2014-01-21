@@ -9,13 +9,13 @@ from django.shortcuts import redirect
 from django.template.loader import render_to_string
 from django.views.decorators.http import require_safe
 from django.views.generic import DetailView, ListView
-from django.views.generic.edit import CreateView, FormView
+from django.views.generic.edit import CreateView, FormView, UpdateView
 from django.conf import settings
 
 from braces.views import LoginRequiredMixin
 
 from .models import Game, Release, CrashReport
-from .forms import LoveForm, GameForm
+from .forms import LoveForm, GameForm, UpdateGameForm
 
 from games import bundle
 from games import tasks
@@ -154,6 +154,20 @@ class GameCreate(LoginRequiredMixin, CreateView):
         form.instance.owner = self.request.user
         form.instance.slug = slugify(form.instance.name)
         return super(GameCreate, self).form_valid(form)
+
+
+class GameUpdate(LoginRequiredMixin, UpdateView):
+    model = Game
+    template_name_suffix = '_update_form'
+    context_object_name = 'game'
+    form_class = UpdateGameForm
+
+    def get_object(self, queryset=None):
+        return get_game(self.request, self.kwargs['uuid'])
+
+    def form_valid(self, form):
+        form.instance.slug = slugify(form.instance.name)
+        return super(GameUpdate, self).form_valid(form)
 
 
 @require_safe

@@ -32,6 +32,19 @@ _PUBLIC_CHOICES = ((True, 'Public'), (False, 'Private'))
 _PUBLIC_HELP = "Public games can be downloaded for free without paying"
 
 
+def icon_path(game, filename):
+    return os.path.join(game.uuid, 'images', 'icon.png')
+
+
+def icns_path(game, filename):
+    return os.path.join(game.uuid, 'images', 'icon.icns')
+
+
+def splash_path(game, filename):
+    _, ext = os.path.splitext(filename)
+    return os.path.join(game.uuid, 'images', 'splash' + ext)
+
+
 class Game(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
@@ -42,6 +55,9 @@ class Game(models.Model):
     framework = models.ForeignKey(Framework)
     public = models.BooleanField(default=False, help_text=_PUBLIC_HELP,
                                  choices=_PUBLIC_CHOICES)
+    icns = models.ImageField(upload_to=icns_path, null=True, blank=True)
+    icon = models.ImageField(upload_to=icon_path, null=True, blank=True)
+    splash = models.ImageField(upload_to=splash_path, null=True, blank=True)
 
     def __unicode__(self):
         return self.name

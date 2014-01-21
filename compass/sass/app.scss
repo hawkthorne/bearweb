@@ -856,8 +856,28 @@ ul.top-bar-links li {
   border-bottom: 0px;
 }
 
-#samehere{
-  border: 1px solid #000;
-  display:block;
+.nav-game {
+  margin: 10px 0;
 }
 
+.title-game {
+  margin-top: 10px;
+}
+
+.title-game a {
+  font-size: 21px;
+  line-height: 21px;
+}
+
+.title-game span, .title-game img {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.title-game span {
+  margin-left: 10px;
+}
+
+.title-game img {
+  border: 1px solid #DDD;
+}

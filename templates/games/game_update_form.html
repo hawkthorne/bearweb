@@ -1,0 +1,21 @@
+{% extends "games/base.html" %}
+
+{% load bootstrap %}
+
+{% block title %}Update {{ game.name }}{% endblock %}
+
+{% block content %}
+
+{% include "games/gamebar.html" %} 
+
+<div class="row">
+  <div class="col-md-8">
+    <form enctype="multipart/form-data" action="" role="form" method="POST">{% csrf_token %}
+      {{ form|bootstrap }}
+      <input class="btn btn-primary btn-lg" type="submit" value="Save Game">
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+

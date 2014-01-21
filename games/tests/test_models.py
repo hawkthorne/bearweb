@@ -4,7 +4,7 @@ from django.test import TestCase
 from django.contrib.auth.models import User
 from django.core.files.base import ContentFile
 
-from games.models import Game, Framework, tubeid
+from games.models import Game, Framework, tubeid, splash_path
 
 
 class GamesModelTests(TestCase):
@@ -15,6 +15,12 @@ class GamesModelTests(TestCase):
 
     def test_youtube_id(self):
         self.assertEqual(24, len(tubeid()))
+
+    def test_splash_path(self):
+        game = Game.objects.create(owner=self.user, framework=self.other,
+                                   name="Foo", slug="foo")
+        expected = os.path.join(game.uuid, 'images', 'splash.png')
+        self.assertEqual(expected, splash_path(game, 'foobar.png'))
 
     def test_current_version(self):
         game = Game.objects.create(owner=self.user, framework=self.other,

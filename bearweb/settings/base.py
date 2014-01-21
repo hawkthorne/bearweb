@@ -164,7 +164,6 @@ DJANGO_APPS = (
 )
 
 THIRD_PARTY_APPS = (
-    'bootstrapform',
     'south',
     'djcelery',
     'subdomains',
@@ -172,6 +171,7 @@ THIRD_PARTY_APPS = (
 
 # Apps specific for this project go here.
 LOCAL_APPS = (
+    'bootstrapform',
     'registration',
     'core',
     'games',

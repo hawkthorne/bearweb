@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% load staticfiles %}
+{% load subdomainurls %}
+
+from braces.views import StaffuserRequiredMixin
+
+class OverallMetricsView(LoginRequiredMixin,
+                         StaffuserRequiredMixin, TemplateView):
+    template_name = "games/admin.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(OverallMetricsView, self).get_context_data(**kwargs)
+        context['KEEN_PROJECT_ID'] = settings.KEEN_PROJECT_ID
+        context['KEEN_READ_KEY'] = settings.KEEN_READ_KEY
+        return context
+
+
+
+{% block content %}
+<div class="row">
+  <div class="col-md-12">
+    <div id="unique-game-opens"></div>
+    <div id="total-errors"></div>
+  </div>
+</div>
+<script type="text/javascript">
+  var Keen=Keen||{configure:function(e){this._cf=e},addEvent:function(e,t,n,i){this._eq=this._eq||[],this._eq.push([e,t,n,i])},setGlobalProperties:function(e){this._gp=e},onChartsReady:function(e){this._ocrq=this._ocrq||[],this._ocrq.push(e)}};(function(){var e=document.createElement("script");e.type="text/javascript",e.async=!0,e.src=("https:"==document.location.protocol?"https://":"http://")+"dc8na2hxrj29i.cloudfront.net/code/keen-2.1.0-min.js";var t=document.getElementsByTagName("script")[0];t.parentNode.insertBefore(e,t)})();
+
+  // Configure the Keen object with your Project ID and (optional) access keys.
+  Keen.configure({
+    projectId: "{{KEEN_PROJECT_ID}}",
+    readKey: "{{KEEN_READ_KEY}}"    // required for doing analysis
+  });
+</script>
+<script type="text/javascript">
+  Keen.onChartsReady(function() {
+    var unique = new Keen.Series("opens", {
+      analysisType: "count_unique",
+        targetProperty: "distinct_id",
+        timeframe: "this_5_days",
+        interval: "daily"
+    });
+
+    unique.draw(document.getElementById("unique-game-opens"), {
+      title: "Players per day for last 5 days",
+      label: "players",
+      color: "#0dbb00",
+      width: 450,
+      height: 200
+    });
+
+    var total = new Keen.Series("opens", {
+      analysisType: "count",
+        timeframe: "this_5_days",
+        interval: "daily"
+    });
+
+    total.addFilter("game_uuid", "eq", "{{game.uuid}}");
+
+    total.draw(document.getElementById("total-game-opens"), {
+      title: "Total game plays per day for last 5 days",
+      label: "plays",
+      width: 450,
+      height: 200
+    });
+
+  });
+</script>
+{% endblock %}

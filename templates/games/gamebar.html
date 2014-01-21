@@ -3,9 +3,22 @@
 
 <div class="row gamebar">
   <div class="col-sm-12">
-    <ul class="nav nav-pills">
-      <li class="dropdown">
-        <a href="{% url 'games:view' game.uuid %}"> <img class="game-icon" src="{{ game.icon_url }}" /> {{game.name }}</a>
+    <div class="title-game">
+      <a href="{% url 'games:view' game.uuid %}"><img class="game-icon" src="{{ game.icon_url }}" /><span>{{game.name }}</span></a>
+    </div>
+
+    <ul class="nav nav-game nav-tabs">
+      <li class="{% active 'games:view' %}">
+        <a href="{% url 'games:view' game.uuid %}">Dashboard</a>
+      </li>
+      <li class="{% active 'games:releases' %}">
+        <a href="{% url 'games:releases' game.uuid %}">Releases</a>
+      </li>
+      <li class="{% active 'games:crashes' %}">
+        <a href="{% url 'games:crashes' game.uuid %}">Crash Reports</a>
+      </li>
+      <li class="{% active 'games:edit' %}">
+        <a href="{% url 'games:edit' game.uuid %}">Settings</a>
       </li>
     </ul>
   </div>
