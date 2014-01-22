@@ -102,7 +102,7 @@ def check_for_main(lovepath):
         return False
 
 
-def package_osx(lovefile, prefix, name, slug, version):
+def package_osx(game, lovefile, prefix, name, slug, version):
     """Given a path to a .love file, create OS X version for
     download. Returns path to create zipfile
     """
@@ -123,11 +123,15 @@ def package_osx(lovefile, prefix, name, slug, version):
                 write_symlink(archive, archive_root, fullpath)
 
         for filename in files:
+
             fullpath = os.path.join(root, filename)
             archive_root = relpath(prefix, fullpath, app_name)
 
             if os.path.islink(fullpath):
                 write_symlink(archive, archive_root, fullpath)
+            elif "Love.icns" in fullpath and game.icns:
+                archive.writestr(archive_root, game.icns.read(),
+                                 zipfile.ZIP_DEFLATED)
             else:
                 archive.write(fullpath, archive_root, zipfile.ZIP_DEFLATED)
 
@@ -139,14 +143,14 @@ def package_osx(lovefile, prefix, name, slug, version):
     return output_name, zip_name
 
 
-def blobify(func, lovefile, prefix, name, slug, version):
-    output_name, zip_name = func(lovefile, prefix, name, slug, version)
+def blobify(func, game, lovefile, prefix, name, slug, version):
+    output_name, zip_name = func(game, lovefile, prefix, name, slug, version)
     blob = File(open(output_name))
     blob.name = zip_name
     return blob
 
 
-def package_windows(lovefile, prefix, name, slug, version):
+def package_windows(game, lovefile, prefix, name, slug, version):
     """Given a path to a .love file, create a Windows version for
     download. Returns path to created zipfile
     """
@@ -173,7 +177,7 @@ def package_windows(lovefile, prefix, name, slug, version):
     return output_name, zip_name
 
 
-def package_exe(lovefile, prefix, name, slug, version):
+def package_exe(game, lovefile, prefix, name, slug, version):
     love_exe = open(p(prefix + "/windows/love.exe"), "rb").read()
     love_archive = open(lovefile, "rb").read()
 
@@ -182,7 +186,7 @@ def package_exe(lovefile, prefix, name, slug, version):
     return blob
 
 
-def inject_code(lovefile, config):
+def inject_code(game, lovefile, config):
     _, output_name = tempfile.mkstemp("love")
 
     archive = zipfile.ZipFile(output_name, 'w')
@@ -201,6 +205,12 @@ def inject_code(lovefile, config):
     for script in os.listdir(p("build/sparkle")):
         if script.startswith("."):
             continue
+
+        if script == "splash.png" and game.splash:
+            archive.writestr(os.path.join("sparkle", script),
+                             game.splash.read())
+            continue
+
         archive.write(p(os.path.join("build", "sparkle", script)),
                       os.path.join("sparkle", script))
 
@@ -230,16 +240,17 @@ def package(release_id):
         prefix = "build/love9"
 
     # Detect version, fail if not specified
-    love = inject_code(upload.blob, config)
+    love = inject_code(game, upload.blob, config)
 
     slug = game.slug
     name = game.name
 
     # Create binaries
-    osx_file = blobify(package_osx, love, prefix, name, slug, release.version)
-    win_file = blobify(package_windows, love, prefix,
+    osx_file = blobify(package_osx, game, love, prefix, name, slug,
+                       release.version)
+    win_file = blobify(package_windows, game, love, prefix,
                        name, slug, release.version)
-    exe_file = package_exe(love, prefix, name, slug, release.version)
+    exe_file = package_exe(game, love, prefix, name, slug, release.version)
 
     # Upload
     release.add_asset(osx_file, tag='osx')

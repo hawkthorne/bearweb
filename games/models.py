@@ -4,15 +4,11 @@ import os
 import re
 from urlparse import urlparse
 
-from django.dispatch import receiver
 from django.db import models
-from django.db.models.signals import post_save
 from django.conf import settings
 
 from subdomains.utils import reverse
 from PIL import Image, ImageDraw
-
-from core import tasks
 
 
 def tubeid():
@@ -175,13 +171,6 @@ class Game(models.Model):
         unique_together = ("owner", "slug")
 
 
-@receiver(post_save, sender=Game)
-def track_create_game(sender, instance, created, **kwargs):
-    if created:
-        tasks.track.delay(instance.owner.pk, 'Create Game', game=instance.slug,
-                          distinct_id=instance.owner.username)
-
-
 class Release(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
@@ -256,14 +245,6 @@ class Release(models.Model):
 
     def __unicode__(self):
         return "{} {}".format(self.game.name, self.version)
-
-
-@receiver(post_save, sender=Release)
-def track_create_release(sender, instance, created, **kwargs):
-    if created:
-        tasks.track.delay(instance.game.owner.pk, 'Create Release',
-                          game=instance.game.slug,
-                          distinct_id=instance.game.owner.username)
 
 
 def asset_path(asset, filename):

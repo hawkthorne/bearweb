@@ -141,7 +141,7 @@ class GamesModelTests(TestCase):
         self.game = Game.objects.create(owner=self.user, framework=self.other,
                                         name="foo", slug="foo")
 
-    @unittest.skipIf('DISABLE_SLOW' in os.environ, "This is a slow test")
+    @unittest.skipIf('DISABLE_SLOW' in os.environ, "")
     def test_package_simple_game_8(self):
         release = self.game.release_set.create(version="0.1.8")
         release.asset_set.create(blob=simple_love('bar8', "0.8.0"),
@@ -153,8 +153,27 @@ class GamesModelTests(TestCase):
 
         self.assertIn('0.1.8/foo-osx.zip', asset.blob.url)
 
-    @unittest.skipIf('DISABLE_SLOW' in os.environ, "This is a slow test")
+    @unittest.skipIf('DISABLE_SLOW' in os.environ, "")
     def test_package_simple_game_9(self):
+        release = self.game.release_set.create(love_version="0.9.0",
+                                               version="0.1.9")
+        release.asset_set.create(blob=simple_love('bar9', "0.9.0"),
+                                 tag='uploaded')
+
+        bundle.package(release.pk)
+
+        asset = release.get_asset('osx')
+
+        self.assertIn('0.1.9/foo-osx.zip', asset.blob.url)
+
+    @unittest.skipIf('DISABLE_SLOW' in os.environ, "")
+    def test_package_customized_assets(self):
+        self.game.icns.save('foo.icns',
+                            File(open('games/tests/fixtures/icon.icns')))
+        self.game.splash.save('bar.png',
+                              File(open('games/tests/fixtures/splash.png')))
+        self.game.save()
+
         release = self.game.release_set.create(love_version="0.9.0",
                                                version="0.1.9")
         release.asset_set.create(blob=simple_love('bar9', "0.9.0"),
@@ -169,7 +188,7 @@ class GamesModelTests(TestCase):
     def test_package_game_with_folders(self):
         lovefile = os.path.abspath(
             'games/tests/fixtures/game_with_folders.love')
-        path = bundle.inject_code(lovefile, "{}")
+        path = bundle.inject_code(self.game, lovefile, "{}")
 
         shutil.move(path, 'media/game.love')
 

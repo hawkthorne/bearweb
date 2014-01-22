@@ -10,7 +10,7 @@
 
 <div class="row">
   <div class="col-md-8">
-    <form enctype="multipart/form-data" action="" role="form" method="POST">{% csrf_token %}
+    <form class="game-form" enctype="multipart/form-data" action="" role="form" method="POST">{% csrf_token %}
       {{ form|bootstrap }}
       <input class="btn btn-primary btn-lg" type="submit" value="Save Game">
     </form>

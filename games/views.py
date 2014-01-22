@@ -153,7 +153,9 @@ class GameCreate(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         form.instance.owner = self.request.user
         form.instance.slug = slugify(form.instance.name)
-        return super(GameCreate, self).form_valid(form)
+        val = super(GameCreate, self).form_valid(form)
+        tasks.update_icns.delay(form.instance.pk)
+        return val
 
 
 class GameUpdate(LoginRequiredMixin, UpdateView):
@@ -162,12 +164,17 @@ class GameUpdate(LoginRequiredMixin, UpdateView):
     context_object_name = 'game'
     form_class = UpdateGameForm
 
+    def get_success_url(self):
+        return reverse('games:edit', kwargs={'uuid': self.kwargs['uuid']})
+
     def get_object(self, queryset=None):
         return get_game(self.request, self.kwargs['uuid'])
 
     def form_valid(self, form):
         form.instance.slug = slugify(form.instance.name)
-        return super(GameUpdate, self).form_valid(form)
+        val = super(GameUpdate, self).form_valid(form)
+        tasks.update_icns.delay(form.instance.pk)
+        return val
 
 
 @require_safe
