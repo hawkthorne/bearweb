@@ -108,8 +108,8 @@ def package_osx(game, lovefile, prefix, name, slug, version):
     """
     _, output_name = tempfile.mkstemp("love")
 
-    app_name = "{}.app".format(name)
-    zip_name = "{}-osx.zip".format(slug)
+    app_name = u"{}.app".format(name)
+    zip_name = u"{}-osx.zip".format(slug)
 
     archive = zipfile.ZipFile(output_name, "w")
 
@@ -156,7 +156,7 @@ def package_windows(game, lovefile, prefix, name, slug, version):
     """
     _, output_name = tempfile.mkstemp("love")
 
-    zip_name = "{}-win.zip".format(slug)
+    zip_name = u"{}-win.zip".format(slug)
 
     archive = zipfile.ZipFile(output_name, "w")
 
@@ -182,7 +182,7 @@ def package_exe(game, lovefile, prefix, name, slug, version):
     love_archive = open(lovefile, "rb").read()
 
     blob = ContentFile(love_exe + love_archive)
-    blob.name = slug + ".exe"
+    blob.name = u"{}.exe".format(slug)
     return blob
 
 

@@ -8,6 +8,7 @@ import shutil
 from django.test import TestCase
 from django.core.files import File
 from django.contrib.auth.models import User
+from django.template.defaultfilters import slugify
 from django.conf import settings
 from zipfile import ZipFile
 
@@ -136,10 +137,11 @@ class GamesModelTests(TestCase):
         os.mkdir('media')
 
     def setUp(self):
+        name = u"PÖNG"
         self.user = User.objects.create_user("foo", "bar@example.com", "pass")
         self.other = Framework.objects.create(name="Other")
         self.game = Game.objects.create(owner=self.user, framework=self.other,
-                                        name="foo", slug="foo")
+                                        name=name, slug=slugify(name))
 
     @unittest.skipIf('DISABLE_SLOW' in os.environ, "")
     def test_package_simple_game_8(self):
@@ -151,7 +153,7 @@ class GamesModelTests(TestCase):
 
         asset = release.get_asset('osx')
 
-        self.assertIn('0.1.8/foo-osx.zip', asset.blob.url)
+        self.assertIn('0.1.8/pong-osx.zip', asset.blob.url)
 
     @unittest.skipIf('DISABLE_SLOW' in os.environ, "")
     def test_package_simple_game_9(self):
@@ -164,7 +166,7 @@ class GamesModelTests(TestCase):
 
         asset = release.get_asset('osx')
 
-        self.assertIn('0.1.9/foo-osx.zip', asset.blob.url)
+        self.assertIn('0.1.9/pong-osx.zip', asset.blob.url)
 
     @unittest.skipIf('DISABLE_SLOW' in os.environ, "")
     def test_package_customized_assets(self):
@@ -183,7 +185,7 @@ class GamesModelTests(TestCase):
 
         asset = release.get_asset('osx')
 
-        self.assertIn('0.1.9/foo-osx.zip', asset.blob.url)
+        self.assertIn('0.1.9/pong-osx.zip', asset.blob.url)
 
     def test_package_game_with_folders(self):
         lovefile = os.path.abspath(
