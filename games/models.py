@@ -74,6 +74,9 @@ class Game(models.Model):
         ]
 
     def icon_url(self):
+        if self.icon:
+            return self.icon.url
+
         url = reverse("identicon", kwargs={"uuid": self.uuid})
 
         if not settings.DEBUG:
