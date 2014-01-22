@@ -162,6 +162,9 @@ class GamesModelTests(TestCase):
         release.asset_set.create(blob=simple_love('bar9', "0.9.0"),
                                  tag='uploaded')
 
+        # Make sure the name works
+        release.__unicode__()
+
         bundle.package(release.pk)
 
         asset = release.get_asset('osx')

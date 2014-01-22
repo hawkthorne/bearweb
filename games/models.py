@@ -247,7 +247,7 @@ class Release(models.Model):
             return None
 
     def __unicode__(self):
-        return "{} {}".format(self.game.name, self.version)
+        return u"{} {}".format(self.game.name, self.version)
 
 
 def asset_path(asset, filename):
