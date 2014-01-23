@@ -235,7 +235,7 @@ class Release(models.Model):
             'changelog': '',
             'platforms': platforms,
             'published': '',
-            'title': '{} | Version {}'.format(self.game.name, self.version),
+            'title': u"{} | Version {}".format(self.game.name, self.version),
             'version': self.version,
         }
 

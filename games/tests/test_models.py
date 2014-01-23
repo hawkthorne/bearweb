@@ -1,7 +1,9 @@
+  # -*- coding: utf-8 -*-
 import os
 
 from django.test import TestCase
 from django.contrib.auth.models import User
+from django.template.defaultfilters import slugify
 from django.core.files.base import ContentFile
 
 from games.models import Game, Framework, tubeid, splash_path
@@ -21,6 +23,16 @@ class GamesModelTests(TestCase):
                                    name="Foo", slug="foo")
         expected = os.path.join(game.uuid, 'images', 'splash.png')
         self.assertEqual(expected, splash_path(game, 'foobar.png'))
+
+    def test_appcast(self):
+        name = u"PÖNG"
+        game = Game.objects.create(owner=self.user, framework=self.other,
+                                   name=name, slug=slugify(name))
+        game.release_set.create(version="0.1.0")
+        appcast = game.appcast()
+
+        self.assertEqual(u"PÖNG | Version 0.1.0",
+                         appcast['items'].pop()['title'])
 
     def test_current_version(self):
         game = Game.objects.create(owner=self.user, framework=self.other,

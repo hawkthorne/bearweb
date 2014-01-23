@@ -196,6 +196,12 @@ def inject_code(game, lovefile, config):
         for zipinfo in old_archive.infolist():
             filename = zipinfo.filename
 
+            if zipinfo.filename.startswith("__MACOSX"):
+                continue
+
+            if zipinfo.filename.endswith(".DS_Store"):
+                continue
+
             if zipinfo.filename == 'main.lua':
                 zipinfo.filename = 'oldmain.lua'
 
