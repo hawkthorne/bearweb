@@ -37,6 +37,7 @@
       </div>
       <div class="panel-body">
       {% for name, link in game.download_links %}
+        {% if link %}
         <div class="input-group input-group-sm download-links">
           <span class="input-group-addon"><div>{{name}}</div></span>
           <input type="text" class="form-control" id="download{{name}}" value="{{link}}">
@@ -44,6 +45,7 @@
             <a href="{{link}}" class="btn btn-default" type="button">Download</a>
           </span>
         </div>
+        {% endif %}
       {% endfor %}
       </div>
     </div>

@@ -185,7 +185,7 @@ def download(request, uuid, platform):
     if not game.public:
         raise Http404
 
-    if platform not in ['windows', 'osx']:
+    if platform not in ['windows', 'osx', 'love']:
         raise Http404
 
     try:
@@ -195,8 +195,10 @@ def download(request, uuid, platform):
 
     if platform == "windows":
         url = release.windows_url()
-    else:
+    elif platform == "osx":
         url = release.osx_url()
+    else:
+        url = release.love_url()
 
     if not url:
         raise Http404

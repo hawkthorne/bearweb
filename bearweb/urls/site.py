@@ -16,7 +16,8 @@ def template(path):
 
 urlpatterns = patterns(
     '',
-    url(r'^games/(?P<uuid>[0-9a-f]{24})/download/(?P<platform>windows|osx)$',
+    url((r'^games/(?P<uuid>[0-9a-f]{24})/download/'
+         r'(?P<platform>windows|osx|love)$'),
         download, name='download'),
     url(r'^identicons/(?P<uuid>[0-9a-f]{24}).png', IdenticonDetail.as_view(),
         name='identicon'),

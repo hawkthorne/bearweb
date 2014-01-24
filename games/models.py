@@ -71,6 +71,7 @@ class Game(models.Model):
         return [
             ('Windows', fullurl(self.uuid, 'windows')),
             ('OSX', fullurl(self.uuid, 'osx')),
+            ('.love', fullurl(self.uuid, 'love')),
         ]
 
     def icon_url(self):
@@ -193,27 +194,19 @@ class Release(models.Model):
     def add_asset(self, django_file, tag=''):
         return self.asset_set.create(tag=tag, blob=django_file)
 
-    # FIXME: Reduntant?
     def windows_url(self):
-        asset = self.get_asset('windows')
+        return self.get_asset_url('windows')
 
-        if asset is None:
-            return ""
-
-        return asset.blob.url.replace("https://", "http://")
-
-    # FIXME: Reduntant?
     def osx_url(self):
-        asset = self.get_asset('osx')
+        return self.get_asset_url('osx')
 
-        if asset is None:
-            return ""
-
-        return asset.blob.url.replace("https://", "http://")
+    def love_url(self):
+        return self.get_asset_url('love')
 
     def appcast(self):
         osx_asset = self.get_asset('osx')
         exe_asset = self.get_asset('exe')
+        love_file = self.get_asset('love')
 
         platforms = []
 
@@ -222,6 +215,13 @@ class Release(models.Model):
                 'name': 'macosx',
                 'arch': 'universal',
                 'files': [osx_asset.appcast()],
+            })
+
+        if love_file:
+            platforms.append({
+                'name': 'crossplatform',
+                'arch': '',
+                'files': [love_file.appcast()],
             })
 
         if exe_asset:
@@ -245,6 +245,14 @@ class Release(models.Model):
             return self.asset_set.filter(tag=tag)[0]
         except IndexError:
             return None
+
+    def get_asset_url(self, tag):
+        asset = self.get_asset(tag)
+
+        if asset is None:
+            return ""
+
+        return asset.blob.url
 
     def __unicode__(self):
         return u"{} {}".format(self.game.name, self.version)
