@@ -46,16 +46,12 @@ function love.load(arg)
     love.filesystem.setIdentity(config.identity)
   end
 
-  love.graphics.setBackgroundColor(0, 0, 0)
-
   tasks.track('opens')
 
   cmdargs = arg
   message = ""
   time = 0
   progress = 0
-  logo = love.graphics.newImage('sparkle/splash.png')
-
 
   updater = sparkle.newUpdater(arg, config.version, config.links.updates)
   updater:start()
@@ -88,6 +84,11 @@ function love.update(dt)
 end
 
 function love.draw()
+  if not logo then
+    love.graphics.setBackgroundColor(0, 0, 0)
+    logo = love.graphics.newImage('sparkle/splash.png')
+  end
+
   love.graphics.setColor(255, 255, 255, math.min(255, time * 200))
 
   local width = love.graphics.getWidth()
