@@ -1,9 +1,9 @@
-local logging = require "sparkle/logging"
+local logging = require "stackmachine/logging"
 local os = require "os"
 local url = require "socket.url"
-local urllib = require "sparkle/urllib"
-local utils = require "sparkle/utils"
-local glove = require "sparkle/glove"
+local urllib = require "stackmachine/urllib"
+local utils = require "stackmachine/utils"
+local glove = require "stackmachine/glove"
 
 local windows = {}
 local logger = logging.new('update')
@@ -42,11 +42,11 @@ local function execute(command, msg)
   end
 end
 
-function windows.getApplicationPath(lovepath)
+function windows.getApplicationPath(args)
   if love._exe then
     return ""
   end
-  return lovepath
+  return args[1]
 end
 
 function windows.getDownload(item)
@@ -102,7 +102,7 @@ function windows.cleanup()
   windows.removeRecursive("winupdates")
 end
 
-function windows.replace(download, exepath, callback)
+function windows.replace(download, exepath, args, callback)
   -- Clean up previous updates
   windows.removeRecursive("winupdates")
   glove.filesystem.mkdir("winupdates")

@@ -52,6 +52,10 @@ deploy: test
 	heroku run python manage.py migrate
 	say -v "Good News" "Deployment is complete"
 
+lovesdk: 
+	rm -rf games/build/love-sdk
+	cp -r ../stackmachine.love/stackmachine games/build/love-sdk
+
 blog:
 	cd jekyll/blog && bundle install
 	cd jekyll/blog && bundle exec jekyll build

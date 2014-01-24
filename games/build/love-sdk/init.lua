@@ -1,16 +1,15 @@
 require "love.filesystem"
-
-local glove = require "sparkle/glove"
 local http = require "socket.http"
 local ltn12 = require "ltn12"
 local os = require "os"
 
-local middle = require 'sparkle/middleclass'
-local json = require 'sparkle/json'
-local logging = require 'sparkle/logging'
-local osx = require 'sparkle/osx'
-local windows = require 'sparkle/windows'
-local utils = require 'sparkle/utils'
+local glove = require "stackmachine/glove"
+local middle = require 'stackmachine/middleclass'
+local json = require 'stackmachine/json'
+local logging = require 'stackmachine/logging'
+local osx = require 'stackmachine/osx'
+local windows = require 'stackmachine/windows'
+local utils = require 'stackmachine/utils'
 
 local Updater = middle.class('Updater')
 local logger = logging.new("update")
@@ -18,12 +17,11 @@ local logger = logging.new("update")
 function Updater:initialize(args, version, url)
   self.thread = nil
   self.version = version
-  -- FIXME: Remove
-  self.lovepath = utils.getLow(args)
+  self.args = utils.naturalKeys(args)
   self.url = url
   self._finished = url == ""
 
-  logger:info("LOVEPATH: " .. self.lovepath)
+  logger:info("ARGS: " .. json.encode(args))
 end
 
 function Updater:done()
@@ -37,10 +35,10 @@ function Updater:start()
   end
 
   if not self.thread then
-    self.thread = glove.thread.newThread("sparkle", "sparkle/thread.lua")
+    self.thread = glove.thread.newThread("stackmachine", "stackmachine/update_thread.lua")
     self.thread:start()
     self.thread:set('version', self.version)
-    self.thread:set('lovepath', self.lovepath)
+    self.thread:set('args', json.encode(self.args))
     self.thread:set('url', self.url)
   end
 end
@@ -85,13 +83,13 @@ function Updater:progress()
   return "", 0, ok
 end
 
-local sparkle = {}
+local stackmachine = {}
 
-function sparkle.newUpdater(args, version, url)
+function stackmachine.newUpdater(args, version, url)
   return Updater(args, version, url)
 end
 
-function sparkle.parseVersion(version)
+function stackmachine.parseVersion(version)
   local a, b, c = string.match(version, '^(%d+)%.(%d+)%.(%d+)$')
   if a == nil or b == nil or c == nil then
     return nil, nil, nil
@@ -100,19 +98,19 @@ function sparkle.parseVersion(version)
 end
 
 -- Returns nil if no update is found
-function sparkle.findItem(version, appcast)
+function stackmachine.findItem(version, appcast)
   local item = appcast.items[1] or {}
   local newestVersion = item.version or ""
-  if sparkle.isNewer(version, newestVersion) then
+  if stackmachine.isNewer(version, newestVersion) then
     return item
   else
     return nil
   end
 end
 
-function sparkle.isNewer(version, other)
-  local major1, minor1, fix1 = sparkle.parseVersion(version)
-  local major2, minor2, fix2 = sparkle.parseVersion(other)
+function stackmachine.isNewer(version, other)
+  local major1, minor1, fix1 = stackmachine.parseVersion(version)
+  local major2, minor2, fix2 = stackmachine.parseVersion(other)
 
   if major1 == nil or major2 == nil then
     return false
@@ -133,7 +131,7 @@ function sparkle.isNewer(version, other)
   return false
 end
 
-function sparkle.getPlatform()
+function stackmachine.getPlatform()
   if love._os == "OS X" then
     return osx
   elseif love._os == "Windows" then
@@ -144,9 +142,14 @@ function sparkle.getPlatform()
 end
 
 -- This method blocks and should never be called directly, use the updater object
-function sparkle.update(lovepath, version, url, callback)
+function stackmachine.update(args, version, url, callback)
   local callback = callback or function(s, p) end
-  local platform = sparkle.getPlatform()
+
+  if glove.filesystem.isFused() then
+    error("Can't update non-fused games")
+  end
+
+  local platform = stackmachine.getPlatform()
 
   if platform == nil then
     error("Current platform doesn't support automatic updates")
@@ -155,7 +158,7 @@ function sparkle.update(lovepath, version, url, callback)
   -- Clean up after old updates
   platform.cleanup()
 
-  local oldpath = platform.getApplicationPath(lovepath)
+  local oldpath = platform.getApplicationPath(args)
 
   if oldpath == "" then
     logger:info("Can't find application directory")
@@ -173,7 +176,7 @@ function sparkle.update(lovepath, version, url, callback)
 
   -- Parse appcast
   local appcast = json.decode(b)
-  local item = sparkle.findItem(version, appcast)
+  local item = stackmachine.findItem(version, appcast)
 
   if item == nil then
     pcall(callback, true, "Current version is up to date", 100)
@@ -187,10 +190,10 @@ function sparkle.update(lovepath, version, url, callback)
   end
 
   -- Replace the current app with the download application
-  platform.replace(download, oldpath, callback)
+  platform.replace(download, oldpath, args, callback)
 
   -- Quit the current program
   love.event.push("quit")
 end
 
-return sparkle
+return stackmachine

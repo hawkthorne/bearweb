@@ -102,6 +102,10 @@ def check_for_main(lovepath):
         return False
 
 
+def package_love(game, lovefile, prefix, name, slug, version):
+    return lovefile, u"{}.love".format(slug)
+
+
 def package_osx(game, lovefile, prefix, name, slug, version):
     """Given a path to a .love file, create OS X version for
     download. Returns path to create zipfile
@@ -208,23 +212,25 @@ def inject_code(game, lovefile, config):
             archive.writestr(zipinfo, old_archive.read(filename))
 
     # Add code
-    for script in os.listdir(p("build/sparkle")):
+    for script in os.listdir(p("build/love-sdk")):
         if script.startswith("."):
             continue
 
-        if script == "splash.png" and game.splash:
-            archive.writestr(os.path.join("sparkle", script),
-                             game.splash.read())
-            continue
+        archive.write(p(os.path.join("build", "love-sdk", script)),
+                      os.path.join("stackmachine", script))
 
-        archive.write(p(os.path.join("build", "sparkle", script)),
-                      os.path.join("sparkle", script))
+    if game.splash:
+        archive.writestr(os.path.join("stackmachine", "splash.png"),
+                         game.splash.read())
+    else:
+        archive.write(p(os.path.join("static", "img", "splash.png")),
+                      os.path.join("stackmachine", script))
 
     # Add new main.lua
     archive.writestr("main.lua", render_to_string('games/main.lua'))
 
-    # Add JSON
-    archive.writestr("sparkle/config.json", config, zipfile.ZIP_DEFLATED)
+    # FIXME: Add JSON
+    archive.writestr("stackmachine/config.json", config, zipfile.ZIP_DEFLATED)
 
     archive.close()
 
@@ -252,6 +258,8 @@ def package(release_id):
     name = game.name
 
     # Create binaries
+    love_file = blobify(package_love, game, love, prefix, name, slug,
+                        release.version)
     osx_file = blobify(package_osx, game, love, prefix, name, slug,
                        release.version)
     win_file = blobify(package_windows, game, love, prefix,
@@ -259,6 +267,7 @@ def package(release_id):
     exe_file = package_exe(game, love, prefix, name, slug, release.version)
 
     # Upload
+    release.add_asset(love_file, tag='love')
     release.add_asset(osx_file, tag='osx')
     release.add_asset(win_file, tag='windows')
     release.add_asset(exe_file, tag='exe')

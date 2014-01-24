@@ -1,9 +1,9 @@
-local sparkle = require 'sparkle'
-local reporter = require 'sparkle/reporter'
-local tasks = require 'sparkle/tasks'
-local logging = require 'sparkle/logging'
-local config = require 'sparkle/config'
-local utils = require 'sparkle/utils'
+local stackmachine = require 'stackmachine'
+local reporter = require 'stackmachine/reporter'
+local tasks = require 'stackmachine/tasks'
+local logging = require 'stackmachine/logging'
+local config = require 'stackmachine/config'
+local utils = require 'stackmachine/utils'
 
 function love.errhand(msg)
   reporter.log(msg)
@@ -53,7 +53,7 @@ function love.load(arg)
   time = 0
   progress = 0
 
-  updater = sparkle.newUpdater(arg, config.version, config.links.updates)
+  updater = stackmachine.newUpdater(arg, config.version, config.links.updates)
   updater:start()
   loaded = true
 end
@@ -86,7 +86,7 @@ end
 function love.draw()
   if not logo then
     love.graphics.setBackgroundColor(0, 0, 0)
-    logo = love.graphics.newImage('sparkle/splash.png')
+    logo = love.graphics.newImage('stackmachine/splash.png')
   end
 
   love.graphics.setColor(255, 255, 255, math.min(255, time * 200))
