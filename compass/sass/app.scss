@@ -723,12 +723,16 @@ ul.top-bar-links li {
   display: block;
 }
 
+.download-links {
+  margin-bottom: 15px;
+}
+
 .download-links input {
   font-family: Monaco,Menlo,Consolas,"Courier New",monospace;
 }
 
-.download-links:first-child {
-  margin-bottom: 15px;
+.download-links:last-child {
+  margin-bottom: 0;
 }
 
 .download-links span div {
