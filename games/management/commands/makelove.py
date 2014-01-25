@@ -1,3 +1,5 @@
+import zipfile
+
 from django.core.management.base import BaseCommand
 
 from games import models, bundle
@@ -14,7 +16,12 @@ def package_love(stdout, game, release):
         stdout.write(u"NO UPLOAD {}".format(release))
         return
 
-    identity = bundle.detect_identity(upload.blob) or game.slug
+    try:
+        identity = bundle.detect_identity(upload.blob) or game.slug
+    except zipfile.BadZipfile:
+        stdout.write(u"BAD ZIP {}".format(release))
+        return
+
     config = bundle.game_config(game.uuid, identity, release.version)
 
     prefix = "build/love8"
