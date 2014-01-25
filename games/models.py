@@ -113,8 +113,11 @@ class Game(models.Model):
     def appcast(self):
         items = []
 
-        for release in self.release_set.order_by('-created'):
+        try:
+            release = self.release_set.order_by('-created')[0]
             items.append(release.appcast())
+        except IndexError:
+            pass
 
         return {
             'description': 'Eventually put game description here',
