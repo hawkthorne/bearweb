@@ -224,7 +224,7 @@ def inject_code(game, lovefile, config):
                          game.splash.read())
     else:
         archive.write(p(os.path.join("static", "img", "splash.png")),
-                      os.path.join("stackmachine", script))
+                      os.path.join("stackmachine", "splash.png"))
 
     # Add new main.lua
     archive.writestr("main.lua", render_to_string('games/main.lua'))

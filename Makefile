@@ -46,6 +46,9 @@ autoschema: venv
 flush: venv
 	. venv/bin/activate; python manage.py flush
 
+makelove: venv
+	. venv/bin/activate; python manage.py makelove
+					
 deploy: test
 	git push origin master
 	git push heroku master

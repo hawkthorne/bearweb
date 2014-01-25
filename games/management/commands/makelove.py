@@ -6,9 +6,10 @@ from games import models, bundle
 
 
 def package_love(stdout, game, release):
-    if release.get_asset('love') is not None:
-        stdout.write(u"SKIPPING {}".format(release))
-        return
+    lovefile = release.get_asset('love')
+
+    if lovefile is not None:
+        lovefile.delete()
 
     upload = release.get_asset('uploaded')
 
