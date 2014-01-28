@@ -25,8 +25,6 @@ urlpatterns = patterns(
     url(r'^$', template("core/index.html"), name='home'),
     url(r'^robots.txt$', TemplateView.as_view(template_name='core/robots.txt',
                                               content_type='text/plain')),
-    url(r'^attribution$', template('core/attribution.html'),
-        name='attribution'),
     url(r'^pricing$', PricingView.as_view(), name='pricing'),
     url(r'^privacy$', template('core/privacy.html'), name='privacy'),
     url(r'^tos$', template('core/tos.html'), name='tos'),
