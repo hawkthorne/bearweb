@@ -1,8 +1,11 @@
+import json
 from datetime import datetime, timedelta
 from collections import namedtuple
 
 from django.core.management.base import BaseCommand
 from django.contrib.auth.models import User
+from django.conf import settings
+import requests
 import pytz
 
 from games.models import Game, Release
@@ -16,19 +19,21 @@ def growth_rate(current, previous):
 
 
 def breakdown(weeks):
-    print "Date       Users    GR% Games    GR% Releases   GR%"
-    report = "{} {:5} {:5.0f}% {:5} {:5.0f}% {:7} {:5.0f}%"
+    print "Date       Users    GR% Games    GR% Releases   GR% Plays    GR%"
+    report = "{} {:5} {:5.0f}% {:5} {:5.0f}% {:7} {:5.0f}% {:5} {:5.0f}%"
     previous = None
     for week, m in weeks:
         if previous is None:
             print report.format(week.date(), m.users, 0, m.games, 0,
-                                m.releases, 0)
+                                m.releases, 0, m.plays, 0)
         else:
             user_rate = growth_rate(m.users, previous.users)
+            play_rate = growth_rate(m.plays, previous.plays)
             game_rate = growth_rate(m.games, previous.games)
             rele_rate = growth_rate(m.releases, previous.releases)
             print report.format(week.date(), m.users, user_rate,
-                                m.games, game_rate, m.releases, rele_rate)
+                                m.games, game_rate, m.releases, rele_rate,
+                                m.plays, play_rate)
         previous = m
 
 
@@ -40,8 +45,23 @@ def crunch_numbers(begin, end):
     # TODO: Add download numbers
 
     # Add play numbers
+    keen = "https://api.keen.io/3.0/projects/{}/queries/count"
 
-    return Metric(uc, gc, rc, 0, 0)
+    timeframe = {
+        "start": begin.astimezone(pytz.UTC).isoformat(),
+        "end": end.astimezone(pytz.UTC).isoformat(),
+    }
+
+    params = {
+        "api_key": settings.KEEN_READ_KEY,
+        "timeframe": json.dumps(timeframe),
+        "event_collection": "opens",
+    }
+
+    resp = requests.get(keen.format(settings.KEEN_PROJECT_ID), params=params)
+    resp.raise_for_status()
+
+    return Metric(uc, gc, rc, 0, resp.json().get('result', 0))
 
 
 class Command(BaseCommand):
