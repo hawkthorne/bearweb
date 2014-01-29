@@ -16,7 +16,7 @@ def growth_rate(current, previous):
 
 
 def breakdown(weeks):
-    print "Week       Users    GR% Games    GR% Releases   GR%"
+    print "Date       Users    GR% Games    GR% Releases   GR%"
     report = "{} {:5} {:5.0f}% {:5} {:5.0f}% {:7} {:5.0f}%"
     previous = None
     for week, m in weeks:
@@ -38,7 +38,9 @@ def crunch_numbers(begin, end):
     uc = User.objects.filter(date_joined__lt=end,
                              date_joined__gte=begin).count()
     # TODO: Add download numbers
-    # TODO: Add play numbers
+
+    # Add play numbers
+
     return Metric(uc, gc, rc, 0, 0)
 
 
@@ -50,6 +52,9 @@ class Command(BaseCommand):
         week_begin = pacific.localize(datetime(2013, 12, 13))
         week_end = week_begin + timedelta(days=3)
 
+        print "Week over week"
+        print
+
         weeks = []
 
         while week_begin < datetime.now(pacific):
@@ -58,3 +63,20 @@ class Command(BaseCommand):
             week_end = week_begin + timedelta(days=7)
 
         breakdown(weeks)
+
+        print
+        print "Month over month"
+        print
+
+        december = pacific.localize(datetime(2013, 12, 13))
+        january = pacific.localize(datetime(2014, 1, 1))
+        february = pacific.localize(datetime(2014, 2, 1))
+
+        months = [
+            (december, crunch_numbers(december, january)),
+            (january, crunch_numbers(january, february)),
+        ]
+
+        breakdown(months)
+
+
