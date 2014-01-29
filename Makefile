@@ -71,6 +71,9 @@ fmt:
 	. venv/bin/activate; find blog core bearweb games -name "*.py" | grep -v "migrations" | xargs -I {} pep8ify -n -w {}
 
 
+stats:
+	. venv/bin/activate; python manage.py stats
+
 pep8:
 	. venv/bin/activate; flake8 blog core bearweb games \
 		--exclude "migrations"
@@ -84,7 +87,6 @@ love8:
 
 love9:
 	games/build/love9/osx/love.app/Contents/MacOS/love games/build
-
 
 
 pipeline: clean test
