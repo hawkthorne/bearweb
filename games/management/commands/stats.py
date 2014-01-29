@@ -10,8 +10,10 @@ from games.models import Game, Release
 
 Metric = namedtuple('Metric', 'users, games, releases, downloads, plays')
 
+
 def growth_rate(current, previous):
     return (current - previous) / float(previous or 1) * 100
+
 
 def breakdown(weeks):
     print "Week       Users    GR% Games    GR% Releases   GR%"
@@ -33,7 +35,7 @@ def breakdown(weeks):
 def crunch_numbers(begin, end):
     gc = Game.objects.filter(created__lt=end, created__gte=begin).count()
     rc = Release.objects.filter(created__lt=end, created__gte=begin).count()
-    uc = User.objects.filter(date_joined__lt=end, 
+    uc = User.objects.filter(date_joined__lt=end,
                              date_joined__gte=begin).count()
     # TODO: Add download numbers
     # TODO: Add play numbers
@@ -49,7 +51,7 @@ class Command(BaseCommand):
         week_end = week_begin + timedelta(days=3)
 
         weeks = []
-        
+
         while week_begin < datetime.now(pacific):
             weeks.append((week_begin, crunch_numbers(week_begin, week_end)))
             week_begin = week_end
