@@ -45,7 +45,7 @@ $(function(){
       $("#drop .message").empty().append("<strong>All Done! We're doing some extra work to get your release ready");
 
       // TODO: Create redirect
-      setInterval(function() {
+      setTimeout(function() {
         window.location.href = $('#id_next').val();
       }, 500);
     },

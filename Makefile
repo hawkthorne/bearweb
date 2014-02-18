@@ -27,7 +27,7 @@ syncdb: venv
 	. venv/bin/activate; python manage.py syncdb
 
 migrate: venv
-	. venv/bin/activate; python manage.py migrate games
+	. venv/bin/activate; python manage.py migrate
 
 init: venv
 	#. venv/bin/activate; python manage.py schemamigration core --initial
